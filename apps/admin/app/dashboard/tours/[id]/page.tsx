@@ -1,0 +1,604 @@
+'use client'
+
+import { useState, useMemo, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter, useParams } from 'next/navigation'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ChevronLeft, ChevronRight, Edit, Trash2, Plus, Clock, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { getTourPlanDetail, deleteTourPlan, TourPlan } from '@/app/lib/api'
+import { getCookie } from '@/app/lib/cookies'
+import { LocationModal } from '@/components/dashboard/location-modal'
+import { DateModal } from '@/components/dashboard/date-modal'
+import { fetchTourDates } from '@/app/lib/redux/tour-date-slice'
+import { RootState, AppDispatch } from '@/app/lib/redux/store'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
+const TimeSlotCount = ({ dateId }: { dateId: string }) => {
+  const [count, setCount] = useState<number | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const token = getCookie('access_token')
+        if (token) {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tour/plan/date/time/${dateId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          })
+          const data = await response.json()
+          setCount(data.count || 0)
+        }
+      } catch (err) {
+        console.error('Failed to fetch time count:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchCount()
+  }, [dateId])
+
+  if (isLoading) return <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+
+  return (
+    <span className="text-xs text-muted-foreground mt-1">
+      {count} time slot{count !== 1 ? 's' : ''}
+    </span>
+  )
+}
+
+export default function TourDetailsPage() {
+  const router = useRouter()
+  const params = useParams()
+  const tourId = params.id as string
+  const dispatch = useDispatch<AppDispatch>()
+  const { dates: reduxDates, isLoading: isDatesLoading } = useSelector((state: RootState) => state.tourDate)
+
+  const [tour, setTour] = useState<TourPlan | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [locationModalOpen, setLocationModalOpen] = useState(false)
+  const [dateModalOpen, setDateModalOpen] = useState(false)
+  const [locationMode, setLocationMode] = useState<'create' | 'edit'>('create')
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [alertConfig, setAlertConfig] = useState<{
+    show: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'error';
+    onConfirm?: () => void;
+  }>({
+    show: false,
+    title: '',
+    message: '',
+    type: 'success'
+  })
+
+  useEffect(() => {
+    const fetchTourDetail = async () => {
+      try {
+        setIsLoading(true)
+        const token = getCookie('access_token')
+        if (token && tourId) {
+          const data = await getTourPlanDetail(token, tourId)
+          setTour(data)
+          // Also fetch dates via Redux
+          dispatch(fetchTourDates(parseInt(tourId)))
+        } else if (!token) {
+          setError('Authentication token not found. Please log in again.')
+        }
+      } catch (err) {
+        setError('Failed to fetch tour details. Please try again later.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchTourDetail()
+  }, [tourId, dispatch])
+
+  const handlePrevImage = () => {
+    if (!tour?.images.length) return
+    setCurrentImageIndex((prev) => (prev === 0 ? tour.images.length - 1 : prev - 1))
+  }
+
+  const handleNextImage = () => {
+    if (!tour?.images.length) return
+    setCurrentImageIndex((prev) => (prev === tour.images.length - 1 ? 0 : prev + 1))
+  }
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true)
+      const token = getCookie('access_token')
+      if (!token) {
+        throw new Error('Authentication token not found.')
+      }
+
+      await deleteTourPlan(token, tourId)
+
+      setAlertConfig({
+        show: true,
+        title: 'Success',
+        message: 'Tour deleted successfully.',
+        type: 'success',
+        onConfirm: () => router.push('/dashboard/tours')
+      })
+    } catch (err: any) {
+      console.error('Delete tour error:', err)
+      let errorMessage = 'Failed to delete tour. Please try again.'
+      if (err) {
+        const errorDetails = Object.entries(err).map(([key, value]) => {
+          if (Array.isArray(value)) return `${key}: ${value.join(', ')}`
+          return `${key}: ${value}`
+        }).join('\n')
+        errorMessage = errorDetails || errorMessage
+      }
+
+      setAlertConfig({
+        show: true,
+        title: 'Error',
+        message: errorMessage,
+        type: 'error'
+      })
+    } finally {
+      setIsDeleting(false)
+      setIsDeleteDialogOpen(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (error || !tour) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
+        <Card className="p-8 max-w-md border-border">
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">{error || "Tour not found"}</h2>
+          <Link href="/dashboard/tours">
+            <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
+              Back to Tours
+            </Button>
+          </Link>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-8 pb-10">
+      {/* Back Button & Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-4">
+          <Link href="/dashboard/tours">
+            <Button variant="outline" size="icon" className="border-border bg-transparent flex-shrink-0">
+              <ChevronLeft size={20} />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-xl font-semibold text-foreground mb-2">{tour.title}</h1>
+            <p className="text-muted-foreground text-sm sm:text-base line-clamp-2 md:line-clamp-none">{tour.description}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column - Image & Quick Info */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Image Carousel */}
+          <Card className="border-border overflow-hidden shadow-md">
+            <div className="relative bg-secondary h-76 sm:h-100">
+              <img
+                src={tour.images[currentImageIndex]?.file || "/placeholder.svg"}
+                alt={tour.title}
+                className="w-full h-full object-fixed"
+              />
+              {tour.images.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevImage}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </>
+              )}
+              <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1">
+                {tour.images.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-2 rounded-full transition-all ${i === currentImageIndex ? 'bg-white w-6' : 'bg-white/50 w-2'
+                      }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* Price & Duration Card */}
+          <Card className="p-6 border-border shadow-md space-y-4">
+            <div>
+              <p className="text-muted-foreground text-xs uppercase font-semibold tracking-wider mb-1">Starting From</p>
+              <p className="text-2x font-semibold text-primary">${tour.price_adult}</p>
+            </div>
+            {tour.duration_days && (
+              <div className="flex items-center gap-2 pt-2 border-t border-border">
+                <Clock className="text-muted-foreground" size={20} />
+                <span className="text-foreground font-medium">{tour.duration_days} Days</span>
+              </div>
+            )}
+            <div className={`flex items-center gap-2 ${!tour.duration_days ? 'pt-2 border-t border-border' : ''}`}>
+              <Badge variant={tour.is_active ? "default" : "secondary"}>
+                {tour.status}
+              </Badge>
+              {tour.free_cancellation && (
+                <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
+                  Free Cancellation
+                </Badge>
+              )}
+              {tour.pickup_included && (
+                <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50">
+                  Pickup Included
+                </Badge>
+              )}
+            </div>
+          </Card>
+          {/* Actions */}
+          <div className="p-4 border-t border-border flex gap-2">
+            <Link href={`/dashboard/tours/${tour.id}/edit`} className="flex-1">
+              <Button
+                variant="outline"
+                className="w-full border-border text-black/80 hover:text-black/80 hover:bg-primary/10 bg-transparent h-10 cursor-pointer"
+              >
+                <Edit size={18} />
+                Edit
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="flex-1 border-border text-destructive hover:text-destructive hover:bg-destructive/10 bg-transparent h-10 cursor-pointer"
+            >
+              <Trash2 size={18} />
+              Delete
+            </Button>
+          </div>
+        </div>
+
+        {/* Right Column - Comprehensive Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Overview Section */}
+          <Card className="p-6 border-border shadow-md space-y-6">
+            <h2 className="text-lg font-medium text-foreground">Overview</h2>
+
+            {tour.full_description && (
+              <div className="prose prose-sm max-w-none text-muted-foreground wrap-break-word">
+                <p className="whitespace-pre-line">{tour.full_description}</p>
+              </div>
+            )}
+
+            {tour.highlights && tour.highlights.length > 0 && (
+              <div className="space-y-3 pt-4 border-t border-border">
+                <h3 className="text-lg font-medium text-foreground">Highlights</h3>
+                <ul className="grid grid-cols-1 md:grid-cols-1 gap-2">
+                  {tour.highlights.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="text-primary flex-shrink-0">•</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Card>
+
+          {/* Locations Section - RESTORED */}
+          <Card className="p-6 border-border shadow-md">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium text-foreground">Locations</h2>
+              {/* <Button
+                size="sm"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2"
+                onClick={() => {
+                  setLocationMode('create')
+                  setLocationModalOpen(true)
+                }}
+              >
+                <Plus size={16} />
+                Add New Location
+              </Button> */}
+            </div>
+
+            {tour.locations.length > 0 ? (
+              <div className="space-y-2 mb-4">
+                {tour.locations.map((location) => (
+                  <div
+                    key={location.id}
+                    className="flex items-center justify-between bg-secondary p-3 rounded-lg border border-border"
+                  >
+                    <div>
+                      <Badge className="bg-primary text-primary-foreground mb-1">
+                        {location.name}
+                      </Badge>
+                      {location.description && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {location.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-sm py-4 text-center">
+                No locations added yet
+              </p>
+            )}
+
+            {/* <Button
+              variant="outline"
+              className="w-full border-border text-primary hover:bg-primary/10 bg-transparent"
+              onClick={() => {
+                setLocationMode('edit')
+                setLocationModalOpen(true)
+              }}
+            >
+              Edit Locations
+            </Button> */}
+          </Card>
+
+          {/* Inclusions & Exclusions */}
+          <Card className="p-6 border-border shadow-md">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-medium text-foreground mb-4">Includes</h3>
+                {tour.includes.length > 0 ? (
+                  <ul className="space-y-2">
+                    {tour.includes.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <span className="text-green-500 flex-shrink-0">✓</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">None</p>
+                )}
+              </div>
+              <div className="pt-6 md:pt-0 border-t md:border-t-0 md:border-l border-border md:pl-8">
+                <h3 className="text-lg font-medium text-foreground mb-4">Excludes</h3>
+                {tour.excludes.length > 0 ? (
+                  <ul className="space-y-2">
+                    {tour.excludes.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <span className="text-destructive flex-shrink-0">✕</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">None</p>
+                )}
+              </div>
+            </div>
+          </Card>
+
+          {/* Important Information */}
+          <Card className="p-6 border-border shadow-md space-y-6">
+            <h2 className="text-lg font-medium text-foreground">Important Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium text-foreground mb-3">Know Before You Go</h3>
+                  {tour.know_before_you_go.length > 0 ? (
+                    <ul className="space-y-3">
+                      {tour.know_before_you_go.map((item, i) => (
+                        <li key={i} className="text-sm text-muted-foreground pb-2 border-b border-border/50 last:border-0 flex items-start gap-2">
+                          <span className="text-destructive flex-shrink-0">{i + 1}.</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">No specific info</p>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium text-foreground mb-3">Not Allowed</h3>
+                  {tour.not_allowed.length > 0 ? (
+                    <ul className="space-y-2">
+                      {tour.not_allowed.map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <span className="text-destructive flex-shrink-0">•</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">No restrictions</p>
+                  )}
+                </div>
+                <div className="pt-6 border-t border-border">
+                  <h3 className="text-lg font-medium text-foreground mb-3">Not Suitable For</h3>
+                  {tour.not_suitable_for.length > 0 ? (
+                    <ul className="space-y-2">
+                      {tour.not_suitable_for.map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <span className="text-destructive flex-shrink-0">•</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">No specifics</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Dates & Tickets Section - RESTORED */}
+          <Card className="p-6 border-border shadow-md">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium text-foreground">Date & Tickets</h2>
+              <Button
+                size="sm"
+                className="cursor-pointer text-black/80 hover:bg-primary/10 bg-transparent border border-1 flex items-center gap-2"
+                onClick={() => setDateModalOpen(true)}
+              >
+                <Plus size={16} />
+                Add New Date
+              </Button>
+            </div>
+
+            {isDatesLoading && reduxDates.length === 0 ? (
+              <div className="flex justify-center py-4">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              </div>
+            ) : reduxDates.length > 0 ? (
+              <div className="space-y-2 mb-4">
+                {reduxDates.map((date: any) => (
+                  <Link href={`/dashboard/tours/${tour.id}/dates/${date.id}`}>
+                  <div
+                    key={date.id}
+                    className="flex items-center justify-between bg-secondary p-3 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
+                  >
+                    {/* <div className="flex flex-row justify-between gap-2"> */}
+                    
+                      <Badge className="bg-primary text-primary-foreground">
+                        {new Date(date.date).toLocaleDateString()}
+                      </Badge>
+                    
+                    <div className="flex flex-row justify-between gap-2">
+
+                      <TimeSlotCount dateId={date.id.toString()} />
+                    </div>
+                    {/* </div> */}
+                  </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-sm py-4 text-center">
+                No dates scheduled yet
+              </p>
+            )}
+          </Card>
+        </div>
+      </div>
+
+      {/* Modals placeholders */}
+      <LocationModal
+        isOpen={locationModalOpen}
+        onClose={() => setLocationModalOpen(false)}
+        onSave={() => setLocationModalOpen(false)}
+        initialLocations={tour.locations.map(loc => ({
+          ...loc,
+          id: loc.id.toString()
+        }))}
+        mode={locationMode}
+      />
+
+      <DateModal
+        isOpen={dateModalOpen}
+        onClose={() => setDateModalOpen(false)}
+        onSave={() => {
+          dispatch(fetchTourDates(parseInt(tourId)))
+          setDateModalOpen(false)
+        }}
+        initialDates={reduxDates.map((d: any) => ({
+          ...d,
+          id: d.id.toString()
+        }))}
+        tourId={parseInt(tourId)}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent className="max-w-md border-destructive/20 bg-background/95 backdrop-blur-lg">
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2 text-destructive mb-2">
+              <Trash2 size={24} />
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="text-foreground/80 font-medium">
+              This action cannot be undone. This will permanently delete the tour
+              <span className="font-semibold text-destructive px-1">"{tour?.title}"</span>
+              and all of its associated data including dates and time slots.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="cursor-pointer border-border bg-transparent hover:bg-secondary">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="cursor-pointer bg-destructive hover:bg-destructive/90 text-white border-0"
+            >
+              {isDeleting ? <Loader2 className="animate-spin" size={18} /> : 'Delete Tour'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Feedback Alert Dialog */}
+      <AlertDialog
+        open={alertConfig.show}
+        onOpenChange={(v) => setAlertConfig({ ...alertConfig, show: v })}
+      >
+        <AlertDialogContent className={`max-w-md border-0 bg-background/95 backdrop-blur-lg shadow-2xl`}>
+          <div className={`absolute top-0 left-0 w-full h-1 ${alertConfig.type === 'success' ? 'bg-primary' : 'bg-destructive'}`} />
+          <AlertDialogHeader>
+            <div className={`flex items-center gap-2 ${alertConfig.type === 'success' ? 'text-primary' : 'text-destructive'} mb-2`}>
+              {alertConfig.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
+              <AlertDialogTitle className="text-lg font-semibold">{alertConfig.title}</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="text-foreground/80 text-base font-medium whitespace-pre-line">
+              {alertConfig.message}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                setAlertConfig({ ...alertConfig, show: false })
+                if (alertConfig.onConfirm) alertConfig.onConfirm()
+              }}
+              className={`cursor-pointer ${alertConfig.type === 'success' ? 'bg-primary hover:bg-primary/90' : 'bg-destructive hover:bg-destructive/90'} text-white border-0 px-8`}
+            >
+              {alertConfig.type === 'success' ? 'Continue' : 'Okay'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  )
+}

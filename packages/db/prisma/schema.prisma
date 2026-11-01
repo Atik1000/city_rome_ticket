@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  phone        String?
+  passwordHash String
+  role         String    @default("customer") // admin | moderator | customer
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  bookings     Booking[]
+}
+
+model Location {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @default("")
+  createdAt   DateTime @default(now())
+  tours       Tour[]   @relation("TourLocations")
+}
+
+model Tour {
+  id              Int     @id @default(autoincrement())
+  title           String
+  description     String
+  fullDescription String?
+
+  maxAdults       Int   @default(20)
+  priceAdult      Float @default(0)
+  adultAgeMin     Int   @default(18)
+  adultAgeMax     Int   @default(99)
+  maxChildren     Int   @default(10)
+  priceChild      Float @default(0)
+  childAgeMin     Int   @default(4)
+  childAgeMax     Int   @default(12)
+  maxInfants      Int   @default(5)
+  priceInfant     Float @default(0)
+  infantAgeMin    Int   @default(0)
+  infantAgeMax    Int   @default(3)
+  maxYouth        Int   @default(10)
+  priceYouth      Float @default(0)
+  youthAgeMin     Int   @default(13)
+  youthAgeMax     Int   @default(17)
+  maxStudentEu    Int   @default(10)
+  priceStudentEu  Float @default(0)
+  studentEuAgeMin Int   @default(18)
+  studentEuAgeMax Int   @default(25)
+
+  freeCancellation Boolean @default(true)
+  pickupIncluded   Boolean @default(false)
+
+  // JSON-encoded string arrays (SQLite has no native arrays)
+  highlights      String @default("[]")
+  includes        String @default("[]")
+  excludes        String @default("[]")
+  notSuitableFor  String @default("[]")
+  notAllowed      String @default("[]")
+  knowBeforeYouGo String @default("[]")
+
+  durationDays Int?
+  status       String  @default("published") // draft | published | archived
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  images       TourImage[]
+  locations    Location[]    @relation("TourLocations")
+  dates        TourDate[]
+  bookingItems BookingItem[]
+  cartItems    CartItem[]
+}
+
+model TourImage {
+  id        Int      @id @default(autoincrement())
+  file      String // URL or /api/v1/files/<name>
+  status    String   @default("active")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  tourId    Int?
+  tour      Tour?    @relation(fields: [tourId], references: [id], onDelete: SetNull)
+}
+
+model TourDate {
+  id        Int        @id @default(autoincrement())
+  date      String // "YYYY-MM-DD"
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  tourId    Int
+  tour      Tour       @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  timeSlots TimeSlot[]
+
+  @@unique([tourId, date])
+}
+
+model TimeSlot {
+  id                 Int      @id @default(autoincrement())
+  startTime          String // "HH:MM"
+  endTime            String? // "HH:MM"
+  availableAdults    Int      @default(20)
+  availableChildren  Int      @default(10)
+  availableInfants   Int      @default(5)
+  availableYouth     Int      @default(10)
+  availableStudentEu Int      @default(10)
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  tourDateId         Int
+  tourDate           TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+
+  bookingItems BookingItem[]
+  cartItems    CartItem[]
+}
+
+model CartItem {
+  id           Int      @id @default(autoincrement())
+  numAdults    Int      @default(0)
+  numChildren  Int      @default(0)
+  numInfants   Int      @default(0)
+  numYouth     Int      @default(0)
+  numStudentEu Int      @default(0)
+  itemPrice    Float    @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       Int?
+  tourId       Int
+  tour         Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  timeSlotId   Int
+  timeSlot     TimeSlot @relation(fields: [timeSlotId], references: [id], onDelete: Cascade)
+}
+
+model Booking {
+  id              Int      @id @default(autoincrement())
+  userType        String   @default("guest") // guest | registered | admin
+  totalPrice      Float    @default(0)
+  travelerDetails String   @default("[]") // JSON [{name, email}]
+  status          String   @default("pending") // pending | confirmed | completed | cancelled
+  cancelledReason String?
+  bookedByAdmin   Boolean  @default(false)
+  fullName        String?
+  email           String?
+  country         String?
+  phone           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          Int?
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  items BookingItem[]
+}
+
+model BookingItem {
+  id           Int      @id @default(autoincrement())
+  numAdults    Int      @default(0)
+  numChildren  Int      @default(0)
+  numInfants   Int      @default(0)
+  numYouth     Int      @default(0)
+  numStudentEu Int      @default(0)
+  itemPrice    Float    @default(0)
+  createdAt    DateTime @default(now())
+  bookingId    Int
+  booking      Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  tourId       Int
+  tour         Tour     @relation(fields: [tourId], references: [id])
+  timeSlotId   Int
+  timeSlot     TimeSlot @relation(fields: [timeSlotId], references: [id])
+}
+
+model ContactRequest {
+  id              Int      @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String
+  phone           String   @default("")
+  subject         String   @default("")
+  message         String
+  status          String   @default("pending") // pending | resolved | cancelled
+  cancelledReason String?
+  createdAt       DateTime @default(now())
+}
+
+model Notice {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}

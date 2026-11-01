@@ -1,0 +1,180 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { ArrowRight, Calendar } from "lucide-react";
+import Link from "next/link";
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
+
+const blogs = [
+  {
+    id: 1,
+    title:
+      "How to Book Italy Attractions Like a Pro: Skip-the-Line, Timed Entry & Smart Tips",
+    excerpt:
+      "Italy’s top sights sell out fast—especially in peak season. Learn when to book, how timed entry works, and how to avoid long lines in Rome, Florence, and Venice.",
+    image: "/blogs/how_to_book_italy.png",
+    date: "February 15, 2026",
+    category: "Travel Tips",
+    slug: "/blog/italy-top-sights",
+  },
+  {
+    id: 2,
+    title:
+      "Colosseum, Roman Forum & Palatine Hill – Private 3 Hour Tour (What’s Worth It?)",
+    excerpt:
+      "Thinking about a private Colosseum tour? Here’s what you’ll actually see in 3 hours, who it’s best for, and how it compares to standard entry or group tours.",
+    image: "/blogs/Colosseum_Roman.png",
+    date: "February 10, 2026",
+    category: "Rome Tours",
+    slug: "/blog/private-3-hour-tour",
+  },
+  {
+    id: 3,
+    title:
+      "Vatican Museums & Sistine Chapel: A Complete Visitor Guide",
+    excerpt:
+      "The Vatican Museums and the Sistine Chapel are among the most visited cultural sites in the world. Located within Vatican City, these landmarks offer an extraordinary journey through art, history, and religion.",
+    image: "/blogs/vatican-sistine.png",
+    date: "March 2026",
+    category: "Ticket Guide",
+    slug: "/blog/vatican-sistine",
+  },
+  {
+    id: 4,
+    title:
+      "St. Peter’s Basilica & Colosseum: What to Know Before You Visit",
+    excerpt:
+      "Rome is home to some of the most iconic landmarks in the world, and two of the most essential stops on any itinerary are St. Peter’s Basilica and the Colosseum. While they represent very different eras of history, both offer unforgettable experiences.",
+    image: "/blogs/stpeter-colosseum.png",
+    date: "March 2026",
+    category: "Ticket Guide",
+    slug: "/blog/stpeter-colosseum",
+  },
+  {
+    id: 5,
+    title:
+      "First Time in Rome? The Perfect 3-Day Itinerary (With Smart Ticket Planning)",
+    excerpt:
+      "Planning your first trip to Rome can feel overwhelming. With so many iconic landmarks, long queues, and limited time, having a smart itinerary is essential. This 3-day plan helps you experience the best of Rome while booking tickets strategically to avoid crowds.",
+    image: "/blogs/rome-itinerary.png",
+    date: "March 2026",
+    category: "Ticket Guide",
+    slug: "/blog/first-time-rome",
+  },
+  {
+    id: 6,
+    title:
+      "Rome Travel Tips 2026: 15 Mistakes Tourists Make (And How to Avoid Them)",
+    excerpt:
+      "Rome is one of the most visited cities in the world—but many travelers make simple mistakes that cost time, money, and experience. Here are 15 common mistakes and how you can avoid them for a smoother trip.",
+    image: "/blogs/rome-travel-tips.png",
+    date: "March 2026",
+    category: "Travel Tips",
+    slug: "/blog/rome-travel-tips",
+  },
+    
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
+  },
+};
+
+const BlogIndex = () => {
+  return (
+    <div className="min-h-screen bg-background text-[#2A2118] flex flex-col">
+        <Navbar />
+      {/* Hero Section */}
+      <section className="relative h-40 sm:h-44 md:h-52 w-full overflow-hidden mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h1 className="font-serif text-4xl font-semibold text-foreground mb-4">
+              Travel Blog
+            </h1>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Ticket tips, itinerary ideas, and local insights to help you
+              explore Italy smoothly—without wasting time in long lines.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Blog Grid */}
+      <section className="pb-20 ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {blogs.map((blog) => (
+              <motion.article
+                key={blog.id}
+                variants={itemVariants}
+                className="group bg-card rounded-2xl overflow-hidden border border-black/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              >
+                {/* Image */}
+                <div className="relative h-56 overflow-hidden">
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-[#9E2B25] hover:bg-[#9E2B25]/90 text-white text-xs font-semibold rounded-full">
+                      {blog.category}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
+                    <Calendar className="w-4 h-4" />
+                    <span>{blog.date}</span>
+                  </div>
+                  <h3 className="font-serif text-lg font-semibold text-foreground mb-3 group-hover:text-brand transition-colors duration-300">
+                    {blog.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                    {blog.excerpt}
+                  </p>
+                  <Link
+                    href={blog.slug}
+                    className="inline-flex items-center gap-2 text-brand font-medium text-sm hover:gap-3 transition-all duration-300"
+                  >
+                    Read More <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+      <Footer />
+    </div>
+  );
+};
+
+export default BlogIndex;

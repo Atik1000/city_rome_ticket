@@ -1,0 +1,118 @@
+'use client'
+
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { loginAdmin, getCurrentUser, ApiErrorResponse } from '@/app/lib/api'
+import { setCookie, getCookie, deleteCookie } from '@/app/lib/cookies'
+
+interface AuthContextType {
+  isAuthenticated: boolean
+  user: any | null
+  token: string | null
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string | string[] }>
+  logout: () => void
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<any | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
+  const pathname = usePathname()
+
+  // Initialize auth state from cookies
+  useEffect(() => {
+    const checkAuth = async () => {
+      const accessToken = getCookie('access_token')
+
+      if (accessToken) {
+        try {
+          const userData = await getCurrentUser(accessToken)
+          setIsAuthenticated(true)
+          setUser(userData)
+
+          if (pathname === '/login') {
+            router.push('/dashboard')
+          }
+        } catch (error) {
+          console.error('Check auth error:', error)
+          logout()
+        }
+      } else {
+        setIsAuthenticated(false)
+        setUser(null)
+
+        if (pathname !== '/login' && !pathname.includes('/get-started')) {
+          router.push('/login')
+        }
+      }
+      setIsLoading(false)
+    }
+
+    checkAuth()
+  }, [pathname, router])
+
+  const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string | string[] }> => {
+    try {
+      const response = await loginAdmin({ email, password })
+
+      // Save tokens in cookies
+      setCookie('access_token', response.access, 1)
+      setCookie('refresh_token', response.refresh, 7)
+
+      // Fetch user data
+      const userData = await getCurrentUser(response.access)
+      setIsAuthenticated(true)
+      setUser(userData)
+
+      router.push('/dashboard')
+      return { success: true }
+    } catch (err) {
+      const apiError = err as ApiErrorResponse
+      let errorMessage: string | string[] = 'An error occurred during login'
+
+      if (apiError.detail) {
+        errorMessage = apiError.detail
+      } else if (apiError.email || apiError.password) {
+        const errors: string[] = []
+        if (apiError.email) errors.push(...apiError.email)
+        if (apiError.password) errors.push(...apiError.password)
+        errorMessage = errors
+      }
+
+      return { success: false, error: errorMessage }
+    }
+  }, [router])
+
+  const logout = useCallback(() => {
+    deleteCookie('access_token')
+    deleteCookie('refresh_token')
+    setIsAuthenticated(false)
+    setUser(null)
+    router.push('/login')
+  }, [router])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, user, token: getCookie('access_token') || null, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error('useAuth must be used within AuthProvider')
+  }
+  return context
+}
