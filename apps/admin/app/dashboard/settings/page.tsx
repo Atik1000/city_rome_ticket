@@ -26,7 +26,6 @@ import { Plus, Edit, Trash2, Loader2 } from 'lucide-react'
 import { UserFormModal } from '@/components/dashboard/user-form-modal'
 import { getAuthUsers, AuthUser, deleteAuthUser } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 export default function SettingsPage() {
@@ -68,25 +67,14 @@ export default function SettingsPage() {
     fetchUsers()
   }, [token])
 
-  const handleSaveUser = (userData: any) => {
-    // Note: Implementation for saving/updating users via API will be needed here 
-    // for full functionality, but for now we follow the user's request to show data.
-    if (editingUser) {
-      setUsers(
-        users.map((user) =>
-          user.email === editingUser.email
-            ? { ...user, ...userData }
-            : user
-        )
-      )
-      setEditingUser(null)
-    } else {
-      setUsers([
-        ...users,
-        { ...userData },
-      ])
-    }
-    setUserModalOpen(false)
+  const handleAddUser = () => {
+    setEditingUser(null)
+    setUserModalOpen(true)
+  }
+
+  const handleEditUser = (user: AuthUser) => {
+    setEditingUser(user)
+    setUserModalOpen(true)
   }
 
   const handleDeleteUser = (id: string | number) => {
@@ -137,14 +125,13 @@ export default function SettingsPage() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">Settings</h1>
           <p className="text-muted-foreground text-sm sm:text-base">Manage users and system configurations</p>
         </div>
-        <Link href="/dashboard/settings/add-user">
-          <Button
-            className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg cursor-pointer"
-          >
-            <Plus size={20} />
-            Add User
-          </Button>
-        </Link>
+        <Button
+          onClick={handleAddUser}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg cursor-pointer"
+        >
+          <Plus size={20} />
+          Add User
+        </Button>
       </div>
 
       {/* Users Table - Responsive */}
@@ -185,16 +172,15 @@ export default function SettingsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Link href={`/dashboard/settings/edit-user/${user.id}`}>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="border-border text-primary hover:bg-primary/10 bg-transparent h-9 w-9 p-0 rounded cursor-pointer"
-                              title="Edit user"
-                            >
-                              <Edit size={16} />
-                            </Button>
-                          </Link>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-border text-primary hover:bg-primary/10 bg-transparent h-9 w-9 p-0 rounded cursor-pointer"
+                            title="Edit user"
+                            onClick={() => handleEditUser(user)}
+                          >
+                            <Edit size={16} />
+                          </Button>
                           <Button
                             variant="outline"
                             size="sm"
@@ -228,15 +214,8 @@ export default function SettingsPage() {
           setUserModalOpen(false)
           setEditingUser(null)
         }}
-        onSave={handleSaveUser}
-        mode={editingUser ? 'edit' : 'create'}
-        initialUser={editingUser ? {
-          id: editingUser.email,
-          name: `${editingUser.first_name} ${editingUser.last_name}`,
-          email: editingUser.email,
-          role: editingUser.role.toLowerCase() as any,
-          createdAt: new Date().toISOString()
-        } : undefined}
+        onSaved={fetchUsers}
+        user={editingUser}
       />
 
       {/* Delete Confirmation Modal */}

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { ChevronLeft, ChevronRight, X, Loader2, AlertCircle, Calendar, Clock, Users, Euro, Mail, User } from 'lucide-react'
 import { getBookingById, Booking, TourTime, TourPlan } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
+import { BookingFormModal } from '@/components/dashboard/booking-form-modal'
 
 export default function BookingDetailsPage() {
   const params = useParams()
@@ -17,6 +18,7 @@ export default function BookingDetailsPage() {
   const [booking, setBooking] = useState<Booking | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [editModalOpen, setEditModalOpen] = useState(false)
   const [lightboxState, setLightboxState] = useState<{ isOpen: boolean; images: any[]; currentIndex: number }>({
     isOpen: false,
     images: [],
@@ -45,22 +47,22 @@ export default function BookingDetailsPage() {
     }))
   }
 
-  useEffect(() => {
-    const fetchBooking = async () => {
-      if (!token || !bookingId) return
-      try {
-        setLoading(true)
-        const data = await getBookingById(token, bookingId)
-        setBooking(data)
-        setError(null)
-      } catch (err: any) {
-        console.error('Error fetching booking detail:', err)
-        setError(err.message || 'Failed to fetch booking details')
-      } finally {
-        setLoading(false)
-      }
+  const fetchBooking = async () => {
+    if (!token || !bookingId) return
+    try {
+      setLoading(true)
+      const data = await getBookingById(token, bookingId)
+      setBooking(data)
+      setError(null)
+    } catch (err: any) {
+      console.error('Error fetching booking detail:', err)
+      setError(err.message || 'Failed to fetch booking details')
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchBooking()
   }, [token, bookingId])
 
@@ -470,15 +472,21 @@ export default function BookingDetailsPage() {
                   Back to All Bookings
                 </Link>
               </Button>
-              <Button asChild className="flex-1">
-                <Link href={`/dashboard/bookings/${booking.id}/edit`}>
-                  Edit
-                </Link>
+              <Button className="flex-1 cursor-pointer" onClick={() => setEditModalOpen(true)}>
+                Edit
               </Button>
             </div>
           </Card>
         </div>
       </div>
+
+      {/* Edit Booking Modal */}
+      <BookingFormModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        booking={booking}
+        onSaved={fetchBooking}
+      />
 
       {/* Lightbox Modal */}
       {lightboxState.isOpen && lightboxState.images.length > 0 && (

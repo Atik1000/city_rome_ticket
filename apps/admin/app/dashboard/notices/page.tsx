@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -37,16 +35,19 @@ import {
 import { Plus, Loader2, Edit, Trash2, CheckCircle2, AlertCircle, Info, Save } from 'lucide-react'
 import { useReducedMotion } from 'framer-motion'
 import { MotionTableRow, staggerIn } from '@/components/motion'
+import { NoticeFormModal } from '@/components/dashboard/notice-form-modal'
 import { getNotices, getNoticeDetail, deleteNotice, updateNotice, Notice } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 
 export default function NoticesPage() {
-  const router = useRouter()
   const reduceMotion = useReducedMotion()
   const [notices, setNotices] = useState<Notice[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeNoticeId, setActiveNoticeId] = useState<number | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+
+  // Create State
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   // Edit State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -231,12 +232,13 @@ export default function NoticesPage() {
           <h1 className="text-xl font-semibold text-foreground mb-2">Notices</h1>
           <p className="text-muted-foreground text-sm sm:text-base">Manage important announcements and system notices</p>
         </div>
-        <Link href="/dashboard/notices/create">
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg cursor-pointer transition-all active:scale-95 shadow-md">
-            <Plus size={20} />
-            Create Notice
-          </Button>
-        </Link>
+        <Button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg cursor-pointer transition-all active:scale-95 shadow-md"
+        >
+          <Plus size={20} />
+          Create Notice
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -391,8 +393,8 @@ export default function NoticesPage() {
                   Select a notice from the left panel to view details, edit or manage its status.
                 </p>
                 <Button
-                  onClick={() => router.push('/dashboard/notices/create')}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 text-sm h-11 px-8 rounded-xl font-semibold mt-4 shadow-lg shadow-primary/20"
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 text-sm h-11 px-8 rounded-xl font-semibold mt-4 shadow-lg shadow-primary/20 cursor-pointer"
                 >
                   Create New Announcement
                 </Button>
@@ -401,6 +403,13 @@ export default function NoticesPage() {
           )}
         </div>
       </div>
+
+      {/* Create Modal */}
+      <NoticeFormModal
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        onSaved={fetchNotices}
+      />
 
       {/* Edit Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>

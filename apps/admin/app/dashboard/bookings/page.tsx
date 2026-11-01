@@ -17,6 +17,7 @@ import { Eye, Plus, Loader2, AlertCircle, Search, RotateCcw } from 'lucide-react
 import { useReducedMotion } from 'framer-motion'
 import { MotionTableRow, staggerIn } from '@/components/motion'
 import { StatusModal } from '@/components/dashboard/status-modal'
+import { BookingFormModal } from '@/components/dashboard/booking-form-modal'
 import { getBookings, Booking } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 import { Input } from '@/components/ui/input'
@@ -32,6 +33,7 @@ export default function BookingsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
   const [statusModalOpen, setStatusModalOpen] = useState(false)
+  const [createModalOpen, setCreateModalOpen] = useState(false)
   const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null)
   const [searchValue, setSearchValue] = useState('')
   const [search, setSearch] = useState('')
@@ -195,12 +197,13 @@ export default function BookingsPage() {
             Search
           </Button>
 
-          <Link href="/dashboard/bookings/new">
-            <Button className="cursor-pointer text-black/80 hover:bg-primary/10 bg-transparent border border-1 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg">
-              <Plus size={20} />
-              Add New Booking
-            </Button>
-          </Link>
+          <Button
+            onClick={() => setCreateModalOpen(true)}
+            className="cursor-pointer text-black/80 hover:bg-primary/10 bg-transparent border border-1 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg"
+          >
+            <Plus size={20} />
+            Add New Booking
+          </Button>
         </div>
       </div>
 
@@ -325,6 +328,13 @@ export default function BookingsPage() {
           </div>
         </div>
       )}
+
+      {/* Create Booking Modal */}
+      <BookingFormModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onSaved={() => fetchBookings(currentPage, search, activeDateFrom, activeDateTo)}
+      />
 
       {/* Status Modal */}
       {selectedBooking && token && (

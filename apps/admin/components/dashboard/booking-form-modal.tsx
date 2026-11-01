@@ -1,9 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import {
-    ChevronLeft,
     Minus,
     Plus,
     Calendar as CalendarIcon,
@@ -12,23 +10,24 @@ import {
     AlertCircle,
     Users,
     Clock,
-    Euro,
     Info,
     Search
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useAuth } from '@/app/contexts/auth-context'
 import {
     getTourPlans,
     getTourDates,
     getTourTimes,
     createBooking,
+    updateBooking,
+    updateBookingItem,
     TourPlan,
     TourDate,
-    TourTime
+    TourTime,
+    Booking
 } from '@/app/lib/api'
-import Link from 'next/link'
 
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -82,7 +81,6 @@ const DatePicker = ({ isOpen, onClose, availableDates, onDateSelect }: any) => {
             <Calendar
                 mode="single"
                 onSelect={handleSelect}
-                //initialFocus
                 disabled={(date) => {
                     const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
                     return !availableDates.some((d: any) => d.date === dateStr)
@@ -97,7 +95,7 @@ const DatePicker = ({ isOpen, onClose, availableDates, onDateSelect }: any) => {
     )
 }
 
-export const countries = [
+const countries = [
     { name: "Afghanistan", code: "AF", dial_code: "+93", flag: "🇦🇫" },
     { name: "Albania", code: "AL", dial_code: "+355", flag: "🇦🇱" },
     { name: "Algeria", code: "DZ", dial_code: "+213", flag: "🇩🇿" },
@@ -340,9 +338,16 @@ export const countries = [
     { name: "Zimbabwe", code: "ZW", dial_code: "+263", flag: "🇿🇼" }
 ]
 
-export default function NewBookingPage() {
-    const router = useRouter()
+interface BookingFormModalProps {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    booking?: Booking | null
+    onSaved: () => void
+}
+
+export function BookingFormModal({ open, onOpenChange, booking, onSaved }: BookingFormModalProps) {
     const { token } = useAuth()
+    const isEdit = !!booking
 
     // State
     const [loading, setLoading] = useState(true)
@@ -368,31 +373,88 @@ export default function NewBookingPage() {
         country: '',
         phone: ''
     })
-    const [step, setStep] = useState(1) // 1: Selection, 2: Customer Info, 3: Details
+    const [step, setStep] = useState(1) // Create: 1 Selection, 2 Customer Info, 3 Manifest — Edit: 1 Selection, 2 Manifest
     const [countrySearch, setCountrySearch] = useState('')
     const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false)
     const [isGridDatePickerOpen, setIsGridDatePickerOpen] = useState(false)
     const [errorDialogOpen, setErrorDialogOpen] = useState(false)
     const [apiErrors, setApiErrors] = useState<any>(null)
+    const [originalBooking, setOriginalBooking] = useState<Booking | null>(null)
     const gridDatePickerRef = useRef<HTMLDivElement>(null)
+    const scrollRef = useRef<HTMLDivElement>(null)
 
-    // Fetch initial tour plans
+    const scrollToTop = () => {
+        scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    // Reset state and fetch initial data whenever the modal opens
     useEffect(() => {
-        const fetchTours = async () => {
-            if (!token) return
+        if (!open || !token) return
+        const init = async () => {
+            setStep(1)
+            setSubmitting(false)
+            setError(null)
+            setApiErrors(null)
+            setErrorDialogOpen(false)
+            setIsGridDatePickerOpen(false)
+            setIsCountryDropdownOpen(false)
+            setCountrySearch('')
+            setCustomerInfo({ full_name: '', email: '', country: '', phone: '' })
             try {
                 setLoading(true)
                 const response = await getTourPlans(token)
                 setTourPlans(response.results)
+
+                if (booking) {
+                    setOriginalBooking(booking)
+
+                    // Pre-fill form from booking data
+                    if (booking.items.length > 0) {
+                        const firstItem = booking.items[0];
+                        const tour = response.results.find(t => t.id === firstItem.tour_plan);
+                        setSelectedTour(tour || null);
+                        setCounts({
+                            adults: firstItem.num_adults,
+                            children: firstItem.num_children,
+                            infants: firstItem.num_infants,
+                            youths: firstItem.num_youth,
+                            students: firstItem.num_student_eu
+                        });
+
+                        // Pre-fill date and time slot if possible
+                        if (typeof firstItem.time_slot === 'object') {
+                            const ts = firstItem.time_slot as TourTime;
+                            setSelectedDate(ts.tour_date);
+                            setSelectedTimeSlot(ts);
+                        } else {
+                            setSelectedDate(null);
+                            setSelectedTimeSlot(null);
+                        }
+                    } else {
+                        setSelectedTour(null);
+                        setSelectedDate(null);
+                        setSelectedTimeSlot(null);
+                    }
+                    setTravelerDetails(booking.traveler_details);
+                } else {
+                    setOriginalBooking(null)
+                    setSelectedTour(null)
+                    setAvailableDates([])
+                    setSelectedDate(null)
+                    setTimeSlots([])
+                    setSelectedTimeSlot(null)
+                    setCounts({ adults: 1, children: 0, infants: 0, youths: 0, students: 0 })
+                    setTravelerDetails([])
+                }
             } catch (err: any) {
-                setError('Failed to fetch tour plans')
+                setError(booking ? 'Failed to fetch data' : 'Failed to fetch tour plans')
                 console.error(err)
             } finally {
                 setLoading(false)
             }
         }
-        fetchTours()
-    }, [token])
+        init()
+    }, [open, token, booking])
 
     // Fetch available dates when tour changes
     useEffect(() => {
@@ -401,15 +463,17 @@ export default function NewBookingPage() {
             try {
                 const response = await getTourDates(selectedTour.id.toString())
                 setAvailableDates(response.results)
-                setSelectedDate(null)
-                setTimeSlots([])
-                setSelectedTimeSlot(null)
+                if (!isEdit) {
+                    setSelectedDate(null)
+                    setTimeSlots([])
+                    setSelectedTimeSlot(null)
+                }
             } catch (err) {
                 console.error('Error fetching dates:', err)
             }
         }
         fetchDates()
-    }, [selectedTour])
+    }, [selectedTour, isEdit])
 
     // Fetch time slots when date changes
     useEffect(() => {
@@ -418,19 +482,51 @@ export default function NewBookingPage() {
             try {
                 const response = await getTourTimes(token, selectedDate.id.toString())
                 setTimeSlots(response.results)
-                setSelectedTimeSlot(null)
+                if (!isEdit) {
+                    setSelectedTimeSlot(null)
+                }
             } catch (err) {
                 console.error('Error fetching times:', err)
             }
         }
         fetchTimes()
-    }, [selectedDate, token])
+    }, [selectedDate, token, isEdit])
 
     // Handlers
     const handleTourChange = (id: string) => {
         const tour = tourPlans.find(t => t.id.toString() === id)
         setSelectedTour(tour || null)
-        setCounts({ adults: 1, children: 0, infants: 0, youths: 0, students: 0 })
+
+        if (isEdit) {
+            // Check if this tour is already in the original booking
+            const existingItem = originalBooking?.items.find(item => item.tour_plan.toString() === id)
+
+            if (existingItem) {
+                setCounts({
+                    adults: existingItem.num_adults,
+                    children: existingItem.num_children,
+                    infants: existingItem.num_infants,
+                    youths: existingItem.num_youth,
+                    students: existingItem.num_student_eu
+                })
+                if (typeof existingItem.time_slot === 'object') {
+                    const ts = existingItem.time_slot as TourTime
+                    setSelectedDate(ts.tour_date)
+                    setSelectedTimeSlot(ts)
+                } else {
+                    setSelectedDate(null)
+                    setSelectedTimeSlot(null)
+                    setTimeSlots([])
+                }
+            } else {
+                setCounts({ adults: 1, children: 0, infants: 0, youths: 0, students: 0 })
+                setSelectedDate(null)
+                setTimeSlots([])
+                setSelectedTimeSlot(null)
+            }
+        } else {
+            setCounts({ adults: 1, children: 0, infants: 0, youths: 0, students: 0 })
+        }
         setError(null)
     }
 
@@ -444,9 +540,13 @@ export default function NewBookingPage() {
 
     const handleDateSelect = (date: TourDate) => {
         setSelectedDate(date)
+        if (isEdit) {
+            setSelectedTimeSlot(null)
+        }
         setIsGridDatePickerOpen(false)
     }
 
+    // Create flow: step 1 -> 2
     const handleCreateBooking = () => {
         if (!selectedTour || !selectedTimeSlot) return
 
@@ -466,17 +566,40 @@ export default function NewBookingPage() {
         const totalTravelers = counts.adults + counts.children + counts.infants + counts.youths + counts.students
         setTravelerDetails(Array(totalTravelers).fill({ name: '', email: '' }))
         setStep(2)
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        scrollToTop()
     }
 
     const handleCustomerInfoChange = (field: string, value: string) => {
         setCustomerInfo(prev => ({ ...prev, [field]: value }))
     }
 
+    // Create flow: step 2 -> 3
     const handleCustomerSubmit = () => {
         localStorage.setItem('customerData', JSON.stringify(customerInfo))
         setStep(3)
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        scrollToTop()
+    }
+
+    // Edit flow: step 1 -> 2
+    const handleContinue = () => {
+        if (!selectedTour || !selectedTimeSlot) return
+
+        // Sync traveler manifest count with booking counts
+        const totalTravelers = counts.adults + counts.children + counts.infants + counts.youths + counts.students
+        if (travelerDetails.length !== totalTravelers) {
+            const newDetails = [...travelerDetails]
+            if (newDetails.length < totalTravelers) {
+                while (newDetails.length < totalTravelers) {
+                    newDetails.push({ name: '', email: '' })
+                }
+            } else {
+                newDetails.splice(totalTravelers)
+            }
+            setTravelerDetails(newDetails)
+        }
+
+        setStep(2)
+        scrollToTop()
     }
 
     const handleTravelerChange = (index: number, field: string, value: string) => {
@@ -502,11 +625,71 @@ export default function NewBookingPage() {
             await createBooking(payload, token || undefined)
             localStorage.removeItem('bookNowData')
             localStorage.removeItem('customerData')
-            router.push('/dashboard/bookings')
+            onSaved()
+            onOpenChange(false)
         } catch (err: any) {
             console.error('Submit error:', err)
             setApiErrors(err)
             setErrorDialogOpen(true)
+        } finally {
+            setSubmitting(false)
+        }
+    }
+
+    const handleFinalUpdate = async () => {
+        if (!originalBooking || !token) return
+
+        try {
+            setSubmitting(true)
+
+            // 1. Update Group Composition (Items)
+            const itemToUpdate = originalBooking.items.find(item => item.tour_plan === selectedTour?.id) || originalBooking.items[0];
+
+            if (itemToUpdate) {
+                const itemId = itemToUpdate.id.toString()
+                const itemPayload = {
+                    num_adults: counts.adults,
+                    num_children: counts.children,
+                    num_infants: counts.infants,
+                    num_youth: counts.youths,
+                    num_student_eu: counts.students
+                }
+                await updateBookingItem(token, itemId, itemPayload)
+            }
+
+            // 2. Update Booking (Date, Time, Traveler Manifest)
+            const bookingPayload = {
+                traveler_details: travelerDetails,
+            }
+
+            // Re-constructing the items array for the booking patch
+            const updatedItems = originalBooking.items.map((item) => {
+                if (item.tour_plan === selectedTour?.id && selectedTimeSlot) {
+                    return {
+                        ...item,
+                        time_slot: selectedTimeSlot.id,
+                        num_adults: counts.adults,
+                        num_children: counts.children,
+                        num_infants: counts.infants,
+                        num_youth: counts.youths,
+                        num_student_eu: counts.students
+                    }
+                }
+                return item
+            })
+
+            const finalBookingPayload = {
+                ...bookingPayload,
+                items: updatedItems
+            }
+
+            await updateBooking(token, originalBooking.id.toString(), finalBookingPayload)
+
+            onSaved()
+            onOpenChange(false)
+        } catch (err) {
+            console.error('Update error:', err)
+            alert('Failed to update booking')
         } finally {
             setSubmitting(false)
         }
@@ -540,60 +723,59 @@ export default function NewBookingPage() {
         return d
     })
 
-    // Loading Screen
-    if (loading && step === 1) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-background gap-4">
-                <div className="relative h-16 w-16">
-                    <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
-                    <Loader2 className="h-16 w-16 animate-spin text-primary absolute top-0 left-0 [animation-delay:0.2s]" />
-                </div>
-                {/* <p className="text-sm font-medium text-muted-foreground animate-pulse tracking-widest uppercase">Initializing Dashboard...</p> */}
-            </div>
-        )
-    }
+    const grossTotal = (
+        counts.adults * parseFloat(selectedTour?.price_adult || '0') +
+        counts.children * parseFloat(selectedTour?.price_child || '0') +
+        counts.infants * parseFloat(selectedTour?.price_infant || '0') +
+        counts.youths * parseFloat(selectedTour?.price_youth || '0') +
+        counts.students * parseFloat(selectedTour?.price_student_eu || '0')
+    )
+
+    const totalSteps = isEdit ? [1, 2] : [1, 2, 3]
+    const isManifestStep = isEdit ? step === 2 : step === 3
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC]">
-            {/* Header Overlay */}
-            <div className="bg-white border-b border-border/50 sticky top-0 z-30">
-                <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link href="/dashboard/bookings" className="cursor-pointer group flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-all">
-                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
-                            <ChevronLeft size={18} />
+        <>
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="sm:max-w-4xl max-h-[85vh] flex flex-col gap-0 p-0 overflow-hidden">
+                    <DialogHeader className="px-6 py-4 border-b border-border shrink-0">
+                        <div className="flex items-center justify-between pr-8">
+                            <DialogTitle>
+                                {isEdit ? (
+                                    <>Update <span className="text-primary italic">Booking</span> #{originalBooking?.id}</>
+                                ) : (
+                                    <><span className="text-primary italic">Manual</span> Booking Engine</>
+                                )}
+                            </DialogTitle>
+                            <div className="flex items-center gap-2">
+                                {totalSteps.map(s => (
+                                    <div key={s} className={`h-1.5 w-8 rounded-full transition-all duration-500 ${step >= s ? 'bg-primary' : 'bg-muted'}`} />
+                                ))}
+                            </div>
                         </div>
-                        Back to Bookings
-                    </Link>
-                    <div className="flex items-center gap-4">
-                        <div className={`h-2 w-12 rounded-full transition-all duration-500 ${step >= 1 ? 'bg-primary' : 'bg-muted'}`} />
-                        <div className={`h-2 w-12 rounded-full transition-all duration-500 ${step >= 2 ? 'bg-primary' : 'bg-muted'}`} />
-                        <div className={`h-2 w-12 rounded-full transition-all duration-500 ${step >= 3 ? 'bg-primary' : 'bg-muted'}`} />
-                    </div>
-                </div>
-            </div>
+                    </DialogHeader>
 
-            <div className="p-4 sm:p-8 max-w-6xl mx-auto pb-32">
-                <div className="mb-12">
-                    <h1 className="text-4xl font-black text-foreground tracking-tight mb-3">
-                        <span className="text-primary italic">Manual</span> Booking Engine
-                    </h1>
-                    <p className="text-muted-foreground text-lg max-w-2xl font-medium">
-                        Create institutional reservations and private tour bookings with custom traveler details.
-                    </p>
-                </div>
+                    <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6">
+                        {loading ? (
+                            <div className="flex items-center justify-center py-24">
+                                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                            </div>
+                        ) : step === 1 ? (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                {error && (
+                                    <div className="flex items-center gap-3 p-4 bg-red-50 rounded-2xl border border-red-100 text-red-600">
+                                        <AlertCircle size={20} />
+                                        <span className="text-sm font-bold">{error}</span>
+                                    </div>
+                                )}
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-                    {/* Form Section */}
-                    <div className="lg:col-span-8 space-y-10">
-                        {step === 1 ? (
-                            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                                 {/* 1. Tour Selection */}
-                                <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-border/40 transition-hover hover:shadow-md">
-                                    <div className="flex items-center gap-3 mb-8">
-                                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                                            <Info size={20} />
+                                <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40">
+                                    <div className="flex items-center gap-3 mb-5">
+                                        <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                                            <Info size={18} />
                                         </div>
-                                        <h2 className="text-xl font-bold">Select Destination</h2>
+                                        <h2 className="text-lg font-bold">Select Destination</h2>
                                     </div>
 
                                     <div className="relative">
@@ -604,7 +786,7 @@ export default function NewBookingPage() {
                                             <SelectTrigger
                                                 hideChevron
                                                 wrapContent
-                                                className="w-full h-16 appearance-none p-4 bg-secondary/30 border border-border/50 rounded-2xl text-lg font-bold text-foreground focus:ring-4 focus:ring-primary/10 outline-none transition-all cursor-pointer pr-12"
+                                                className="w-full h-14 appearance-none p-4 bg-secondary/30 border border-border/50 rounded-2xl text-base font-bold text-foreground focus:ring-4 focus:ring-primary/10 outline-none transition-all cursor-pointer pr-12"
                                             >
                                                 <SelectValue placeholder="Browse available tour plans..." />
                                             </SelectTrigger>
@@ -622,23 +804,23 @@ export default function NewBookingPage() {
                                             </SelectContent>
                                         </Select>
                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground z-10">
-                                            <Plus className="rotate-0" size={24} />
+                                            <Plus className="rotate-0" size={20} />
                                         </div>
                                     </div>
                                 </div>
 
                                 {selectedTour && (
                                     <>
-                                        {/* 2. Travelers */}
-                                        <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-                                            <div className="flex items-center gap-3 mb-8">
-                                                <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
-                                                    <Users size={20} />
+                                        {/* 2. Travelers / Group Composition */}
+                                        <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                            <div className="flex items-center gap-3 mb-5">
+                                                <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                                                    <Users size={18} />
                                                 </div>
-                                                <h2 className="text-xl font-bold">Group Composition</h2>
+                                                <h2 className="text-lg font-bold">Group Composition</h2>
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {[
                                                     { label: 'Adult', key: 'adults', max: selectedTour.max_adults, age: `${selectedTour.adult_age_min}-${selectedTour.adult_age_max}` },
                                                     { label: 'Child', key: 'children', max: selectedTour.max_children, age: `${selectedTour.child_age_min}-${selectedTour.child_age_max}` },
@@ -647,7 +829,7 @@ export default function NewBookingPage() {
                                                     { label: 'Student EU', key: 'students', max: selectedTour.max_student_eu, age: `${selectedTour.student_eu_age_min}-${selectedTour.student_eu_age_max}` }
                                                 ].map((item) => (
                                                     item.max > 0 && (
-                                                        <div key={item.key} className="p-5 rounded-2xl bg-secondary/20 border border-border/30 flex flex-col gap-4">
+                                                        <div key={item.key} className="p-4 rounded-2xl bg-secondary/20 border border-border/30 flex flex-col gap-3">
                                                             <div className="flex flex-col">
                                                                 <span className="font-bold text-foreground">{item.label}</span>
                                                                 <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground opacity-70">Age {item.age}</span>
@@ -676,12 +858,12 @@ export default function NewBookingPage() {
                                         </div>
 
                                         {/* 3. Date Selection */}
-                                        <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200 relative z-20">
-                                            <div className="flex items-center gap-3 mb-8">
-                                                <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
-                                                    <CalendarIcon size={20} />
+                                        <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300 relative z-20">
+                                            <div className="flex items-center gap-3 mb-5">
+                                                <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                                                    <CalendarIcon size={18} />
                                                 </div>
-                                                <h2 className="text-xl font-bold">Booking Date</h2>
+                                                <h2 className="text-lg font-bold">Booking Date</h2>
                                             </div>
 
                                             <div className="flex gap-4">
@@ -701,7 +883,7 @@ export default function NewBookingPage() {
                                                                 key={idx}
                                                                 onClick={() => { if (availableDate) handleDateSelect(availableDate) }}
                                                                 disabled={!availableDate}
-                                                                className={`flex-shrink-0 flex flex-col items-center justify-center w-24 h-24 rounded-2xl border-2 transition-all duration-300 relative overflow-hidden group
+                                                                className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl border-2 transition-all duration-300 relative overflow-hidden group
                                                         ${isSelected
                                                                         ? "border-primary bg-primary text-white shadow-xl shadow-primary/20 scale-105 z-10"
                                                                         : availableDate
@@ -713,7 +895,7 @@ export default function NewBookingPage() {
                                                                 <span className="text-[10px] font-black uppercase tracking-widest mb-1 opacity-70 group-hover:opacity-100 transition-opacity">
                                                                     {date.toLocaleString('default', { weekday: 'short' })}
                                                                 </span>
-                                                                <span className="text-2xl font-black tabular-nums leading-none mb-1">
+                                                                <span className="text-xl font-black tabular-nums leading-none mb-1">
                                                                     {date.getDate()}
                                                                 </span>
                                                                 <span className="text-[10px] font-bold uppercase opacity-80 group-hover:opacity-100">
@@ -727,9 +909,9 @@ export default function NewBookingPage() {
                                                 <div className="relative pt-0" ref={gridDatePickerRef}>
                                                     <button
                                                         onClick={() => setIsGridDatePickerOpen(!isGridDatePickerOpen)}
-                                                        className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-24 rounded-2xl border-2 border-dashed border-muted-foreground/30 bg-white text-muted-foreground hover:border-primary hover:text-primary transition-all duration-300 shadow-sm cursor-pointer"
+                                                        className="flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl border-2 border-dashed border-muted-foreground/30 bg-white text-muted-foreground hover:border-primary hover:text-primary transition-all duration-300 shadow-sm cursor-pointer"
                                                     >
-                                                        <CalendarIcon size={28} className="mb-1" />
+                                                        <CalendarIcon size={24} className="mb-1" />
                                                         <span className="text-[10px] font-bold uppercase tracking-tight">Custom</span>
                                                     </button>
                                                     <DatePicker
@@ -744,20 +926,20 @@ export default function NewBookingPage() {
 
                                         {/* 4. Time Selection */}
                                         {selectedDate && (
-                                            <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300 relative z-10">
-                                                <div className="flex items-center gap-3 mb-4">
-                                                    <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
-                                                        <Clock size={20} />
+                                            <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300 relative z-10">
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                                                        <Clock size={18} />
                                                     </div>
-                                                    <h2 className="text-xl font-bold">Execution Time</h2>
+                                                    <h2 className="text-lg font-bold">Execution Time</h2>
                                                 </div>
-                                                <p className="text-sm font-bold text-muted-foreground mb-8 ml-13 italic">
+                                                <p className="text-sm font-bold text-muted-foreground mb-5 italic">
                                                     {new Date(selectedDate.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                                                 </p>
 
-                                                <div className="flex flex-wrap gap-4">
+                                                <div className="flex flex-wrap gap-3">
                                                     {timeSlots.length === 0 ? (
-                                                        <div className="flex items-center gap-3 p-6 bg-red-50 rounded-2xl border border-red-100 text-red-600 w-full animate-in zoom-in duration-300">
+                                                        <div className="flex items-center gap-3 p-4 bg-red-50 rounded-2xl border border-red-100 text-red-600 w-full animate-in zoom-in duration-300">
                                                             <AlertCircle size={20} />
                                                             <span className="text-sm font-bold">All slots are currently booked or unavailable for this date.</span>
                                                         </div>
@@ -768,9 +950,9 @@ export default function NewBookingPage() {
                                                                 <button
                                                                     key={slot.id}
                                                                     onClick={() => setSelectedTimeSlot(slot)}
-                                                                    className={`min-w-[120px] px-8 py-5 rounded-2xl border-2 font-black text-lg transition-all duration-300 tabular-nums cursor-pointer
+                                                                    className={`min-w-[100px] px-6 py-4 rounded-2xl border-2 font-black text-base transition-all duration-300 tabular-nums cursor-pointer
                                                                 ${isSelected
-                                                                            ? "bg-foreground text-white border-foreground shadow-2xl scale-110 z-10"
+                                                                            ? "bg-foreground text-white border-foreground shadow-2xl scale-105 z-10"
                                                                             : "bg-white text-foreground border-secondary hover:border-foreground/50 hover:bg-secondary/10"
                                                                         }`}
                                                                 >
@@ -782,290 +964,274 @@ export default function NewBookingPage() {
                                                 </div>
                                             </div>
                                         )}
+
+                                        {/* 5. Itemized Breakdown */}
+                                        <div className="bg-secondary/20 rounded-2xl p-5 border border-border/30 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-4">Itemized Breakdown</span>
+                                            {isEdit ? (
+                                                <div className="space-y-3">
+                                                    {originalBooking?.items.map((item, idx) => {
+                                                        const tour = tourPlans.find(t => t.id === item.tour_plan)
+                                                        return (
+                                                            <div key={idx} className="p-4 rounded-2xl bg-white border border-border/30 space-y-2">
+                                                                <div className="flex justify-between items-center">
+                                                                    <span className="text-sm font-bold text-primary">{tour?.title || 'Unknown Tour'}</span>
+                                                                    <span className="font-black">€{parseFloat(item.item_price).toFixed(2)}</span>
+                                                                </div>
+                                                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                                                                    {item.num_adults > 0 && <span>{item.num_adults} Adults</span>}
+                                                                    {item.num_children > 0 && <span>{item.num_children} Children</span>}
+                                                                    {item.num_infants > 0 && <span>{item.num_infants} Infants</span>}
+                                                                    {item.num_youth > 0 && <span>{item.num_youth} Youth</span>}
+                                                                    {item.num_student_eu > 0 && <span>{item.num_student_eu} Students</span>}
+                                                                </div>
+                                                                {typeof item.time_slot === 'object' && (
+                                                                    <div className="flex items-center gap-2 text-[10px] font-black text-primary/70">
+                                                                        <CalendarIcon size={10} />
+                                                                        {new Date((item.time_slot as TourTime).tour_date.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
+                                                                        <span className="mx-1">•</span>
+                                                                        <Clock size={10} />
+                                                                        {(item.time_slot as TourTime).start_time.split(':').slice(0, 2).join(':')}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-3">
+                                                    {[
+                                                        { label: 'Adults', count: counts.adults, price: selectedTour?.price_adult },
+                                                        { label: 'Children', count: counts.children, price: selectedTour?.price_child },
+                                                        { label: 'Infants', count: counts.infants, price: selectedTour?.price_infant },
+                                                        { label: 'Youths', count: counts.youths, price: selectedTour?.price_youth },
+                                                        { label: 'Students', count: counts.students, price: selectedTour?.price_student_eu }
+                                                    ].map((item, i) => (
+                                                        item.count > 0 && (
+                                                            <div key={i} className="flex justify-between items-center">
+                                                                <div className="flex flex-col">
+                                                                    <span className="text-sm font-bold">{item.count} × {item.label}</span>
+                                                                    <span className="text-[10px] text-muted-foreground">€{parseFloat(item.price || '0').toFixed(2)} per unit</span>
+                                                                </div>
+                                                                <span className="font-black">€{(item.count * parseFloat(item.price || '0')).toFixed(2)}</span>
+                                                            </div>
+                                                        )
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </>
                                 )}
                             </div>
-                        ) : step === 2 ? (
-                            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                <div className="bg-white rounded-[3rem] p-10 shadow-2xl border border-border/40">
-                                    <div className="flex items-center gap-4 mb-12">
-                                        <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30">
-                                            <Info size={28} />
+                        ) : !isEdit && step === 2 ? (
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30">
+                                        <Info size={24} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl font-black text-foreground tracking-tight">Customer Information</h2>
+                                        <p className="text-muted-foreground font-medium italic text-sm">Please provide primary contact details for this booking.</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Full Name</label>
+                                            <input
+                                                required
+                                                type="text"
+                                                placeholder="e.g. MARCUS AURELIUS"
+                                                className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                value={customerInfo.full_name}
+                                                onChange={e => handleCustomerInfoChange('full_name', e.target.value)}
+                                            />
                                         </div>
-                                        <div>
-                                            <h2 className="text-3xl font-black text-foreground tracking-tight">Customer Information</h2>
-                                            <p className="text-muted-foreground font-medium italic">Please provide primary contact details for this booking.</p>
+                                        <div className="space-y-2">
+                                            <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Email Address</label>
+                                            <input
+                                                required
+                                                type="email"
+                                                placeholder="customer@email.com"
+                                                className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                value={customerInfo.email}
+                                                onChange={e => handleCustomerInfoChange('email', e.target.value)}
+                                            />
                                         </div>
                                     </div>
 
-                                    <div className="space-y-8">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <div className="space-y-2">
-                                                <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Full Name</label>
-                                                <input
-                                                    required
-                                                    type="text"
-                                                    placeholder="e.g. MARCUS AURELIUS"
-                                                    className="w-full p-4 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-lg"
-                                                    value={customerInfo.full_name}
-                                                    onChange={e => handleCustomerInfoChange('full_name', e.target.value)}
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Email Address</label>
-                                                <input
-                                                    required
-                                                    type="email"
-                                                    placeholder="customer@email.com"
-                                                    className="w-full p-4 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-lg"
-                                                    value={customerInfo.email}
-                                                    onChange={e => handleCustomerInfoChange('email', e.target.value)}
-                                                />
-                                            </div>
-                                        </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2 relative">
+                                            <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Country</label>
+                                            <div className="relative">
+                                                <button
+                                                    onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                                                    className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base text-left flex justify-between items-center"
+                                                >
+                                                    {customerInfo.country || "Select Country"}
+                                                    <Plus className={isCountryDropdownOpen ? "rotate-45" : ""} size={20} />
+                                                </button>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <div className="space-y-2 relative">
-                                                <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Country</label>
-                                                <div className="relative">
-                                                    <button
-                                                        onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                                                        className="w-full p-4 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-lg text-left flex justify-between items-center"
-                                                    >
-                                                        {customerInfo.country || "Select Country"}
-                                                        <Plus className={isCountryDropdownOpen ? "rotate-45" : ""} size={20} />
-                                                    </button>
-
-                                                    {isCountryDropdownOpen && (
-                                                        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-border/50 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
-                                                            <div className="p-4 border-b border-secondary flex items-center gap-3">
-                                                                <Search size={18} className="text-muted-foreground" />
-                                                                <input
-                                                                    type="text"
-                                                                    placeholder="Search country..."
-                                                                    className="w-full outline-none font-bold text-sm bg-transparent"
-                                                                    value={countrySearch}
-                                                                    onChange={(e) => setCountrySearch(e.target.value)}
-                                                                    autoFocus
-                                                                />
-                                                            </div>
-                                                            <div className="max-h-[300px] overflow-y-auto">
-                                                                {countries
-                                                                    .filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()))
-                                                                    .map((c) => (
-                                                                        <div
-                                                                            key={c.code}
-                                                                            onClick={() => {
-                                                                                handleCustomerInfoChange('country', c.name);
-                                                                                setIsCountryDropdownOpen(false);
-                                                                                setCountrySearch('');
-                                                                            }}
-                                                                            className="p-4 hover:bg-secondary/30 cursor-pointer font-bold transition-colors flex items-center gap-5"
-                                                                        >
-                                                                            <span className="text-2xl">{c.flag}</span>
-                                                                            <span>{c.name}</span>
-                                                                        </div>
-                                                                    ))
-                                                                }
-                                                            </div>
+                                                {isCountryDropdownOpen && (
+                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-border/50 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                                                        <div className="p-4 border-b border-secondary flex items-center gap-3">
+                                                            <Search size={18} className="text-muted-foreground" />
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Search country..."
+                                                                className="w-full outline-none font-bold text-sm bg-transparent"
+                                                                value={countrySearch}
+                                                                onChange={(e) => setCountrySearch(e.target.value)}
+                                                                autoFocus
+                                                            />
                                                         </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Phone Number</label>
-                                                <input
-                                                    required
-                                                    type="tel"
-                                                    placeholder="+1 (555) 000-0000"
-                                                    className="w-full p-4 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-lg"
-                                                    value={customerInfo.phone}
-                                                    onChange={e => handleCustomerInfoChange('phone', e.target.value)}
-                                                />
+                                                        <div className="max-h-[300px] overflow-y-auto">
+                                                            {countries
+                                                                .filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()))
+                                                                .map((c) => (
+                                                                    <div
+                                                                        key={c.code}
+                                                                        onClick={() => {
+                                                                            handleCustomerInfoChange('country', c.name);
+                                                                            setIsCountryDropdownOpen(false);
+                                                                            setCountrySearch('');
+                                                                        }}
+                                                                        className="p-4 hover:bg-secondary/30 cursor-pointer font-bold transition-colors flex items-center gap-5"
+                                                                    >
+                                                                        <span className="text-2xl">{c.flag}</span>
+                                                                        <span>{c.name}</span>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div className="mt-16 flex flex-col md:flex-col gap-6">
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => setStep(1)}
-                                            className="h-16 flex-1 rounded-2xl border-2 font-black text-sm md:text-lg transition-all hover:scale-[0.98] active:scale-95 cursor-pointer w-full md:w-auto"
-                                        >
-                                            Back to Selection
-                                        </Button>
-                                        <Button
-                                            onClick={handleCustomerSubmit}
-                                            disabled={!customerInfo.full_name || !customerInfo.email || !customerInfo.country || !customerInfo.phone}
-                                            className="h-16 flex-1 rounded-2xl bg-primary text-white font-black text-sm md:text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 cursor-pointer w-full md:w-auto"
-                                        >
-                                            Continue to Manifest
-                                        </Button>
+                                        <div className="space-y-2">
+                                            <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Phone Number</label>
+                                            <input
+                                                required
+                                                type="tel"
+                                                placeholder="+1 (555) 000-0000"
+                                                className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                value={customerInfo.phone}
+                                                onChange={e => handleCustomerInfoChange('phone', e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                <div className="bg-white rounded-[3rem] p-10 shadow-2xl border border-border/40">
-                                    <div className="flex items-center gap-4 mb-12">
-                                        <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30">
-                                            <Users size={28} />
-                                        </div>
-                                        <div>
-                                            <h2 className="text-3xl font-black text-foreground tracking-tight">Traveler Manifest</h2>
-                                            <p className="text-muted-foreground font-medium italic">Please provide legal identification names for the voucher.</p>
-                                        </div>
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30">
+                                        <Users size={24} />
                                     </div>
+                                    <div>
+                                        <h2 className="text-xl font-black text-foreground tracking-tight">Traveler Manifest</h2>
+                                        <p className="text-muted-foreground font-medium italic text-sm">Please provide legal identification names for the voucher.</p>
+                                    </div>
+                                </div>
 
-                                    <div className="space-y-8">
-                                        {travelerDetails.map((traveler, index) => (
-                                            <div key={index} className="group p-8 rounded-[2rem] bg-secondary/10 border border-border/20 transition-all hover:bg-white hover:shadow-xl hover:border-border/80">
-                                                <div className="flex items-center gap-4 mb-6">
-                                                    <div className="w-10 h-10 rounded-full bg-white border border-border text-foreground flex items-center justify-center font-black group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
-                                                        {index + 1}
-                                                    </div>
-                                                    <h3 className="font-black text-sm uppercase tracking-[0.2em] text-muted-foreground opacity-60">Adult {index + 1}</h3>
+                                <div className="space-y-6">
+                                    {travelerDetails.map((traveler, index) => (
+                                        <div key={index} className="group p-5 rounded-2xl bg-secondary/10 border border-border/20 transition-all hover:bg-white hover:shadow-xl hover:border-border/80">
+                                            <div className="flex items-center gap-4 mb-4">
+                                                <div className="w-9 h-9 rounded-full bg-white border border-border text-foreground flex items-center justify-center font-black group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
+                                                    {index + 1}
                                                 </div>
-                                                <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
-                                                    <div className="space-y-2">
-                                                        <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Full Legal Name</label>
-                                                        <input
-                                                            required
-                                                            type="text"
-                                                            placeholder="e.g. MARCUS AURELIUS"
-                                                            className="w-full p-4 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-lg"
-                                                            value={traveler.name}
-                                                            onChange={e => handleTravelerChange(index, 'name', e.target.value)}
-                                                        />
-                                                    </div>
-                                                    {/* <div className="space-y-2">
-                                                        <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Contact Email (Optional)</label>
-                                                        <input
-                                                            type="email"
-                                                            placeholder="customer@email.com"
-                                                            className="w-full p-4 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-lg"
-                                                            value={traveler.email || ''}
-                                                            onChange={e => handleTravelerChange(index, 'email', e.target.value)}
-                                                        />
-                                                    </div> */}
-                                                </div>
+                                                <h3 className="font-black text-sm uppercase tracking-[0.2em] text-muted-foreground opacity-60">Adult {index + 1}</h3>
                                             </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="mt-16 flex flex-col md:flex-col gap-6">
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => setStep(2)}
-                                            className="h-16 flex-1 rounded-2xl border-2 font-black text-sm md:text-lg transition-all hover:scale-[0.98] active:scale-95 cursor-pointer w-full md:w-auto"
-                                        >
-                                            Review Selection
-                                        </Button>
-                                        <Button
-                                            onClick={handleFinalSubmit}
-                                            disabled={submitting || travelerDetails.some(t => !t.name)}
-                                            className="h-16 flex-1 rounded-2xl bg-primary text-white font-black text-sm md:text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 cursor-pointer w-full md:w-auto"
-                                        >
-                                            {submitting ? <Loader2 className="animate-spin" /> : <Check size={24} className="" />}
-                                            Generate Booking & Notify
-                                        </Button>
-                                    </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-2">Full Legal Name</label>
+                                                <input
+                                                    required
+                                                    type="text"
+                                                    placeholder="e.g. MARCUS AURELIUS"
+                                                    className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                    value={traveler.name}
+                                                    onChange={e => handleTravelerChange(index, 'name', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Sticky Sidebar Summary */}
-                    <div className="lg:col-span-4 lg:sticky lg:top-24">
-                        <Card className={`overflow-hidden rounded-[2.5rem] border-0 shadow-2xl transition-all duration-500 transform ${selectedTour ? 'translate-x-0 opacity-100' : 'translate-x-12 opacity-0 pointer-events-none'}`}>
-                            <div className="bg-primary p-8 text-white relative">
-                                <div className="absolute top-0 right-0 p-8 opacity-10">
-                                    <Euro size={120} />
-                                </div>
-                                <h3 className="text-sm font-black uppercase tracking-[0.3em] mb-4 opacity-70">Order Intelligence</h3>
-                                <p className="text-2xl font-black leading-tight mb-2">{selectedTour?.title}</p>
-                                <div className="flex items-center gap-2 text-xs font-bold opacity-80">
-                                    <Clock size={12} /> Duration: {selectedTour?.duration_days ? `${selectedTour.duration_days} Days` : 'N/A'}
-                                </div>
+                    {/* Sticky footer */}
+                    <div className="px-6 py-4 border-t border-border bg-background shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-6">
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Schedule</span>
+                                <span className="font-black text-sm tabular-nums">
+                                    {selectedDate ? new Date(selectedDate.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '---'}
+                                    <span className="mx-1 text-muted-foreground">•</span>
+                                    {selectedTimeSlot ? selectedTimeSlot.start_time.split(':').slice(0, 2).join(':') : '---'}
+                                </span>
                             </div>
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{isEdit ? 'Total Price' : 'Gross Total'}</span>
+                                <span className="text-xl font-black text-foreground tabular-nums tracking-tighter">
+                                    €{isEdit
+                                        ? parseFloat(originalBooking?.total_price || '0').toFixed(2)
+                                        : grossTotal.toFixed(2)}
+                                </span>
+                            </div>
+                        </div>
 
-                            <div className="p-8 space-y-8 bg-white">
-                                <div className="space-y-6">
-                                    <div className="flex justify-between items-start group">
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Schedule</span>
-                                            <span className="font-black text-lg">
-                                                {selectedDate ? new Date(selectedDate.date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '---'}
-                                            </span>
-                                        </div>
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Time</span>
-                                            <span className="font-black text-lg">
-                                                {selectedTimeSlot ? selectedTimeSlot.start_time.split(':').slice(0, 2).join(':') : '---'}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="h-px bg-secondary w-full" />
-
-                                    <div className="space-y-4">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-4">Itemized Breakdown</span>
-                                        {[
-                                            { label: 'Adults', count: counts.adults, price: selectedTour?.price_adult },
-                                            { label: 'Children', count: counts.children, price: selectedTour?.price_child },
-                                            { label: 'Infants', count: counts.infants, price: selectedTour?.price_infant },
-                                            { label: 'Youths', count: counts.youths, price: selectedTour?.price_youth },
-                                            { label: 'Students', count: counts.students, price: selectedTour?.price_student_eu }
-                                        ].map((item, i) => (
-                                            item.count > 0 && (
-                                                <div key={i} className="flex justify-between items-center animate-in slide-in-from-right-4 duration-300" style={{ animationDelay: `${i * 50}ms` }}>
-                                                    <div className="flex flex-col">
-                                                        <span className="text-sm font-bold">{item.count} × {item.label}</span>
-                                                        <span className="text-[10px] text-muted-foreground">€{parseFloat(item.price || '0').toFixed(2)} per unit</span>
-                                                    </div>
-                                                    <span className="font-black">€{(item.count * parseFloat(item.price || '0')).toFixed(2)}</span>
-                                                </div>
-                                            )
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="relative p-6 pt-10 mt-10 rounded-[2rem] bg-secondary/30 overflow-hidden group">
-                                    <div className="absolute top-0 left-0 w-2 h-full bg-primary" />
-                                    <div className="flex flex-col items-end relative z-10">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-1">Gross Total</span>
-                                        <span className="text-4xl font-black text-foreground tabular-nums tracking-tighter">
-                                            €{(
-                                                counts.adults * parseFloat(selectedTour?.price_adult || '0') +
-                                                counts.children * parseFloat(selectedTour?.price_child || '0') +
-                                                counts.infants * parseFloat(selectedTour?.price_infant || '0') +
-                                                counts.youths * parseFloat(selectedTour?.price_youth || '0') +
-                                                counts.students * parseFloat(selectedTour?.price_student_eu || '0')
-                                            ).toFixed(2)}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {step === 1 && (
+                        <div className="flex gap-3 w-full sm:w-auto">
+                            {step === 1 ? (
+                                <Button
+                                    disabled={!selectedTimeSlot || loading}
+                                    onClick={isEdit ? handleContinue : handleCreateBooking}
+                                    className="h-12 flex-1 sm:flex-initial px-8 rounded-xl bg-foreground text-white font-black transition-all hover:scale-[1.02] active:scale-95 shadow-xl disabled:opacity-50 cursor-pointer"
+                                >
+                                    {isEdit ? 'Update Details' : 'Continue Order'}
+                                </Button>
+                            ) : !isEdit && step === 2 ? (
+                                <>
                                     <Button
-                                        disabled={!selectedTimeSlot}
-                                        onClick={handleCreateBooking}
-                                        className="w-full h-16 rounded-[1.5rem] bg-foreground text-white font-black text-lg transition-all hover:scale-[1.02] active:scale-95 shadow-xl disabled:opacity-50 cursor-pointer"
+                                        variant="outline"
+                                        onClick={() => { setStep(1); scrollToTop() }}
+                                        className="h-12 flex-1 sm:flex-initial px-6 rounded-xl border-2 font-black transition-all hover:scale-[0.98] active:scale-95 cursor-pointer"
                                     >
-                                        Continue Order
+                                        Back to Selection
                                     </Button>
-                                )}
-
-                                <div className="text-center">
-                                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed">
-                                        Secure system booking authenticated via admin token.<br />Review selection before final commit.
-                                    </p>
-                                </div>
-                            </div>
-                        </Card>
+                                    <Button
+                                        onClick={handleCustomerSubmit}
+                                        disabled={!customerInfo.full_name || !customerInfo.email || !customerInfo.country || !customerInfo.phone}
+                                        className="h-12 flex-1 sm:flex-initial px-6 rounded-xl bg-primary text-white font-black shadow-xl shadow-primary/30 hover:shadow-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                                    >
+                                        Continue to Manifest
+                                    </Button>
+                                </>
+                            ) : isManifestStep && (
+                                <>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => { setStep(isEdit ? 1 : 2); scrollToTop() }}
+                                        className="h-12 flex-1 sm:flex-initial px-6 rounded-xl border-2 font-black transition-all hover:scale-[0.98] active:scale-95 cursor-pointer"
+                                    >
+                                        Review Selection
+                                    </Button>
+                                    <Button
+                                        onClick={isEdit ? handleFinalUpdate : handleFinalSubmit}
+                                        disabled={submitting || travelerDetails.some(t => !t.name)}
+                                        className="h-12 flex-1 sm:flex-initial px-6 rounded-xl bg-primary text-white font-black shadow-xl shadow-primary/30 hover:shadow-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                                    >
+                                        {submitting ? <Loader2 className="animate-spin" /> : <Check size={20} />}
+                                        {isEdit ? 'Update Booking' : 'Generate Booking & Notify'}
+                                    </Button>
+                                </>
+                            )}
+                        </div>
                     </div>
-                </div >
-            </div >
+                </DialogContent>
+            </Dialog>
 
             <AlertDialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
                 <AlertDialogContent className="bg-white rounded-[2rem] border-0 shadow-2xl p-8 max-w-md">
@@ -1096,11 +1262,11 @@ export default function NewBookingPage() {
                             onClick={() => setErrorDialogOpen(false)}
                             className="h-14 w-full rounded-xl bg-foreground text-white font-black text-lg transition-all hover:scale-[1.02] active:scale-95 shadow-xl cursor-pointer"
                         >
-                            Acknowledge & Edit
+                            Acknowledge &amp; Edit
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </>
     )
 }

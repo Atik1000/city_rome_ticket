@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +12,7 @@ import { getTourPlanDetail, deleteTourPlan, TourPlan } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 import { LocationModal } from '@/components/dashboard/location-modal'
 import { DateModal } from '@/components/dashboard/date-modal'
+import { TourFormModal } from '@/components/dashboard/tour-form-modal'
 import { fetchTourDates } from '@/app/lib/redux/tour-date-slice'
 import { RootState, AppDispatch } from '@/app/lib/redux/store'
 import {
@@ -72,6 +73,7 @@ export default function TourDetailsPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [locationModalOpen, setLocationModalOpen] = useState(false)
   const [dateModalOpen, setDateModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false)
   const [locationMode, setLocationMode] = useState<'create' | 'edit'>('create')
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -88,28 +90,28 @@ export default function TourDetailsPage() {
     type: 'success'
   })
 
-  useEffect(() => {
-    const fetchTourDetail = async () => {
-      try {
-        setIsLoading(true)
-        const token = getCookie('access_token')
-        if (token && tourId) {
-          const data = await getTourPlanDetail(token, tourId)
-          setTour(data)
-          // Also fetch dates via Redux
-          dispatch(fetchTourDates(parseInt(tourId)))
-        } else if (!token) {
-          setError('Authentication token not found. Please log in again.')
-        }
-      } catch (err) {
-        setError('Failed to fetch tour details. Please try again later.')
-      } finally {
-        setIsLoading(false)
+  const fetchTourDetail = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const token = getCookie('access_token')
+      if (token && tourId) {
+        const data = await getTourPlanDetail(token, tourId)
+        setTour(data)
+        // Also fetch dates via Redux
+        dispatch(fetchTourDates(parseInt(tourId)))
+      } else if (!token) {
+        setError('Authentication token not found. Please log in again.')
       }
+    } catch (err) {
+      setError('Failed to fetch tour details. Please try again later.')
+    } finally {
+      setIsLoading(false)
     }
-
-    fetchTourDetail()
   }, [tourId, dispatch])
+
+  useEffect(() => {
+    fetchTourDetail()
+  }, [fetchTourDetail])
 
   const handlePrevImage = () => {
     if (!tour?.images.length) return
@@ -271,15 +273,14 @@ export default function TourDetailsPage() {
           </Card>
           {/* Actions */}
           <div className="p-4 border-t border-border flex gap-2">
-            <Link href={`/dashboard/tours/${tour.id}/edit`} className="flex-1">
-              <Button
-                variant="outline"
-                className="w-full border-border text-black/80 hover:text-black/80 hover:bg-primary/10 bg-transparent h-10 cursor-pointer"
-              >
-                <Edit size={18} />
-                Edit
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              onClick={() => setEditModalOpen(true)}
+              className="flex-1 border-border text-black/80 hover:text-black/80 hover:bg-primary/10 bg-transparent h-10 cursor-pointer"
+            >
+              <Edit size={18} />
+              Edit
+            </Button>
             <Button
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(true)}
@@ -486,9 +487,8 @@ export default function TourDetailsPage() {
             ) : reduxDates.length > 0 ? (
               <div className="space-y-2 mb-4">
                 {reduxDates.map((date: any) => (
-                  <Link href={`/dashboard/tours/${tour.id}/dates/${date.id}`}>
+                  <Link key={date.id} href={`/dashboard/tours/${tour.id}/dates/${date.id}`}>
                   <div
-                    key={date.id}
                     className="flex items-center justify-between bg-secondary p-3 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
                   >
                     {/* <div className="flex flex-row justify-between gap-2"> */}
@@ -516,6 +516,13 @@ export default function TourDetailsPage() {
       </div>
 
       {/* Modals placeholders */}
+      <TourFormModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        tour={tour}
+        onSaved={fetchTourDetail}
+      />
+
       <LocationModal
         isOpen={locationModalOpen}
         onClose={() => setLocationModalOpen(false)}

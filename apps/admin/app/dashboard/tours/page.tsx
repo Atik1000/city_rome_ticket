@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Search, Plus, Clock, Loader2, AlertCircle } from 'lucide-react'
 import { useReducedMotion } from 'framer-motion'
 import { MotionCard, staggerIn } from '@/components/motion'
+import { TourFormModal } from '@/components/dashboard/tour-form-modal'
 import { getTourPlans, TourPlan } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 
@@ -21,27 +22,28 @@ export default function ToursPage() {
   const [tours, setTours] = useState<TourPlan[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+
+  const fetchTours = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const token = getCookie('access_token')
+      if (token) {
+        const response = await getTourPlans(token)
+        setTours(response.results)
+      } else {
+        setError('Authentication token not found. Please log in again.')
+      }
+    } catch (err) {
+      setError('Failed to fetch tours. Please try again later.')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
-    const fetchTours = async () => {
-      try {
-        setIsLoading(true)
-        const token = getCookie('access_token')
-        if (token) {
-          const response = await getTourPlans(token)
-          setTours(response.results)
-        } else {
-          setError('Authentication token not found. Please log in again.')
-        }
-      } catch (err) {
-        setError('Failed to fetch tours. Please try again later.')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     fetchTours()
-  }, [])
+  }, [fetchTours])
 
   const filteredTours = useMemo(() => {
     return tours.filter((tour) =>
@@ -82,12 +84,13 @@ export default function ToursPage() {
           <h1 className="text-xl font-semibold text-foreground mb-2">Tours</h1>
           <p className="text-muted-foreground text-sm sm:text-base">Manage and organize all your tour offerings</p>
         </div>
-        <Link href="/dashboard/tours/create">
-          <Button className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg">
-            <Plus size={20} />
-            Add New Tours
-          </Button>
-        </Link>
+        <Button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg"
+        >
+          <Plus size={20} />
+          Add New Tours
+        </Button>
       </div>
 
       {/* Search Bar */}
@@ -228,6 +231,13 @@ export default function ToursPage() {
           </Button>
         </Card>
       )}
+
+      {/* Create Tour Modal */}
+      <TourFormModal
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        onSaved={fetchTours}
+      />
     </div>
   )
 }
