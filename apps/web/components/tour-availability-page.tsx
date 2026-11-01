@@ -23,6 +23,7 @@ import {
     ShieldCheck
 } from "lucide-react"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import {
     getTourById, getTourDates, getTourTimeSlots,
     TourDate,
@@ -747,29 +748,57 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                             <p className="text-sm text-gray-500 mb-3">
                                 {new Date(selectedDate.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                             </p>
-                            <div className="flex flex-wrap gap-3">
+                            <motion.div
+                                key={selectedDate.id}
+                                className="flex flex-wrap gap-3"
+                                initial="hidden"
+                                animate="visible"
+                                variants={{
+                                    hidden: {},
+                                    visible: { transition: { staggerChildren: 0.05 } },
+                                }}
+                            >
                                 {timeSlots.map(slot => {
                                     const isSelected = selectedTimeSlot?.id === slot.id
                                     return (
-                                        <button
+                                        <motion.button
                                             key={slot.id}
+                                            variants={{
+                                                hidden: { opacity: 0, y: 8 },
+                                                visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+                                            }}
+                                            whileTap={{ scale: 0.97 }}
                                             onClick={() => setSelectedTimeSlot(slot)}
-                                            className={`px-6 py-2.5 rounded-lg border text-sm font-semibold transition-all
+                                            className={`relative px-6 py-2.5 rounded-lg border text-sm font-semibold transition-colors duration-200
                             ${isSelected
-                                                    ? "bg-[#2A2118] text-white border-[#2A2118]"
+                                                    ? "text-white border-[#2A2118]"
                                                     : "bg-white text-[#2A2118] border-gray-400 hover:border-[#2A2118]"
                                                 }`}
                                         >
-                                            {slot.start_time.split(':').slice(0, 2).join(':')}
-                                        </button>
+                                            {isSelected && (
+                                                <motion.span
+                                                    layoutId="time-slot-fill"
+                                                    className="absolute inset-0 rounded-[7px] bg-[#2A2118]"
+                                                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                                                />
+                                            )}
+                                            <span className="relative z-10">
+                                                {slot.start_time.split(':').slice(0, 2).join(':')}
+                                            </span>
+                                        </motion.button>
                                     )
                                 })}
-                            </div>
+                            </motion.div>
                         </div>
                     )}
 
                     {/* Tour option card */}
-                    <div className="border border-gray-200 rounded-lg p-6 bg-gray-50 mb-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="border border-gray-200 rounded-lg p-6 bg-gray-50 mb-6"
+                    >
                         <h3 className="font-semibold text-gray-900 text-lg mb-4">{tour.title}</h3>
 
                         <div className="flex flex-wrap gap-6 mb-4">
@@ -821,14 +850,20 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
 
                                 <div className="w-full sm:w-auto">
                                     {!showBookingButtons ? (
-                                        <button
+                                        <motion.button
+                                            whileTap={{ scale: 0.98 }}
                                             onClick={() => setShowBookingButtons(true)}
                                             className="w-full sm:min-w-[160px] bg-brand text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-dark transition"
                                         >
                                             Select
-                                        </button>
+                                        </motion.button>
                                     ) : (
-                                        <div className="flex flex-col sm:flex-row gap-2 w-full">
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.96 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ duration: 0.2, ease: "easeOut" }}
+                                            className="flex flex-col sm:flex-row gap-2 w-full"
+                                        >
                                             <button
                                                 onClick={handleBookNow}
                                                 disabled={isBookingLoading}
@@ -851,7 +886,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                                     "Add to Cart"
                                                 )}
                                             </button>
-                                        </div>
+                                        </motion.div>
                                     )}
                                 </div>
 
@@ -861,7 +896,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 
@@ -886,6 +921,11 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
 
             <AlertDialog open={messageModalOpen} onOpenChange={setMessageModalOpen}>
                 <AlertDialogContent className="sm:max-w-md bg-white border-0 shadow-2xl rounded-2xl p-0 overflow-hidden">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.92 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                    >
                     <div className={`p-6 flex flex-col items-center justify-center border-b ${messageModalTitle === "Success" ? "bg-green-50 border-green-100" :
                         messageModalTitle === "Error" ? "bg-red-50 border-red-100" :
                             "bg-cream border-cream"
@@ -923,6 +963,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                             OK, Got it
                         </AlertDialogAction>
                     </AlertDialogFooter>
+                    </motion.div>
                 </AlertDialogContent>
             </AlertDialog>
         </div>

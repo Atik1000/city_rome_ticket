@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Heart, ShoppingCart, Globe, User, LogIn, Bell, Sun, HelpCircle, Smartphone, ChevronRight, LogOut, Menu, X, Check } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import Logo from "./logo"
 import { RegisterModal } from "./auth/RegisterModal"
 import { LoginModal } from "./auth/LoginModal"
@@ -104,7 +105,10 @@ export default function Navbar() {
           dispatch(fetchCartCount())
         }}
       />
-      <nav
+      <motion.nav
+        initial={{ y: -72, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`w-full sticky top-0 z-[100] border-b transition-all duration-300 ${
           isScrolled
             ? "bg-white/85 backdrop-blur-md shadow-sm border-black/5"
@@ -134,11 +138,20 @@ export default function Navbar() {
               <Link href="/cart" className="relative group flex flex-col items-center gap-1 text-gray-600 hover:text-gray-900 cursor-pointer">
                 <div className="relative">
                   <ShoppingCart size={20} />
-                  {cart.count > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-brand text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                      {cart.count}
-                    </span>
-                  )}
+                  <AnimatePresence>
+                    {cart.count > 0 && (
+                      <motion.span
+                        key={cart.count}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                        className="absolute -top-2 -right-2 bg-brand text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full"
+                      >
+                        {cart.count}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </div>
                 <span className="text-xs font-medium">{t.nav.cart}</span>
                 <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all duration-300 group-hover:w-full"></span>
@@ -332,7 +345,7 @@ export default function Navbar() {
             </div>
           </div>
         )}
-      </nav>
+      </motion.nav>
     </>
   )
 }

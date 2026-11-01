@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion, LayoutGroup, useReducedMotion } from 'framer-motion'
 import {
   LayoutDashboard,
   Landmark,
@@ -32,10 +33,27 @@ interface SidebarProps {
   isCollapsed?: boolean
 }
 
+const MotionLink = motion.create(Link)
+
 export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: SidebarProps) {
   const pathname = usePathname()
   const { logout, user } = useAuth()
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
+  const reduceMotion = useReducedMotion()
+
+  // Pill that slides between the active nav items (static under reduced motion)
+  const activePill = reduceMotion ? (
+    <span className="absolute inset-0 rounded-lg bg-sidebar-primary" />
+  ) : (
+    <motion.span
+      layoutId="sidebar-active-pill"
+      className="absolute inset-0 rounded-lg bg-sidebar-primary"
+      transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
+    />
+  )
+
+  const linkHover = reduceMotion ? {} : { whileHover: 'hover' as const }
+  const iconVariants = reduceMotion ? undefined : { hover: { scale: 1.05 } }
 
   const routes = [
     {
@@ -88,7 +106,7 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
   const shouldShowLabels = isMobile || !isCollapsed
 
   return (
-    <>
+    <LayoutGroup id={isMobile ? 'sidebar-mobile' : 'sidebar-desktop'}>
       <div
         className={cn(
           'bg-sidebar text-sidebar-foreground h-full flex flex-col border-r border-sidebar-border overflow-hidden transition-all duration-300',
@@ -122,22 +140,30 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
           {routes.map((route) => {
             const Icon = route.icon
             return (
-              <Link
+              <MotionLink
                 key={route.href}
                 href={route.href}
                 onClick={handleLinkClick}
+                {...linkHover}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-base',
+                  'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 text-sm font-base',
                   isCollapsed && !isMobile ? 'justify-center p-3' : '',
                   route.active
-                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                    ? 'text-sidebar-primary-foreground'
                     : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                 )}
                 title={isCollapsed && !isMobile ? route.label : undefined}
               >
-                <Icon size={20} className="flex-shrink-0" />
-                {shouldShowLabels && <span>{route.label}</span>}
-              </Link>
+                {route.active && activePill}
+                <motion.span
+                  className="relative flex-shrink-0 flex items-center"
+                  variants={iconVariants}
+                  transition={{ duration: 0.15 }}
+                >
+                  <Icon size={20} />
+                </motion.span>
+                {shouldShowLabels && <span className="relative">{route.label}</span>}
+              </MotionLink>
             )
           })}
         </nav>
@@ -146,36 +172,51 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
         <div className="border-t border-sidebar-border p-3 space-y-2 flex-shrink-0">
           {/* Settings Link */}
           {user?.role === 'admin' && (
-            <Link
+            <MotionLink
               href="/dashboard/settings"
               onClick={handleLinkClick}
+              {...linkHover}
               className={cn(
-                'flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-base',
+                'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 text-sm font-base',
                 isCollapsed && !isMobile ? 'justify-center p-3' : '',
                 pathname.includes('/settings')
-                  ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                  ? 'text-sidebar-primary-foreground'
                   : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
               )}
               title={isCollapsed && !isMobile ? 'Settings' : undefined}
             >
-              <Settings size={20} className="flex-shrink-0" />
-              {shouldShowLabels && <span>Settings</span>}
-            </Link>
+              {pathname.includes('/settings') && activePill}
+              <motion.span
+                className="relative flex-shrink-0 flex items-center"
+                variants={iconVariants}
+                transition={{ duration: 0.15 }}
+              >
+                <Settings size={20} />
+              </motion.span>
+              {shouldShowLabels && <span className="relative">Settings</span>}
+            </MotionLink>
           )}
 
           {/* Logout Button */}
-          <button
+          <motion.button
             onClick={() => setShowLogoutDialog(true)}
+            {...linkHover}
             className={cn(
-              'cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 w-full text-sm font-base',
+              'cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 w-full text-sm font-base',
               isCollapsed && !isMobile ? 'justify-center p-3' : '',
               'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
             )}
             title={isCollapsed && !isMobile ? 'Logout' : undefined}
           >
-            <LogOut size={20} className="flex-shrink-0" />
+            <motion.span
+              className="flex-shrink-0 flex items-center"
+              variants={iconVariants}
+              transition={{ duration: 0.15 }}
+            >
+              <LogOut size={20} />
+            </motion.span>
             {shouldShowLabels && <span>Logout</span>}
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -195,6 +236,6 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </LayoutGroup>
   )
 }

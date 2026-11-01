@@ -6,6 +6,7 @@ import "./globals.css"
 import StoreProvider from "@/components/StoreProvider"
 import { LanguageProvider } from "@/components/LanguageProvider"
 import GoogleTranslate from "@/components/GoogleTranslate"
+import MotionProvider from "@/components/animation/motion-provider"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const fraunces = Fraunces({
@@ -35,8 +36,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${fraunces.variable} font-sans antialiased`}>
         <LanguageProvider>
           <StoreProvider>
-            <GoogleTranslate />
-            {children}
+            <MotionProvider>
+              <GoogleTranslate />
+              {children}
+            </MotionProvider>
           </StoreProvider>
         </LanguageProvider>
         <Analytics />

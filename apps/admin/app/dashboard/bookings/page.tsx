@@ -14,6 +14,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Eye, Plus, Loader2, AlertCircle, Search, RotateCcw } from 'lucide-react'
+import { useReducedMotion } from 'framer-motion'
+import { MotionTableRow, staggerIn } from '@/components/motion'
 import { StatusModal } from '@/components/dashboard/status-modal'
 import { getBookings, Booking } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
@@ -23,6 +25,7 @@ const ITEMS_PER_PAGE = 20
 
 export default function BookingsPage() {
   const { token } = useAuth()
+  const reduceMotion = useReducedMotion()
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -223,8 +226,12 @@ export default function BookingsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                bookings.map((booking) => (
-                  <TableRow key={booking.id} className="border-border hover:bg-secondary/50 transition-colors">
+                bookings.map((booking, i) => (
+                  <MotionTableRow
+                    key={`${currentPage}-${booking.id}`}
+                    className="border-border hover:bg-secondary/50 transition-colors"
+                    {...staggerIn(i, reduceMotion, 0.03)}
+                  >
                     <TableCell className="font-medium text-foreground text-xs sm:text-sm">#{booking.id}</TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm capitalize">{booking.user_type}</TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm font-medium">
@@ -267,7 +274,7 @@ export default function BookingsPage() {
                         </Button>
                       </div>
                     </TableCell>
-                  </TableRow>
+                  </MotionTableRow>
                 ))
               )}
             </TableBody>

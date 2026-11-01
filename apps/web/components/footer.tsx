@@ -1,8 +1,16 @@
 "use client"
 import Link from "next/link"
 import { Instagram, Mail, Phone, MapPin } from "lucide-react"
+import { motion } from "framer-motion"
 import { useLanguage } from "@/components/LanguageProvider"
 import Logo from "./logo"
+
+const columnFade = (delay = 0) => ({
+  initial: { opacity: 0, y: 16 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.5, ease: "easeOut" as const, delay },
+})
 
 const paymentLogos = [
   { src: "/visa-logo.jpg", alt: "Visa" },
@@ -23,7 +31,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Brand / short description */}
-          <div className="lg:col-span-6">
+          <motion.div {...columnFade(0)} className="lg:col-span-6">
             <div className="space-y-5">
               <Logo tone="light" />
 
@@ -64,12 +72,12 @@ export default function Footer() {
                 <MapPin size={16} className="text-gold" /> Rome, Italy
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Links */}
           <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8">
             {/* Support */}
-            <div>
+            <motion.div {...columnFade(0.1)}>
               <h3 className="font-semibold text-sm tracking-widest uppercase text-gold/90">
                 {t.footer.support}
               </h3>
@@ -95,10 +103,10 @@ export default function Footer() {
                   </Link>
                 </li>
               </ul>
-            </div>
+            </motion.div>
 
             {/* Company */}
-            <div>
+            <motion.div {...columnFade(0.18)}>
               <h3 className="font-semibold text-sm tracking-widest uppercase text-gold/90">
                 {t.footer.company}
               </h3>
@@ -119,10 +127,10 @@ export default function Footer() {
                   </Link>
                 </li>
               </ul>
-            </div>
+            </motion.div>
 
             {/* Payments */}
-            <div className="col-span-2 sm:col-span-1">
+            <motion.div {...columnFade(0.26)} className="col-span-2 sm:col-span-1">
               <h3 className="font-semibold text-sm tracking-widest uppercase text-gold/90">
                 We accept
               </h3>
@@ -136,7 +144,7 @@ export default function Footer() {
                   </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 

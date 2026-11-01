@@ -19,6 +19,7 @@ import {
     AddToCartPayload
 } from "@/services/tourService"
 import { isLoggedIn } from "@/services/authService"
+import { motion, AnimatePresence } from "framer-motion"
 import { LoginModal } from "@/components/auth/LoginModal"
 import { RegisterModal } from "@/components/auth/RegisterModal"
 import {
@@ -673,8 +674,16 @@ export default function CartPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Cart Items List */}
                         <div className="lg:col-span-2 space-y-6">
+                            <AnimatePresence initial={false}>
                             {cartItems.map((item) => (
-                                <div key={item.id}>
+                                <motion.div
+                                    key={item.id}
+                                    layout
+                                    initial={{ opacity: 0, y: 16 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.97 }}
+                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                >
                                     <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row gap-6">
                                         {/* Image */}
                                         <div className="w-full sm:w-32 h-32 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden">
@@ -863,8 +872,9 @@ export default function CartPage() {
                                             )}
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
+                            </AnimatePresence>
                         </div>
 
                         {/* Right Sidebar */}
@@ -976,6 +986,11 @@ export default function CartPage() {
 
             <AlertDialog open={messageModalOpen} onOpenChange={setMessageModalOpen}>
                 <AlertDialogContent className="sm:max-w-md bg-white border-0 shadow-2xl rounded-2xl p-0 overflow-hidden">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.92 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                    >
                     <div className={`p-6 flex flex-col items-center justify-center border-b ${messageModalTitle === "Success" ? "bg-green-50 border-green-100" :
                         messageModalTitle === "Error" ? "bg-red-50 border-red-100" :
                             "bg-cream border-cream"
@@ -1013,6 +1028,7 @@ export default function CartPage() {
                             OK, Got it
                         </AlertDialogAction>
                     </AlertDialogFooter>
+                    </motion.div>
                 </AlertDialogContent>
             </AlertDialog>
 

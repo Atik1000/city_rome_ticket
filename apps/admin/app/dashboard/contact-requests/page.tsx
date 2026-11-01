@@ -14,6 +14,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Eye, Loader2, AlertCircle, Search, RotateCcw } from 'lucide-react'
+import { useReducedMotion } from 'framer-motion'
+import { MotionTableRow, staggerIn } from '@/components/motion'
 import { StatusModal } from '@/components/dashboard/status-modal'
 import { ContactRequestModal } from '@/components/dashboard/contact-request-modal'
 import { getContactRequests, ContactRequest } from '@/app/lib/api'
@@ -35,6 +37,7 @@ interface UIContactRequest {
 
 export default function ContactRequestsPage() {
   const { token } = useAuth()
+  const reduceMotion = useReducedMotion()
   const [requests, setRequests] = useState<UIContactRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -191,8 +194,12 @@ export default function ContactRequestsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedRequests.map((request) => (
-                  <TableRow key={request.id} className="border-border hover:bg-secondary/50 transition-colors">
+                paginatedRequests.map((request, i) => (
+                  <MotionTableRow
+                    key={`${currentPage}-${request.id}`}
+                    className="border-border hover:bg-secondary/50 transition-colors"
+                    {...staggerIn(i, reduceMotion)}
+                  >
                     <TableCell className="font-medium text-foreground text-xs sm:text-sm truncate">#{request.id}</TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm truncate">{request.name}</TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm truncate break-all">{request.email}</TableCell>
@@ -233,7 +240,7 @@ export default function ContactRequestsPage() {
                         </Button>
                       </div>
                     </TableCell>
-                  </TableRow>
+                  </MotionTableRow>
                 ))
               )}
             </TableBody>

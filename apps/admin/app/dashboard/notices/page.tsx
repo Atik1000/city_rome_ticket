@@ -35,11 +35,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Plus, Loader2, Edit, Trash2, CheckCircle2, AlertCircle, Info, Save } from 'lucide-react'
+import { useReducedMotion } from 'framer-motion'
+import { MotionTableRow, staggerIn } from '@/components/motion'
 import { getNotices, getNoticeDetail, deleteNotice, updateNotice, Notice } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 
 export default function NoticesPage() {
   const router = useRouter()
+  const reduceMotion = useReducedMotion()
   const [notices, setNotices] = useState<Notice[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeNoticeId, setActiveNoticeId] = useState<number | null>(null)
@@ -263,9 +266,10 @@ export default function NoticesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {notices.map((notice) => (
-                    <TableRow
+                  {notices.map((notice, i) => (
+                    <MotionTableRow
                       key={notice.id}
+                      {...staggerIn(i, reduceMotion)}
                       onClick={() => setActiveNoticeId(notice.id)}
                       className={`border-border hover:bg-primary/5 transition-colors cursor-pointer group ${notice.id === activeNoticeId ? 'bg-primary/5 border-l-4 border-l-primary' : ''
                         }`}
@@ -307,7 +311,7 @@ export default function NoticesPage() {
                           </Button>
                         </div>
                       </TableCell>
-                    </TableRow>
+                    </MotionTableRow>
                   ))}
                   {notices.length === 0 && (
                     <TableRow>

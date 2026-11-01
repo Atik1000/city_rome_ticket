@@ -7,6 +7,7 @@ import { getCart, createBooking, BookingPayload, TravelerDetail } from "@/servic
 
 import { isLoggedIn, getUserProfile } from "@/services/authService"
 import { Loader2, User, Mail, Globe, Phone, Check, CheckCircle2, AlertCircle, ShieldCheck, ChevronsUpDown } from "lucide-react"
+import { motion } from "framer-motion"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -688,6 +689,11 @@ export default function CheckoutPage() {
 
             <AlertDialog open={messageModalOpen} onOpenChange={setMessageModalOpen}>
                 <AlertDialogContent className="sm:max-w-md bg-white border-0 shadow-2xl rounded-2xl p-0 overflow-hidden">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.92 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                    >
                     <div className={`p-6 flex flex-col items-center justify-center border-b ${messageModalTitle === "Success" ? "bg-green-50 border-green-100" :
                         messageModalTitle === "Error" ? "bg-red-50 border-red-100" :
                             "bg-cream border-cream"
@@ -728,6 +734,7 @@ export default function CheckoutPage() {
                             OK, Got it
                         </AlertDialogAction>
                     </AlertDialogFooter>
+                    </motion.div>
                 </AlertDialogContent>
             </AlertDialog>
         </div>

@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from "react"
 import { Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { API_BASE_URL } from "@/services/authService";
+import AmbientParticles from "@/components/animation/ambient-particles"
+import { gsap, useGSAP, prefersReducedMotion } from "@/components/animation/gsap"
 interface TourSuggestion {
   id: number
   title: string
@@ -20,6 +22,7 @@ export default function HeroCarousel() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   const slides = [
@@ -86,6 +89,38 @@ export default function HeroCarousel() {
     return () => clearTimeout(delayDebounceFn)
   }, [searchQuery])
 
+  // Ken-Burns drift on the hero image + headline words rising in, restarted per slide
+  useGSAP(
+    () => {
+      if (prefersReducedMotion() || !heroRef.current) return
+      const image = heroRef.current.querySelector("[data-hero-image]")
+      if (image) {
+        gsap.fromTo(
+          image,
+          { scale: 1.12, xPercent: 0.8 },
+          { scale: 1.02, xPercent: -0.8, duration: 7, ease: "none" },
+        )
+      }
+      const words = heroRef.current.querySelectorAll("[data-hero-word]")
+      if (words.length) {
+        gsap.fromTo(
+          words,
+          { yPercent: 110, autoAlpha: 0 },
+          { yPercent: 0, autoAlpha: 1, duration: 0.7, ease: "power2.out", stagger: 0.07 },
+        )
+      }
+      const kicker = heroRef.current.querySelector("[data-hero-kicker]")
+      if (kicker) {
+        gsap.fromTo(
+          kicker,
+          { y: 12, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out", delay: 0.15 },
+        )
+      }
+    },
+    { scope: heroRef, dependencies: [currentSlide] },
+  )
+
   const handleSuggestionClick = (id: number) => {
     setShowSuggestions(false)
     router.push(`/tour/${id}`)
@@ -104,26 +139,41 @@ export default function HeroCarousel() {
   }
 
   return (
-    <div className="relative w-full h-[440px] sm:h-[560px] z-20">
+    <div ref={heroRef} className="relative w-full h-[440px] sm:h-[560px] z-20">
       {/* Slide */}
       <div className="relative w-full h-full">
         <div className="absolute inset-0 overflow-hidden">
           <img
+            key={currentSlide}
+            data-hero-image
             src={slides[currentSlide].image || "/placeholder.svg"}
             alt="Rome landmarks"
-            className="w-full h-full object-cover transition-transform duration-[6000ms] ease-out scale-105"
+            className="w-full h-full object-cover will-change-transform scale-105"
           />
           {/* Gradient overlay for legibility */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" />
+          {/* Golden dust / ember WebGL layer (decorative) */}
+          <AmbientParticles count={220} />
         </div>
 
         {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6">
-          <p className="mb-4 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.35em] text-gold-light">
+          <p
+            data-hero-kicker
+            className="mb-4 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.35em] text-gold-light"
+          >
             {slides[currentSlide].kicker}
           </p>
           <h1 className="font-serif text-4xl sm:text-6xl font-semibold text-white mb-6 sm:mb-8 text-balance drop-shadow-sm">
-            {slides[currentSlide].title}
+            {slides[currentSlide].title.split(" ").map((word, i) => (
+              <span key={`${currentSlide}-${i}`}>
+                <span className="inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em]">
+                  <span data-hero-word className="inline-block">
+                    {word}
+                  </span>
+                </span>{" "}
+              </span>
+            ))}
           </h1>
 
           {/* Search (mobile-friendly) */}

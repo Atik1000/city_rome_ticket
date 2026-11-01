@@ -9,8 +9,10 @@ import {
   MessageSquare,
   ArrowUpRight,
 } from 'lucide-react'
+import { animate, useReducedMotion } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { MotionCard, MotionTableRow, staggerIn } from '@/components/motion'
 import {
   Table,
   TableBody,
@@ -22,16 +24,39 @@ import {
 import { getDashboardStats, getBookings, DashboardStats, Booking } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 
+function CountUp({ value, format }: { value: number; format?: (v: number) => string }) {
+  const reduceMotion = useReducedMotion()
+  const [display, setDisplay] = useState(() => (reduceMotion ? value : 0))
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setDisplay(value)
+      return
+    }
+    const controls = animate(0, value, {
+      duration: 0.8,
+      ease: 'easeOut',
+      onUpdate: (v) => setDisplay(v),
+    })
+    return () => controls.stop()
+  }, [value, reduceMotion])
+
+  return <>{format ? format(display) : Math.round(display).toLocaleString()}</>
+}
+
 interface StatCardProps {
   title: string
-  value: string | number
+  value: React.ReactNode
   icon: React.ReactNode
   chipClass: string
   sub?: React.ReactNode
   loading?: boolean
+  index?: number
 }
 
-function StatCard({ title, value, icon, chipClass, sub, loading }: StatCardProps) {
+function StatCard({ title, value, icon, chipClass, sub, loading, index = 0 }: StatCardProps) {
+  const reduceMotion = useReducedMotion()
+
   if (loading) {
     return (
       <Card className="p-5 animate-pulse">
@@ -45,7 +70,7 @@ function StatCard({ title, value, icon, chipClass, sub, loading }: StatCardProps
   }
 
   return (
-    <Card className="p-5 gap-0 hover:shadow-md transition-shadow">
+    <MotionCard className="p-5 gap-0 hover:shadow-md transition-shadow" {...staggerIn(index, reduceMotion, 0.08)}>
       <div className="flex items-start justify-between mb-4">
         <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${chipClass}`}>
           {icon}
@@ -56,7 +81,7 @@ function StatCard({ title, value, icon, chipClass, sub, loading }: StatCardProps
       </p>
       <p className="text-3xl font-black text-foreground tabular-nums tracking-tight">{value}</p>
       {sub && <div className="mt-3">{sub}</div>}
-    </Card>
+    </MotionCard>
   )
 }
 
@@ -78,6 +103,7 @@ function getStatusColor(status: string) {
 
 export default function DashboardPage() {
   const { token, user } = useAuth()
+  const reduceMotion = useReducedMotion()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [recentBookings, setRecentBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
@@ -121,14 +147,15 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           title="Total Bookings"
-          value={stats?.total_bookings ?? 0}
+          value={<CountUp value={stats?.total_bookings ?? 0} />}
           icon={<CalendarCheck size={22} className="text-primary" />}
           chipClass="bg-primary/10"
           loading={loading}
+          index={0}
         />
         <StatCard
           title="Completed"
-          value={stats?.completed_bookings ?? 0}
+          value={<CountUp value={stats?.completed_bookings ?? 0} />}
           icon={<CheckCircle2 size={22} className="text-green-700" />}
           chipClass="bg-green-100"
           sub={
@@ -146,23 +173,33 @@ export default function DashboardPage() {
             </div>
           }
           loading={loading}
+          index={1}
         />
         <StatCard
           title="Total Income"
-          value={`€${(stats?.total_income || 0).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
+          value={
+            <CountUp
+              value={stats?.total_income || 0}
+              format={(v) =>
+                `€${v.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`
+              }
+            />
+          }
           icon={<Euro size={22} className="text-gold" />}
           chipClass="bg-gold/15"
           loading={loading}
+          index={2}
         />
         <StatCard
           title="Client Requests"
-          value={stats?.total_client_request ?? 0}
+          value={<CountUp value={stats?.total_client_request ?? 0} />}
           icon={<MessageSquare size={22} className="text-blue-700" />}
           chipClass="bg-blue-100"
           loading={loading}
+          index={3}
         />
       </div>
 
@@ -205,8 +242,12 @@ export default function DashboardPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {recentBookings.map((booking) => (
-                <TableRow key={booking.id} className="border-border hover:bg-secondary/40 transition-colors">
+              {recentBookings.map((booking, i) => (
+                <MotionTableRow
+                  key={booking.id}
+                  className="border-border hover:bg-secondary/40 transition-colors"
+                  {...staggerIn(i, reduceMotion)}
+                >
                   <TableCell className="pl-5 font-semibold text-foreground">
                     <Link href={`/dashboard/bookings/${booking.id}`} className="hover:text-primary">
                       #{booking.id}
@@ -233,7 +274,7 @@ export default function DashboardPage() {
                       year: 'numeric',
                     })}
                   </TableCell>
-                </TableRow>
+                </MotionTableRow>
               ))}
             </TableBody>
           </Table>

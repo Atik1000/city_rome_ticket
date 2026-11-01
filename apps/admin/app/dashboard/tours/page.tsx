@@ -7,12 +7,15 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Search, Plus, Clock, Loader2, AlertCircle } from 'lucide-react'
+import { useReducedMotion } from 'framer-motion'
+import { MotionCard, staggerIn } from '@/components/motion'
 import { getTourPlans, TourPlan } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 
 const ITEMS_PER_PAGE = 6
 
 export default function ToursPage() {
+  const reduceMotion = useReducedMotion()
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [tours, setTours] = useState<TourPlan[]>([])
@@ -111,10 +114,11 @@ export default function ToursPage() {
 
       {/* Tours Grid - Fully responsive */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr">
-        {paginatedTours.map((tour) => (
-          <Card
-            key={tour.id}
+        {paginatedTours.map((tour, i) => (
+          <MotionCard
+            key={`${currentPage}-${tour.id}`}
             className="overflow-hidden border-border hover:shadow-lg transition-all duration-300 flex flex-col group"
+            {...staggerIn(i, reduceMotion, 0.06)}
           >
             {/* Tour Image */}
             <div className="relative h-40 sm:h-64 bg-secondary overflow-hidden">
@@ -168,7 +172,7 @@ export default function ToursPage() {
                 </Button>
               </Link>
             </div>
-          </Card>
+          </MotionCard>
         ))}
       </div>
 

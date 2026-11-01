@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import TourCard from "./tour-card"
 import { getTourPlans, TourPlan } from "@/services/tourService"
 import { Loader2 } from "lucide-react"
+import { Reveal, StaggerReveal } from "@/components/animation/reveal"
 
 export default function ToursSection() {
   const [tours, setTours] = useState<TourPlan[]>([])
@@ -49,7 +50,7 @@ export default function ToursSection() {
   return (
     <section className="w-full bg-background py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-10">
+        <Reveal className="mb-10">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold mb-3">
             Handpicked experiences
           </p>
@@ -60,7 +61,7 @@ export default function ToursSection() {
             From the arena floor of the Colosseum to the Sistine Chapel at dawn — skip the
             queues and see the Eternal City with people who know it best.
           </p>
-        </div>
+        </Reveal>
 
         {error && (
           <div className="text-red-500 mb-4 text-center">
@@ -80,11 +81,14 @@ export default function ToursSection() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StaggerReveal
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              watch={tours.length}
+            >
               {tours.map((tour) => (
                 <TourCard key={tour.id} tour={tour} />
               ))}
-            </div>
+            </StaggerReveal>
 
             {tours.length === 0 && !error && (
               <div className="text-center py-12 text-gray-500">

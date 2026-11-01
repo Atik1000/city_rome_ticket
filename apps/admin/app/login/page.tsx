@@ -4,6 +4,7 @@ import React from "react"
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Eye, EyeOff, Landmark, ShieldCheck, Ticket, CalendarCheck } from 'lucide-react'
 import { useAuth } from '@/app/contexts/auth-context'
 import { Button } from '@/components/ui/button'
@@ -28,8 +29,10 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorDetails, setErrorDetails] = useState<string | string[]>('')
   const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const [shakeKey, setShakeKey] = useState(0)
   const router = useRouter()
   const { login } = useAuth()
+  const reduceMotion = useReducedMotion()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,10 +45,12 @@ export default function LoginPage() {
         router.push('/dashboard')
       } else {
         setErrorDetails(result.error || 'Invalid email or password')
+        setShakeKey((k) => k + 1)
         setIsAlertOpen(true)
       }
     } catch (err) {
       setErrorDetails('An unexpected error occurred. Please try again.')
+      setShakeKey((k) => k + 1)
       setIsAlertOpen(true)
     } finally {
       setIsLoading(false)
@@ -109,7 +114,12 @@ export default function LoginPage() {
 
       {/* Right: login form */}
       <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-md">
+        <motion.div
+          className="w-full max-w-md"
+          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+        >
           {/* Brand mark (visible where the hero panel is hidden) */}
           <div className="flex items-center gap-3 mb-10 lg:hidden">
             <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center shadow-md">
@@ -185,28 +195,34 @@ export default function LoginPage() {
           <p className="mt-8 text-center text-xs text-muted-foreground">
             Restricted area — authorized staff of Iconic Rome Tickets only.
           </p>
-        </div>
+        </motion.div>
       </div>
 
       {/* Error Alert Dialog */}
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Authentication Error</AlertDialogTitle>
-            <AlertDialogDescription asChild>
-              <div className="space-y-1">
-                {Array.isArray(errorDetails) ? (
-                  <ul className="list-disc list-inside">
-                    {errorDetails.map((msg, index) => (
-                      <li key={index}>{msg}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <span>{errorDetails}</span>
-                )}
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+          <motion.div
+            key={shakeKey}
+            animate={reduceMotion ? undefined : { x: [0, -6, 6, -4, 4, 0] }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            <AlertDialogHeader>
+              <AlertDialogTitle>Authentication Error</AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div className="space-y-1">
+                  {Array.isArray(errorDetails) ? (
+                    <ul className="list-disc list-inside">
+                      {errorDetails.map((msg, index) => (
+                        <li key={index}>{msg}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span>{errorDetails}</span>
+                  )}
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+          </motion.div>
           <AlertDialogFooter>
             <AlertDialogAction onClick={() => setIsAlertOpen(false)}>OK</AlertDialogAction>
           </AlertDialogFooter>
