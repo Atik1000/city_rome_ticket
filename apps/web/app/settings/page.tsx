@@ -179,10 +179,11 @@ export default function SettingsPage() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar */}
-                    <div className="w-full lg:w-1/4 border border-gray-100 rounded-xl overflow-hidden self-start shadow-sm">
-                        <div className="bg-[#1A2B49] p-8 text-white text-center">
-                            <h2 className="text-2xl font-bold mb-1">{profile?.first_name} {profile?.last_name}</h2>
-                            <p className="text-gray-300 text-sm">Account</p>
+                    <div className="w-full lg:w-1/4 border border-gold/25 rounded-2xl overflow-hidden self-start shadow-warm">
+                        <div className="relative overflow-hidden bg-espresso p-8 text-white text-center">
+                            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+                            <h2 className="font-serif text-2xl font-semibold mb-1">{profile?.first_name} {profile?.last_name}</h2>
+                            <p className="text-gold-light/80 text-xs uppercase tracking-[0.25em]">Account</p>
                         </div>
                         <nav className="bg-[#F3EEE6]">
                             <button
@@ -208,7 +209,7 @@ export default function SettingsPage() {
                             <div className="space-y-10">
                                 {/* Profile Details */}
                                 <section>
-                                    <h3 className="text-xl font-bold mb-6">Profile Details</h3>
+                                    <h3 className="font-serif text-2xl font-semibold text-ink mb-6">Profile Details</h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
                                         <div className="relative">
                                             <label className="absolute -top-2.5 left-3 px-1 bg-white text-xs text-gray-500 z-10">First Name</label>
@@ -217,7 +218,7 @@ export default function SettingsPage() {
                                                 name="first_name"
                                                 value={formData.first_name}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-gray-300 rounded-lg focus:border-[#1A2B49] outline-none transition font-medium"
+                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition font-medium"
                                             />
                                         </div>
                                         <div className="relative">
@@ -227,7 +228,7 @@ export default function SettingsPage() {
                                                 name="last_name"
                                                 value={formData.last_name}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-gray-300 rounded-lg focus:border-[#1A2B49] outline-none transition font-medium"
+                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition font-medium"
                                             />
                                         </div>
                                     </div>
@@ -237,7 +238,7 @@ export default function SettingsPage() {
 
                                 {/* Contact Details */}
                                 <section>
-                                    <h3 className="text-xl font-bold mb-6">Contact Details</h3>
+                                    <h3 className="font-serif text-2xl font-semibold text-ink mb-6">Contact Details</h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="relative">
                                             <label className="absolute -top-2.5 left-3 px-1 bg-gray-100 text-xs text-gray-500 z-10">Email</label>
@@ -246,7 +247,7 @@ export default function SettingsPage() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 outline-none font-medium"
+                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl bg-gray-100 text-gray-600 outline-none font-medium"
                                             />
                                         </div>
                                         <div className="relative">
@@ -256,7 +257,7 @@ export default function SettingsPage() {
                                                 name="phone"
                                                 value={formData.phone}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-gray-300 rounded-lg focus:border-[#1A2B49] outline-none transition font-medium"
+                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition font-medium"
                                             />
                                         </div>
                                     </div>
@@ -266,14 +267,14 @@ export default function SettingsPage() {
 
                                 {/* Date of Birth */}
                                 <section>
-                                    <h3 className="text-xl font-bold mb-6">Date of birth</h3>
+                                    <h3 className="font-serif text-2xl font-semibold text-ink mb-6">Date of birth</h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                                         <div className="relative">
                                             <select
                                                 name="day"
                                                 value={formData.day}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-gray-300 rounded-lg focus:border-[#1A2B49] outline-none transition font-medium bg-white appearance-none"
+                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition font-medium bg-white appearance-none"
                                             >
                                                 <option value="">Day</option>
                                                 {days.map(d => <option key={d} value={d}>{d}</option>)}
@@ -285,7 +286,7 @@ export default function SettingsPage() {
                                                 name="month"
                                                 value={formData.month}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-gray-300 rounded-lg focus:border-[#1A2B49] outline-none transition font-medium bg-white appearance-none"
+                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition font-medium bg-white appearance-none"
                                             >
                                                 <option value="">Month</option>
                                                 {months.map(m => <option key={m} value={m}>{m}</option>)}
@@ -297,7 +298,7 @@ export default function SettingsPage() {
                                                 name="year"
                                                 value={formData.year}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-gray-300 rounded-lg focus:border-[#1A2B49] outline-none transition font-medium bg-white appearance-none"
+                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition font-medium bg-white appearance-none"
                                             >
                                                 <option value="">Year</option>
                                                 {years.map(y => <option key={y} value={y}>{y}</option>)}
@@ -312,7 +313,7 @@ export default function SettingsPage() {
                                     <button
                                         onClick={handleSave}
                                         disabled={saveLoading}
-                                        className="bg-gold-light text-[#1A2B49] px-10 py-3 rounded-full font-bold hover:bg-brand transition-colors flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+                                        className="btn-premium px-10 py-3 rounded-full disabled:opacity-50"
                                     >
                                         {saveLoading && <Loader2 size={16} className="animate-spin" />}
                                         Save
@@ -333,7 +334,7 @@ export default function SettingsPage() {
                             </div>
                         ) : (
                             <div className="space-y-6">
-                                <h3 className="text-xl font-bold mb-6">Booking History</h3>
+                                <h3 className="font-serif text-2xl font-semibold text-ink mb-6">Booking History</h3>
                                 {bookingsLoading ? (
                                     <div className="flex justify-center p-12">
                                         <Loader2 className="animate-spin text-brand" size={32} />

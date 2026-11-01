@@ -33,6 +33,10 @@ const RomeTicketComparisonBlog = () => {
             style={{ objectPosition: "50% 78%" }} // center horizontally, top vertically
           />
           
+          <div className="absolute inset-0 bg-gradient-to-b from-espresso/30 via-transparent to-espresso/70" />
+          
+          <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+          
         </section>
 
 
@@ -48,22 +52,22 @@ const RomeTicketComparisonBlog = () => {
                   Ticket Guide
                 </span>
 
-                <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-soft-white mb-4 max-w-4xl">
+                <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-white mb-4 max-w-4xl">
                   Colosseum vs Vatican vs Borghese: Which Rome Ticket Should You
                   Book First?
                 </h1>
 
-                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-soft-white/80 text-sm md:text-base">
+                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-muted-foreground text-sm md:text-base">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
+                    <User className="w-4 h-4 text-gold" />
                     <span>Team Italia Tickets</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 text-gold" />
                     <span>February 2026</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-4 h-4 text-gold" />
                     <span>7 min read</span>
                   </div>
                 </div>
@@ -82,18 +86,18 @@ const RomeTicketComparisonBlog = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="lg:col-span-8"
               >
-                <h2 className="font-heading text-3xl font-semibold text-foreground mb-4 max-w-4xl">Colosseum vs Vatican vs Borghese: Which Rome Ticket Should You Book First?</h2>
-                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-soft-white/80 text-sm md:text-base">
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-[2.6rem] leading-[1.12] font-semibold text-foreground mb-4 max-w-4xl">Colosseum vs Vatican vs Borghese: Which Rome Ticket Should You Book First?</h2>
+                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-muted-foreground text-sm md:text-base">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
+                    <User className="w-4 h-4 text-gold" />
                     <span>Team Iconic Rome Tickets</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 text-gold" />
                     <span>February 2026</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-4 h-4 text-gold" />
                     <span>7 min read</span>
                   </div>
                 </div>
@@ -115,11 +119,11 @@ const RomeTicketComparisonBlog = () => {
                   </p>
 
                   {/* Overview Section */}
-                  <h2 className="font-heading text-2xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-12 mb-6">
                     Quick Comparison at a Glance
                   </h2>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 md:p-8 my-8">
                     <ul className="space-y-5 text-muted-foreground">
                       <li>
                         <strong className="text-foreground">
@@ -148,7 +152,7 @@ const RomeTicketComparisonBlog = () => {
                   </div>
 
                   {/* Section 1 */}
-                  <h2 className="font-heading text-lg font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-xl font-semibold text-ink mt-12 mb-6">
                     1) The Most Competitive Ticket: Borghese Gallery
                   </h2>
 
@@ -162,7 +166,7 @@ const RomeTicketComparisonBlog = () => {
                     that’s it.
                   </p>
 
-                  <div className="bg-accent/10 border border-accent/20 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="border-l-2 border-gold bg-cream/40 rounded-r-2xl p-6 md:p-8 my-8">
                     <p className="text-foreground font-medium italic text-md">
                       If Borghese is on your must-see list, book this ticket
                       first — especially in peak season.
@@ -178,7 +182,7 @@ const RomeTicketComparisonBlog = () => {
                   </p>
 
                   {/* Section 2 */}
-                  <h2 className="font-heading text-lg font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-xl font-semibold text-ink mt-12 mb-6">
                    2) The Most Popular Overall: Vatican Museums
                   </h2>
 
@@ -192,7 +196,7 @@ const RomeTicketComparisonBlog = () => {
                     ones (early morning or late afternoon) sell out first.
                   </p>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 md:p-8 my-8">
                     <ul className="space-y-4 text-muted-foreground">
                       <li>✔️ Essential to book in advance</li>
                       <li>✔️ Consider skip-the-line or guided entry</li>
@@ -206,7 +210,7 @@ const RomeTicketComparisonBlog = () => {
                   </p>
 
                   {/* Section 3 */}
-                  <h2 className="font-heading text-lg font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-xl font-semibold text-ink mt-12 mb-6">
                     3) The Icon of Rome: Colosseum & Roman Forum
                   </h2>
 
@@ -220,7 +224,7 @@ const RomeTicketComparisonBlog = () => {
                     arena floor, underground, guided tours).
                   </p>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 md:p-8 my-8">
                     <ul className="space-y-4 text-muted-foreground">
                       <li>
                         ✔️ Underground tours sell out fastest
@@ -240,11 +244,11 @@ const RomeTicketComparisonBlog = () => {
                   </p>
 
                   {/* Strategic Advice */}
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     So… What Should You Book First?
                   </h2>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 md:p-8 my-8">
                     <ol className="space-y-4 text-muted-foreground list-decimal list-inside">
                       <li>
                         If you want Borghese → <strong>Book Borghese first.</strong>
@@ -265,7 +269,7 @@ const RomeTicketComparisonBlog = () => {
                   </p>
 
                   {/* Pro Tip */}
-                  <div className="bg-accent/10 border border-accent/20 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="border-l-2 border-gold bg-cream/40 rounded-r-2xl p-6 md:p-8 my-8">
                     <p className="text-foreground font-medium italic text-md">
                       The smartest travelers don’t book in order of excitement —
                       they book in order of availability.
@@ -276,7 +280,7 @@ const RomeTicketComparisonBlog = () => {
                   </div>
 
                   {/* Final Thoughts */}
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     Final Recommendation
                   </h2>
 
@@ -293,7 +297,7 @@ const RomeTicketComparisonBlog = () => {
                 </div>
 
                 {/* Back Button */}
-                <div className="mt-12 pt-8 border-t border-border">
+                <div className="mt-12 pt-8 border-t border-gold/25">
                   <Link href="/">
                     <Button variant="outline" className="gap-2">
                       <ArrowLeft className="w-4 h-4" />
@@ -314,11 +318,11 @@ const RomeTicketComparisonBlog = () => {
 
                   {/* Author */}
                   <div className="bg-card rounded-2xl p-6 shadow-card">
-                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4">
+                    <h3 className="font-serif text-lg font-semibold text-foreground mb-4">
                       About the Author
                     </h3>
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center">
+                      <div className="w-16 h-16 bg-cream ring-1 ring-gold/30 rounded-full flex items-center justify-center">
                         <User className="w-8 h-8 text-muted-foreground" />
                       </div>
                       <div>
@@ -338,11 +342,11 @@ const RomeTicketComparisonBlog = () => {
                   </div>
 
                   {/* CTA */}
-                  <div className="bg-charcoal rounded-2xl p-6 text-center">
-                    <h3 className="font-heading text-xl font-semibold text-soft-white mb-3">
+                  <div className="bg-espresso border border-gold/30 rounded-2xl p-6 text-center shadow-warm-lg">
+                    <h3 className="font-serif text-xl font-semibold text-gold-light mb-3">
                       Ready to Secure Your Tickets?
                     </h3>
-                    <p className="text-soft-white/70 text-sm mb-4">
+                    <p className="text-white/70 text-sm mb-4">
                       Explore skip-the-line options and guided tours for Rome’s
                       top attractions.
                     </p>

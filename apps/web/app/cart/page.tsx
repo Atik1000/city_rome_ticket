@@ -36,6 +36,7 @@ import {
     Loader2,
     Trash2,
     Edit2,
+    Users,
     ShieldCheck,
     CreditCard,
     Headphones,
@@ -150,7 +151,7 @@ function DatePicker({
     if (!isOpen) return null
 
     return (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-6 z-10 w-[700px]">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-6 z-10 w-[700px]">
             <div className="flex justify-between items-start">
                 {/* Left Arrow */}
                 <button onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded mt-1">
@@ -214,7 +215,7 @@ function TravelerCounter({
     if (!isOpen) return null
 
     return (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-100 w-[350px]">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 z-100 w-[350px]">
 
             {/* Adult */}
             {tour.max_adults > 0 && (
@@ -225,14 +226,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('adults', -1, tour.max_adults)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.adults}</span>
                         <button
                             onClick={() => onUpdateCount('adults', 1, tour.max_adults)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -249,14 +250,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('children', -1, tour.max_children)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.children}</span>
                         <button
                             onClick={() => onUpdateCount('children', 1, tour.max_children)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -273,14 +274,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('infants', -1, tour.max_infants)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.infants}</span>
                         <button
                             onClick={() => onUpdateCount('infants', 1, tour.max_infants)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -297,14 +298,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('youths', -1, (tour as any).max_youth)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.youths}</span>
                         <button
                             onClick={() => onUpdateCount('youths', 1, (tour as any).max_youth)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -321,14 +322,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('students', -1, (tour as any).max_student_eu)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.students}</span>
                         <button
                             onClick={() => onUpdateCount('students', 1, (tour as any).max_student_eu)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -663,12 +664,15 @@ export default function CartPage() {
             <Navbar />
 
             <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-                <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-[#2A2118] mb-8">Your Cart</h1>
+                <p className="eyebrow mb-2">Almost there</p>
+                <h1 className="font-serif text-4xl sm:text-5xl font-semibold text-ink mb-3">Your Cart</h1>
+                <div aria-hidden="true" className="gold-rule mb-8" />
 
                 {cartItems.length === 0 ? (
-                    <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                        <p className="text-gray-600 text-lg">Your cart is currently empty.</p>
-                        <a href="/tour" className="text-brand hover:underline mt-4 inline-block">Browse tours</a>
+                    <div className="card-premium p-10 sm:p-14 text-center">
+                        <p className="font-serif text-2xl text-ink mb-2">Your cart is empty</p>
+                        <p className="text-sm text-muted-foreground mb-6">The Eternal City is waiting — pick a tour to get started.</p>
+                        <a href="/tour" className="btn-premium px-8 py-3 inline-flex">Browse tours</a>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -684,9 +688,9 @@ export default function CartPage() {
                                     exit={{ opacity: 0, scale: 0.97 }}
                                     transition={{ duration: 0.3, ease: "easeOut" }}
                                 >
-                                    <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row gap-6">
+                                    <div className="bg-white border border-gold/25 rounded-2xl shadow-warm hover:shadow-warm-md transition-shadow p-4 sm:p-6 flex flex-col sm:flex-row gap-6">
                                         {/* Image */}
-                                        <div className="w-full sm:w-32 h-32 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden">
+                                        <div className="w-full sm:w-32 h-32 flex-shrink-0 bg-cream rounded-xl overflow-hidden ring-1 ring-gold/20">
                                             {item.tour?.images && item.tour.images.length > 0 ? (
                                                 <img
                                                     src={item.tour.images[0].file}
@@ -703,7 +707,7 @@ export default function CartPage() {
                                         {/* Content */}
                                         <div className="flex-grow">
                                             <div className="flex justify-between items-start mb-2">
-                                                <h3 className="text-lg font-semibold text-[#2A2118] line-clamp-2">
+                                                <h3 className="font-serif text-lg sm:text-xl font-semibold text-ink line-clamp-2">
                                                     {item.tour?.title || "Tour Title"}
                                                 </h3>
                                             </div>
@@ -728,7 +732,7 @@ export default function CartPage() {
                                             )}
 
                                             {/* Free Cancellation */}
-                                            <div className="flex items-center gap-2 text-sm text-teal-700 font-medium mb-4">
+                                            <div className="flex items-center gap-2 text-sm text-laurel font-medium mb-4">
                                                 <Check size={16} className="stroke-2" />
                                                 <span>Free cancellation</span>
                                             </div>
@@ -749,13 +753,13 @@ export default function CartPage() {
                                                                         e.stopPropagation()
                                                                         setIsEditTravelerPickerOpen(!isEditTravelerPickerOpen)
                                                                     }}
-                                                                    className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:border-gray-400 transition text-gray-700 font-medium"
+                                                                    className="w-full flex items-center justify-between px-4 py-3 border border-ink/15 rounded-xl hover:border-gold/60 hover:bg-cream/30 transition-colors text-ink/80 font-medium cursor-pointer"
                                                                 >
-                                                                    <span className="flex items-center gap-2">
-                                                                        <span>👥</span>
+                                                                    <span className="flex items-center gap-2.5">
+                                                                        <Users size={18} className="text-gold" />
                                                                         <span>{getTravelerSummary()}</span>
                                                                     </span>
-                                                                    <ChevronLeft size={20} className="text-gray-600 rotate-180" />
+                                                                    <ChevronLeft size={20} className="text-ink/50 rotate-180" />
                                                                 </button>
                                                                 <TravelerCounter
                                                                     isOpen={isEditTravelerPickerOpen}
@@ -770,10 +774,10 @@ export default function CartPage() {
                                                             <div className="mb-6 relative" ref={sidebarDatePickerRef}>
                                                                 <button
                                                                     onClick={() => setIsEditDatePickerOpen(!isEditDatePickerOpen)}
-                                                                    className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:border-gray-400 transition text-gray-700 font-medium"
+                                                                    className="w-full flex items-center justify-between px-4 py-3 border border-ink/15 rounded-xl hover:border-gold/60 hover:bg-cream/30 transition-colors text-ink/80 font-medium cursor-pointer"
                                                                 >
-                                                                    <span className="flex items-center gap-2">
-                                                                        <span>📅</span>
+                                                                    <span className="flex items-center gap-2.5">
+                                                                        <CalendarIcon size={18} className="text-gold" />
                                                                         <span>
                                                                             {editSelectedDate
                                                                                 ? new Date(editSelectedDate.date + 'T00:00:00').toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -781,7 +785,7 @@ export default function CartPage() {
                                                                             }
                                                                         </span>
                                                                     </span>
-                                                                    <ChevronLeft size={20} className="text-gray-600 rotate-180" />
+                                                                    <ChevronLeft size={20} className="text-ink/50 rotate-180" />
                                                                 </button>
                                                                 <DatePicker
                                                                     isOpen={isEditDatePickerOpen}
@@ -794,8 +798,8 @@ export default function CartPage() {
                                                             {/* Time Slot Selector */}
                                                             {editSelectedDate && editTimeSlots.length > 0 && editShowBookingButtons && (
                                                                 <div className="mb-6">
-                                                                    <label className="block text-sm font-semibold text-[#2A2118] mb-1">Select a starting time</label>
-                                                                    <p className="text-sm text-gray-500 mb-3">
+                                                                    <label className="block font-serif text-base font-semibold text-ink mb-1">Select a starting time</label>
+                                                                    <p className="text-sm text-muted-foreground mb-3">
                                                                         {new Date(editSelectedDate.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                                                                     </p>
                                                                     <div className="flex flex-wrap gap-3">
@@ -805,10 +809,10 @@ export default function CartPage() {
                                                                                 <button
                                                                                     key={slot.id}
                                                                                     onClick={() => setEditSelectedTimeSlot(slot)}
-                                                                                    className={`px-6 py-2.5 rounded-lg border text-sm font-semibold transition-all
+                                                                                    className={`px-6 py-2.5 rounded-lg border text-sm font-semibold transition-all cursor-pointer
                                                             ${isSelected
-                                                                                            ? "bg-[#2A2118] text-white border-[#2A2118]"
-                                                                                            : "bg-white text-[#2A2118] border-gray-400 hover:border-[#2A2118]"
+                                                                                            ? "bg-espresso text-gold-light border-gold/70 shadow-warm-md"
+                                                                                            : "bg-white text-ink border-ink/25 hover:border-gold/70 hover:bg-cream/40"
                                                                                         }`}
                                                                                 >
                                                                                     {slot.start_time.split(':').slice(0, 2).join(':')}
@@ -824,7 +828,7 @@ export default function CartPage() {
                                                                 <button
                                                                     onClick={() => handleUpdateItem(item.id, item.tour!.id)}
                                                                     disabled={isUpdating}
-                                                                    className="bg-brand text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-dark transition flex items-center justify-center min-w-[100px] cursor-pointer"
+                                                                    className="btn-premium px-5 py-2 text-sm min-w-[100px]"
                                                                 >
                                                                     {isUpdating ? (
                                                                         <>
@@ -837,7 +841,7 @@ export default function CartPage() {
                                                                 </button>
                                                                 <button
                                                                     onClick={handleCancelEdit}
-                                                                    className="text-gray-600 hover:text-gray-900 font-medium px-4 py-2"
+                                                                    className="text-ink/60 hover:text-ink font-medium px-4 py-2 cursor-pointer transition-colors"
                                                                 >
                                                                     Cancel
                                                                 </button>
@@ -853,19 +857,20 @@ export default function CartPage() {
                                                     <div className="flex gap-4">
                                                         <button
                                                             onClick={() => handleEditClick(item)}
-                                                            className="flex items-center gap-1 px-4 py-1.5 border border-gray-300 rounded-full text-sm font-semibold text-[#2A2118] hover:bg-gray-50 cursor-pointer"
+                                                            className="flex items-center gap-1.5 px-4 py-1.5 border border-gold/40 rounded-full text-sm font-semibold text-ink hover:bg-cream/60 hover:border-gold/70 transition-colors cursor-pointer"
                                                         >
-                                                            <Edit2 size={14} />
+                                                            <Edit2 size={14} className="text-gold" />
                                                             Edit
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(item.id)}
-                                                            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                                                            className="p-2 text-ink/35 hover:text-brand transition-colors cursor-pointer"
+                                                            aria-label="Remove from cart"
                                                         >
                                                             <Trash2 size={20} />
                                                         </button>
                                                     </div>
-                                                    <div className="text-xl font-semibold text-[#2A2118]">
+                                                    <div className="font-serif text-2xl font-semibold text-ink">
                                                         €{item.item_price}
                                                     </div>
                                                 </div>
@@ -879,13 +884,15 @@ export default function CartPage() {
 
                         {/* Right Sidebar */}
                         <div className="lg:col-span-1 space-y-6">
-                            {/* Summary Card */}
-                            <div className="bg-white border border-gray-200 rounded-xl p-6">
-                                <div className="flex justify-between items-start mb-1">
-                                    <span className="text-lg font-semibold text-[#2A2118]">Subtotal ({cartItems.length} items)</span>
-                                    <span className="text-lg font-semibold text-[#2A2118]">€{subtotal.toFixed(2)}</span>
+                            {/* Summary Card — styled like a fine receipt */}
+                            <div className="relative bg-white border border-gold/30 rounded-2xl p-6 shadow-warm-lg overflow-hidden">
+                                <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+                                <p className="eyebrow mb-4">Order summary</p>
+                                <div className="flex justify-between items-baseline pb-4 mb-1 border-b border-dashed border-gold/30">
+                                    <span className="text-sm font-medium text-ink/70">Subtotal ({cartItems.length} {cartItems.length === 1 ? "item" : "items"})</span>
+                                    <span className="font-serif text-2xl font-semibold text-ink">€{subtotal.toFixed(2)}</span>
                                 </div>
-                                <p className="text-right text-xs text-teal-600 font-medium mb-6">All taxes and fees included</p>
+                                <p className="text-right text-xs text-laurel font-medium mb-6">All taxes and fees included</p>
 
                                 <button
                                 onClick={() => {
@@ -898,33 +905,33 @@ export default function CartPage() {
                                     //         setIsLoginOpen(true)
                                     //     }
                                     // }}
-                                    className="block w-full bg-brand text-white font-semibold py-3.5 rounded-full hover:bg-brand-dark transition-colors mb-4 text-center cursor-pointer"
+                                    className="btn-premium w-full py-3.5 rounded-full mb-4"
                                 >
                                     Go to checkout
                                 </button>
 
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                    <Check size={18} className="text-teal-600" />
-                                    <span>Free cancellation <br /><span className="text-gray-400 text-xs">Until 24 hours before activity</span></span>
+                                <div className="flex items-center gap-2 text-sm text-ink/70">
+                                    <Check size={18} className="text-laurel" />
+                                    <span>Free cancellation <br /><span className="text-muted-foreground text-xs">Until 24 hours before activity</span></span>
                                 </div>
                             </div>
 
                             {/* Why book with us */}
-                            <div className="bg-white border border-gray-200 rounded-xl p-6">
-                                <h3 className="font-semibold text-[#2A2118] mb-4">Why book with us?</h3>
+                            <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6">
+                                <h3 className="font-serif text-lg font-semibold text-ink mb-4">Why book with us?</h3>
 
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-3">
-                                        <ShieldCheck size={20} className="text-gray-500 mt-0.5" />
-                                        <span className="text-sm text-[#2A2118] font-medium">Secure payment</span>
+                                        <ShieldCheck size={20} className="text-gold mt-0.5" />
+                                        <span className="text-sm text-ink font-medium">Secure payment</span>
                                     </div>
                                     <div className="flex items-start gap-3">
-                                        <CreditCard size={20} className="text-gray-500 mt-0.5" />
-                                        <span className="text-sm text-[#2A2118] font-medium">No hidden costs</span>
+                                        <CreditCard size={20} className="text-gold mt-0.5" />
+                                        <span className="text-sm text-ink font-medium">No hidden costs</span>
                                     </div>
                                     <div className="flex items-start gap-3">
-                                        <Headphones size={20} className="text-gray-500 mt-0.5" />
-                                        <span className="text-sm text-[#2A2118] font-medium">24/7 customer support worldwide</span>
+                                        <Headphones size={20} className="text-gold mt-0.5" />
+                                        <span className="text-sm text-ink font-medium">24/7 customer support worldwide</span>
                                     </div>
                                 </div>
                             </div>
@@ -1022,7 +1029,7 @@ export default function CartPage() {
                             onClick={() => setMessageModalOpen(false)}
                             className={`w-full cursor-pointer py-3 h-auto rounded-lg font-semibold text-white shadow-md transition-all ${messageModalTitle === "Success" ? "bg-green-600 hover:bg-green-700 shadow-green-200" :
                                 messageModalTitle === "Error" ? "bg-red-600 hover:bg-red-700 shadow-red-200" :
-                                    "bg-[#2A2118] hover:bg-[#0a1e5c] shadow-cream-dark"
+                                    "bg-espresso hover:bg-espresso-light"
                                 }`}
                         >
                             OK, Got it

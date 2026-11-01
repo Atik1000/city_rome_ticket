@@ -152,7 +152,7 @@ function DatePicker({
     if (!isOpen) return null
 
     return (
-        <div className="absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 md:p-6 z-50 w-[90vw] max-w-[350px] md:max-w-[700px] md:w-[700px]">
+        <div className="absolute top-full right-0 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 md:p-6 z-50 w-[90vw] max-w-[350px] md:max-w-[700px] md:w-[700px]">
             <div className="flex justify-between items-start">
                 {/* Left Arrow */}
                 <button onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded mt-1">
@@ -216,7 +216,7 @@ function TravelerCounter({
     if (!isOpen) return null
 
     return (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10 w-[80vw] sm:w-[350px]">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 z-10 w-[80vw] sm:w-[350px]">
             {/* Changing top-full to bottom-full for this page maybe? Original was top-full. Let's stick to original but ensure z-index */}
 
             {/* Adult */}
@@ -228,14 +228,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('adults', -1, tour.max_adults)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.adults}</span>
                         <button
                             onClick={() => onUpdateCount('adults', 1, tour.max_adults)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -252,14 +252,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('children', -1, tour.max_children)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.children}</span>
                         <button
                             onClick={() => onUpdateCount('children', 1, tour.max_children)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -276,14 +276,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('infants', -1, tour.max_infants)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.infants}</span>
                         <button
                             onClick={() => onUpdateCount('infants', 1, tour.max_infants)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -300,14 +300,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('youths', -1, (tour as any).max_youth)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.youths}</span>
                         <button
                             onClick={() => onUpdateCount('youths', 1, (tour as any).max_youth)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -324,14 +324,14 @@ function TravelerCounter({
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => onUpdateCount('students', -1, (tour as any).max_student_eu)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Minus size={16} className="text-gray-600" />
                         </button>
                         <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.students}</span>
                         <button
                             onClick={() => onUpdateCount('students', 1, (tour as any).max_student_eu)}
-                            className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+                            className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
                         >
                             <Plus size={16} className="text-gray-600" />
                         </button>
@@ -663,15 +663,21 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
         <div className="min-h-screen bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-12">
-                    <div className="flex items-center gap-2 mb-6">
-                        <button
-                            onClick={() => router.back()}
-                            className="p-1 hover:bg-gray-100 rounded-full transition -ml-2"
-                            aria-label="Go back"
-                        >
-                            <ChevronLeft size={32} className="text-gray-900" />
-                        </button>
-                        <h2 className="text-2xl font-semibold text-gray-900">Check availability</h2>
+                    <div className="mb-8">
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => router.back()}
+                                className="p-1 hover:bg-cream rounded-full transition-colors -ml-2 cursor-pointer"
+                                aria-label="Go back"
+                            >
+                                <ChevronLeft size={32} className="text-ink" />
+                            </button>
+                            <div>
+                                <p className="eyebrow">Step by step booking</p>
+                                <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-ink">Check availability</h2>
+                            </div>
+                        </div>
+                        <div aria-hidden="true" className="gold-rule mt-5" />
                     </div>
 
                     {/* Check availability logic */}
@@ -700,18 +706,18 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                             if (availableDate && !isPast) handleDateSelect(availableDate)
                                         }}
                                         disabled={!availableDate || isPast}
-                                        className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-lg border transition-all
+                                        className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-xl border transition-all
                                         ${isSelected
-                                                ? "border-brand bg-cream text-brand-dark"
+                                                ? "border-gold bg-espresso text-gold-light shadow-warm-md"
                                                 : availableDate && !isPast
-                                                    ? "border-gray-300 bg-white text-gray-900 hover:border-gray-400 cursor-pointer"
-                                                    : "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                                                    ? "border-gold/30 bg-white text-ink shadow-warm hover:border-gold/60 hover:-translate-y-0.5 cursor-pointer"
+                                                    : "border-ink/10 bg-cream/40 text-ink/30 cursor-not-allowed"
                                             }`}
                                     >
-                                        <span className="text-xs font-semibold uppercase">
+                                        <span className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${isSelected ? "text-gold-light/80" : ""}`}>
                                             {isToday ? "Today" : date.toLocaleString('default', { weekday: 'short' })}
                                         </span>
-                                        <span className={`text-xl font-semibold ${isSelected ? "text-brand-dark" : "text-gray-400"}`}>
+                                        <span className={`font-serif text-2xl font-semibold ${isSelected ? "text-gold-light" : availableDate && !isPast ? "text-ink" : "text-ink/30"}`}>
                                             {date.getDate()}
                                         </span>
                                         <span className="text-xs">
@@ -726,7 +732,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                         <div className="relative" ref={gridDatePickerRef}>
                             <button
                                 onClick={() => setIsGridDatePickerOpen(!isGridDatePickerOpen)}
-                                className="flex-shrink-0 flex items-center justify-center w-20 h-20 rounded-lg border border-gray-300 bg-white text-gray-900 hover:border-gray-400 cursor-pointer"
+                                className="flex-shrink-0 flex items-center justify-center w-20 h-20 rounded-xl border border-gold/30 bg-white text-brand shadow-warm hover:border-gold/60 cursor-pointer transition-colors"
                             >
                                 <CalendarIcon size={24} />
                             </button>
@@ -744,8 +750,8 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                     {/* Time Slot Selector - Only show if date selected AND Select button clicked (showBookingButtons) */}
                     {selectedDate && timeSlots.length > 0 && showBookingButtons && (
                         <div className="mb-6">
-                            <label className="block text-sm font-semibold text-[#2A2118] mb-1">Select a starting time</label>
-                            <p className="text-sm text-gray-500 mb-3">
+                            <label className="block font-serif text-lg font-semibold text-ink mb-1">Select a starting time</label>
+                            <p className="text-sm text-muted-foreground mb-3">
                                 {new Date(selectedDate.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                             </p>
                             <motion.div
@@ -769,16 +775,16 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                             }}
                                             whileTap={{ scale: 0.97 }}
                                             onClick={() => setSelectedTimeSlot(slot)}
-                                            className={`relative px-6 py-2.5 rounded-lg border text-sm font-semibold transition-colors duration-200
+                                            className={`relative px-6 py-2.5 rounded-lg border text-sm font-semibold transition-colors duration-200 cursor-pointer
                             ${isSelected
-                                                    ? "text-white border-[#2A2118]"
-                                                    : "bg-white text-[#2A2118] border-gray-400 hover:border-[#2A2118]"
+                                                    ? "text-gold-light border-gold/70 shadow-warm-md"
+                                                    : "bg-white text-ink border-ink/25 hover:border-gold/70 hover:bg-cream/40"
                                                 }`}
                                         >
                                             {isSelected && (
                                                 <motion.span
                                                     layoutId="time-slot-fill"
-                                                    className="absolute inset-0 rounded-[7px] bg-[#2A2118]"
+                                                    className="absolute inset-0 rounded-[7px] bg-espresso"
                                                     transition={{ type: "spring", stiffness: 420, damping: 32 }}
                                                 />
                                             )}
@@ -797,38 +803,39 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="border border-gray-200 rounded-lg p-6 bg-gray-50 mb-6"
+                        className="relative border border-gold/30 rounded-2xl p-6 sm:p-8 bg-white shadow-warm-lg mb-6 overflow-hidden"
                     >
-                        <h3 className="font-semibold text-gray-900 text-lg mb-4">{tour.title}</h3>
+                        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+                        <h3 className="font-serif font-semibold text-ink text-xl sm:text-2xl mb-4">{tour.title}</h3>
 
-                        <div className="flex flex-wrap gap-6 mb-4">
-                            <div className="flex items-center gap-2">
-                                <Clock size={20} className="text-gray-600" />
-                                <span className="text-gray-700 font-medium">14 hours</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Users size={20} className="text-gray-600" />
-                                <span className="text-gray-700 font-medium">Guide: English</span>
-                            </div>
+                        <div className="flex flex-wrap gap-3 mb-5">
+                            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1 text-xs font-medium text-ink/80">
+                                <Clock size={14} className="text-gold" />
+                                14 hours
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1 text-xs font-medium text-ink/80">
+                                <Users size={14} className="text-gold" />
+                                Guide: English
+                            </span>
                         </div>
 
                         <div className="flex flex-col md:flex-row md:items-end md:justify-between items-stretch gap-8">
                             {/* Left Side: Travelers Selector */}
                             <div className="flex-1">
                                 <div className="relative w-full mb-0 md:mb-10" ref={travelerPickerRef}>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Travelers</label>
+                                    <label className="block text-sm font-semibold text-ink mb-2">Travelers</label>
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation()
                                             setIsTravelerPickerOpen(!isTravelerPickerOpen)
                                         }}
-                                        className="w-full md:w-[350px] flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:border-gray-400 transition text-gray-700 font-medium whitespace-nowrap"
+                                        className="w-full md:w-[350px] flex items-center justify-between px-4 py-3 border border-ink/15 rounded-xl hover:border-gold/60 hover:bg-cream/30 transition-colors text-ink/80 font-medium whitespace-nowrap cursor-pointer"
                                     >
-                                        <span className="flex items-center gap-2">
-                                            <span>👥</span>
+                                        <span className="flex items-center gap-2.5">
+                                            <Users size={18} className="text-gold" />
                                             <span>{getTravelerSummary()}</span>
                                         </span>
-                                        <ChevronLeft size={20} className="text-gray-600 rotate-180" />
+                                        <ChevronLeft size={20} className="text-ink/50 rotate-180" />
                                     </button>
 
                                     <TravelerCounter
@@ -844,8 +851,9 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                             {/* Right Side: Price, Booking Buttons, and Cancellation */}
                             <div className="flex-1 flex flex-col items-stretch md:items-end gap-4 text-left md:text-right">
                                 <div>
-                                    <p className="text-gray-600 text-sm mb-1">{getPriceSummary()}</p>
-                                    <p className="text-3xl font-semibold text-gray-900">€{calculateTotalPrice()}</p>
+                                    <p className="text-muted-foreground text-sm mb-1">{getPriceSummary()}</p>
+                                    <p className="font-serif text-4xl font-semibold text-ink">€{calculateTotalPrice()}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">All taxes and fees included</p>
                                 </div>
 
                                 <div className="w-full sm:w-auto">
@@ -853,7 +861,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                         <motion.button
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() => setShowBookingButtons(true)}
-                                            className="w-full sm:min-w-[160px] bg-brand text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-dark transition"
+                                            className="btn-premium w-full sm:min-w-[160px] px-8 py-3"
                                         >
                                             Select
                                         </motion.button>
@@ -867,7 +875,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                             <button
                                                 onClick={handleBookNow}
                                                 disabled={isBookingLoading}
-                                                className="bg-brand text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-dark transition flex items-center justify-center min-w-[120px] w-full cursor-pointer"
+                                                className="btn-premium px-4 py-3 min-w-[120px] w-full"
                                             >
                                                 {isBookingLoading ? (
                                                     <><Loader2 className="animate-spin mr-2 h-4 w-4" />Booking...</>
@@ -878,7 +886,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                             <button
                                                 onClick={handleAddToCart}
                                                 disabled={isCartLoading}
-                                                className="bg-brand text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-dark transition flex items-center justify-center min-w-[140px] w-full cursor-pointer"
+                                                className="btn-ghost-gold px-4 py-3 min-w-[140px] w-full"
                                             >
                                                 {isCartLoading ? (
                                                     <><Loader2 className="animate-spin mr-2 h-4 w-4" />Adding...</>
@@ -890,7 +898,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                     )}
                                 </div>
 
-                                <div className="flex items-center gap-2 text-teal-600 md:justify-end justify-start">
+                                <div className="flex items-center gap-2 text-laurel md:justify-end justify-start">
                                     <Check size={18} />
                                     <span className="text-sm font-medium">Free cancellation</span>
                                 </div>
@@ -957,7 +965,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                             onClick={() => setMessageModalOpen(false)}
                             className={`w-full cursor-pointer py-3 h-auto rounded-lg font-semibold text-white shadow-md transition-all ${messageModalTitle === "Success" ? "bg-green-600 hover:bg-green-700 shadow-green-200" :
                                 messageModalTitle === "Error" ? "bg-red-600 hover:bg-red-700 shadow-red-200" :
-                                    "bg-[#2A2118] hover:bg-[#0a1e5c] shadow-cream-dark"
+                                    "bg-espresso hover:bg-espresso-light"
                                 }`}
                         >
                             OK, Got it

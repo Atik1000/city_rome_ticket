@@ -50,14 +50,12 @@ export default function ToursSection() {
   return (
     <section className="w-full bg-background py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Reveal className="mb-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold mb-3">
-            Handpicked experiences
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-ink">
-            Rome&apos;s Most-Loved Tours
+        <Reveal className="mb-12">
+          <p className="eyebrow mb-3">Handpicked experiences</p>
+          <h2 className="font-serif text-4xl sm:text-5xl font-semibold text-ink leading-[1.1]">
+            Rome&apos;s Most-Loved <span className="italic text-brand">Tours</span>
           </h2>
-          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+          <p className="mt-4 max-w-[62ch] text-sm sm:text-base leading-relaxed text-muted-foreground">
             From the arena floor of the Colosseum to the Sistine Chapel at dawn — skip the
             queues and see the Eternal City with people who know it best.
           </p>
@@ -101,7 +99,7 @@ export default function ToursSection() {
                 <button
                   onClick={handleSeeMore}
                   disabled={loadingMore}
-                  className="bg-white border border-gray-300 text-gray-700 font-semibold py-3 px-8 rounded-full hover:bg-gray-50 transition shadow-sm disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="btn-ghost-gold py-3 px-10 rounded-full disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {loadingMore && <Loader2 className="animate-spin" size={16} />}
                   {loadingMore ? 'Loading...' : 'See more'}

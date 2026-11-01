@@ -510,27 +510,45 @@ export default function CheckoutPage() {
             <Navbar />
 
             <main className="flex-grow max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-                <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#2A2118] mb-4">Checkout</h1>
+                <p className="eyebrow mb-2">Final step</p>
+                <h1 className="font-serif text-4xl sm:text-5xl font-semibold text-ink mb-4">Checkout</h1>
 
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 text-xs text-gray-600">
-                    <span className="inline-flex items-center gap-1.5"><ShieldCheck size={15} className="text-brand" /> Secure checkout</span>
-                    <span className="inline-flex items-center gap-1.5"><CheckCircle2 size={15} className="text-brand" /> Free cancellation on most tours</span>
-                    <span className="inline-flex items-center gap-1.5"><Check size={15} className="text-brand" /> Instant mobile tickets</span>
+                {/* Trust badges */}
+                <div className="flex flex-wrap items-center gap-2 mb-6 text-xs text-ink/70">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1.5 font-medium"><ShieldCheck size={14} className="text-gold" /> Secure checkout</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1.5 font-medium"><CheckCircle2 size={14} className="text-gold" /> Free cancellation on most tours</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1.5 font-medium"><Check size={14} className="text-gold" /> Instant mobile tickets</span>
                 </div>
+
+                {/* Stepper (Roman ordinals) */}
+                {!loggedIn && (
+                    <div className="flex items-center gap-3 mb-8" aria-hidden="true">
+                        <div className="flex items-center gap-2.5">
+                            <span className={`flex h-9 w-9 items-center justify-center rounded-full font-serif text-sm font-semibold border transition-colors ${step === 1 ? "bg-brand text-white border-brand shadow-warm" : "bg-espresso text-gold-light border-gold/50"}`}>I</span>
+                            <span className={`text-sm font-medium ${step === 1 ? "text-ink" : "text-ink/50"}`}>Contact</span>
+                        </div>
+                        <span className="h-px flex-1 max-w-16 bg-gradient-to-r from-gold/60 to-gold/20" />
+                        <div className="flex items-center gap-2.5">
+                            <span className={`flex h-9 w-9 items-center justify-center rounded-full font-serif text-sm font-semibold border transition-colors ${step === 2 ? "bg-brand text-white border-brand shadow-warm" : "bg-white text-ink/50 border-ink/20"}`}>II</span>
+                            <span className={`text-sm font-medium ${step === 2 ? "text-ink" : "text-ink/50"}`}>Travelers</span>
+                        </div>
+                    </div>
+                )}
 
                 {/* Step 1: Contact Info (Guest Only) */}
                 {step === 1 && !loggedIn && (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
-                        <h2 className="text-xl font-bold text-[#2A2118] mb-6">Contact Details</h2>
+                    <div className="relative bg-white rounded-2xl shadow-warm-lg border border-gold/30 p-6 sm:p-8 overflow-hidden">
+                        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+                        <h2 className="font-serif text-2xl font-semibold text-ink mb-6">Contact Details</h2>
                         <form onSubmit={handleGuestSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
+                                <label className="block text-sm font-semibold text-ink mb-1.5">Full Name</label>
                                 <div className="relative">
                                     <User className="absolute left-3 top-3.5 text-gray-400" size={18} />
                                     <input
                                         required
                                         type="text"
-                                        className="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none"
+                                        className="w-full pl-10 p-2.5 border border-ink/15 rounded-xl bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition-all"
                                         placeholder="John Doe"
                                         value={guestDetails.full_name}
                                         onChange={e => setGuestDetails({ ...guestDetails, full_name: e.target.value })}
@@ -538,13 +556,13 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                                <label className="block text-sm font-semibold text-ink mb-1.5">Email</label>
                                 <div className="relative">
                                     <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
                                     <input
                                         required
                                         type="email"
-                                        className="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none"
+                                        className="w-full pl-10 p-2.5 border border-ink/15 rounded-xl bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition-all"
                                         placeholder="john@example.com"
                                         value={guestDetails.email}
                                         onChange={e => setGuestDetails({ ...guestDetails, email: e.target.value })}
@@ -553,7 +571,7 @@ export default function CheckoutPage() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Country</label>
+                                    <label className="block text-sm font-semibold text-ink mb-1.5">Country</label>
                                     <div className="relative">
                                         <Globe className="absolute left-3 top-3.5 text-gray-400" size={18} />
                                         <Popover open={openCountry} onOpenChange={setOpenCountry}>
@@ -561,7 +579,7 @@ export default function CheckoutPage() {
                                                 <button
                                                     role="combobox"
                                                     aria-expanded={openCountry}
-                                                    className="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none bg-white text-left flex justify-between items-center text-sm transition-all hover:bg-gray-50 hover:border-gold"
+                                                    className="w-full pl-10 p-2.5 border border-ink/15 rounded-xl bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none text-left flex justify-between items-center text-sm transition-all hover:bg-cream/40 hover:border-gold/60 cursor-pointer"
                                                 >
                                                     {guestDetails.country ? (
                                                         <span className="font-medium text-gray-900">
@@ -628,13 +646,13 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
+                                    <label className="block text-sm font-semibold text-ink mb-1.5">Phone</label>
                                     <div className="relative">
                                         <Phone className="absolute left-3 top-3.5 text-gray-400" size={18} />
                                         <input
                                             //required
                                             type="tel"
-                                            className="w-full pl-10 p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none"
+                                            className="w-full pl-10 p-2.5 border border-ink/15 rounded-xl bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition-all"
                                             placeholder="+1 234 567 890"
                                             value={guestDetails.phone}
                                             onChange={e => setGuestDetails({ ...guestDetails, phone: e.target.value })}
@@ -643,7 +661,7 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
 
-                            <button type="submit" className="w-full bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition mt-4 cursor-pointer">
+                            <button type="submit" className="btn-premium w-full py-3.5 mt-4">
                                 Continue
                             </button>
                         </form>
@@ -652,19 +670,20 @@ export default function CheckoutPage() {
 
                 {/* Step 2: Traveler Details */}
                 {step === 2 && (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
-                        <h2 className="text-xl font-bold text-[#2A2118] mb-6">Traveler Details Form</h2>
+                    <div className="relative bg-white rounded-2xl shadow-warm-lg border border-gold/30 p-6 sm:p-8 overflow-hidden">
+                        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+                        <h2 className="font-serif text-2xl font-semibold text-ink mb-6">Traveler Details</h2>
                         <div className="space-y-6">
                             {travelerDetails.map((traveler, index) => (
                                 <div key={index} className="pb-6 border-b border-gray-100 last:border-0 last:pb-0">
-                                    <h3 className="font-semibold text-gray-800 mb-3">Adult {index + 1}</h3>
+                                    <h3 className="font-serif font-semibold text-ink mb-3">Adult {index + 1}</h3>
                                     <div className="space-y-3">
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-600 mb-1">Name</label>
+                                            <label className="block text-xs font-medium text-ink/60 mb-1.5">Name</label>
                                             <input
                                                 required
                                                 type="text"
-                                                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-brand outline-none"
+                                                className="w-full p-2.5 border border-ink/15 rounded-xl bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition-all"
                                                 value={traveler.name}
                                                 onChange={e => handleTravelerChange(index, 'name', e.target.value)}
                                             />
@@ -676,7 +695,7 @@ export default function CheckoutPage() {
 
                         <button
                             onClick={handleFinalSubmit}
-                            className="w-full bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition mt-8 flex items-center justify-center gap-2 cursor-pointer"
+                            className="btn-premium w-full py-3.5 mt-8"
                         >
                             <Check size={20} />
                             Final Submit
@@ -728,7 +747,7 @@ export default function CheckoutPage() {
                             }}
                             className={`w-full cursor-pointer py-3 h-auto rounded-lg font-bold text-white shadow-md transition-all ${messageModalTitle === "Success" ? "bg-green-600 hover:bg-green-700 shadow-green-200" :
                                 messageModalTitle === "Error" ? "bg-red-600 hover:bg-red-700 shadow-red-200" :
-                                    "bg-[#2A2118] hover:bg-[#0a1e5c] shadow-cream-dark"
+                                    "bg-espresso hover:bg-espresso-light"
                                 }`}
                         >
                             OK, Got it

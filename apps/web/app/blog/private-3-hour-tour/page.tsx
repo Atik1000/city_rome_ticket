@@ -31,6 +31,10 @@ const ColosseumPrivateTourBlog = () => {
             style={{ objectPosition: "50% 15%" }} // center horizontally, top vertically
           />
           
+          <div className="absolute inset-0 bg-gradient-to-b from-espresso/30 via-transparent to-espresso/70" />
+          
+          <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+          
         </section>
 
 
@@ -46,22 +50,22 @@ const ColosseumPrivateTourBlog = () => {
                   Rome Tours
                 </span>
 
-                <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-soft-white mb-4 max-w-4xl">
+                <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-white mb-4 max-w-4xl">
                   Colosseum, Roman Forum & Palatine Hill – Private 3 Hour Tour
                   (What’s Worth It?)
                 </h1>
 
-                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-soft-white/80 text-sm md:text-base">
+                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-muted-foreground text-sm md:text-base">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
+                    <User className="w-4 h-4 text-gold" />
                     <span>Team Italia Tickets</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 text-gold" />
                     <span>February 2026</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-4 h-4 text-gold" />
                     <span>6 min read</span>
                   </div>
                 </div>
@@ -81,7 +85,7 @@ const ColosseumPrivateTourBlog = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="lg:col-span-8"
               >
-                <h1 className="font-heading text-3xl font-semibold text-foreground mb-4 max-w-4xl">
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[2.6rem] leading-[1.12] font-semibold text-foreground mb-4 max-w-4xl">
                   Colosseum, Roman Forum & Palatine Hill – Private 3 Hour Tour
                   (What’s Worth It?)
                 </h1>
@@ -99,7 +103,7 @@ const ColosseumPrivateTourBlog = () => {
                     choice for your trip.
                   </p>
 
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     Why This Area Is So Important
                   </h2>
 
@@ -115,7 +119,7 @@ const ColosseumPrivateTourBlog = () => {
                     become living history.
                   </p>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 md:p-8 my-8">
                     <ul className="space-y-4 text-muted-foreground">
                       <li>
                         <strong className="text-foreground">
@@ -142,7 +146,7 @@ const ColosseumPrivateTourBlog = () => {
                     </ul>
                   </div>
 
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     What Makes a Private 3-Hour Tour Different?
                   </h2>
 
@@ -151,7 +155,7 @@ const ColosseumPrivateTourBlog = () => {
                     tour transforms the experience.
                   </p>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 md:p-8 my-8">
                     <ul className="space-y-4 text-muted-foreground">
                       <li>
                         <strong className="text-foreground">
@@ -188,7 +192,7 @@ const ColosseumPrivateTourBlog = () => {
                     </ul>
                   </div>
 
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     Is 3 Hours Enough?
                   </h2>
 
@@ -216,7 +220,7 @@ const ColosseumPrivateTourBlog = () => {
                     the Forum. Three hours is the sweet spot.
                   </p>
 
-                  <div className="bg-accent/10 border border-accent/20 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="border-l-2 border-gold bg-cream/40 rounded-r-2xl p-6 md:p-8 my-8">
                     <p className="text-foreground font-medium italic text-md leading-relaxed">
                       If this is your first time in Rome, this tour gives you
                       the foundation to understand everything else you’ll see in
@@ -227,11 +231,11 @@ const ColosseumPrivateTourBlog = () => {
                     </p>
                   </div>
 
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     Who Should Choose a Private Tour?
                   </h2>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 md:p-8 my-8">
                     <ul className="space-y-4 text-muted-foreground">
                       <li>✔️ Families who want flexible pacing</li>
                       <li>✔️ Couples looking for a premium experience</li>
@@ -241,7 +245,7 @@ const ColosseumPrivateTourBlog = () => {
                     </ul>
                   </div>
 
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     Is It Worth the Price?
                   </h2>
 
@@ -262,7 +266,7 @@ const ColosseumPrivateTourBlog = () => {
                     trip.
                   </p>
 
-                  <h2 className="font-heading text-xl font-semibold text-foreground mt-12 mb-6">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mt-12 mb-6">
                     Final Verdict
                   </h2>
 
@@ -279,7 +283,7 @@ const ColosseumPrivateTourBlog = () => {
                 </div>
 
                 {/* Back Button */}
-                <div className="mt-12 pt-8 border-t border-border">
+                <div className="mt-12 pt-8 border-t border-gold/25">
                   <Link href="/">
                     <Button variant="outline" className="gap-2">
                       <ArrowLeft className="w-4 h-4" />
@@ -300,11 +304,11 @@ const ColosseumPrivateTourBlog = () => {
 
                   {/* Author */}
                   <div className="bg-card rounded-2xl p-6 shadow-card">
-                    <h3 className="font-heading text-lg font-semibold text-foreground mb-4">
+                    <h3 className="font-serif text-lg font-semibold text-foreground mb-4">
                       About the Author
                     </h3>
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center">
+                      <div className="w-16 h-16 bg-cream ring-1 ring-gold/30 rounded-full flex items-center justify-center">
                         <User className="w-8 h-8 text-muted-foreground" />
                       </div>
                       <div>
@@ -324,11 +328,11 @@ const ColosseumPrivateTourBlog = () => {
                   </div>
 
                   {/* CTA */}
-                  <div className="bg-charcoal rounded-2xl p-6 text-center">
-                    <h3 className="font-heading text-xl font-semibold text-soft-white mb-3">
+                  <div className="bg-espresso border border-gold/30 rounded-2xl p-6 text-center shadow-warm-lg">
+                    <h3 className="font-serif text-xl font-semibold text-gold-light mb-3">
                       Ready to Explore Ancient Rome?
                     </h3>
-                    <p className="text-soft-white/70 text-sm mb-4">
+                    <p className="text-white/70 text-sm mb-4">
                       Book your private Colosseum tour today and experience
                       history without the stress.
                     </p>

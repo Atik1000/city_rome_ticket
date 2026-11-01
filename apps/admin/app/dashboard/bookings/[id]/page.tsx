@@ -6,10 +6,13 @@ import { useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ChevronLeft, ChevronRight, X, Loader2, AlertCircle, Calendar, Clock, Users, Euro, Mail, User } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, AlertCircle, Calendar, Clock, Users, Euro, Mail, User } from 'lucide-react'
 import { getBookingById, Booking, TourTime, TourPlan } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 import { BookingFormModal } from '@/components/dashboard/booking-form-modal'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { PageLoader } from '@/components/dashboard/page-loader'
+import { StatusBadge } from '@/components/dashboard/status-badge'
 
 export default function BookingDetailsPage() {
   const params = useParams()
@@ -66,26 +69,8 @@ export default function BookingDetailsPage() {
     fetchBooking()
   }, [token, bookingId])
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'open':
-      case 'confirmed':
-        return 'bg-green-100 text-green-800'
-      case 'pending':
-        return 'bg-blue-100 text-blue-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    )
+    return <PageLoader label="Loading booking" className="min-h-screen" />
   }
 
   if (error || !booking) {
@@ -103,17 +88,12 @@ export default function BookingDetailsPage() {
   return (
     <div className="space-y-6 sm:space-y-8 pb-8">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/bookings">
-          <Button variant="outline" size="icon" className="border-border bg-transparent hover:bg-secondary">
-            <ChevronLeft size={20} />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-1">Booking Details</h1>
-          <p className="text-muted-foreground text-sm">Booking ID: #{booking.id}</p>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Reservations"
+        backHref="/dashboard/bookings"
+        title="Booking Details"
+        description={`Booking ID: #${booking.id}`}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         {/* Main Details */}
@@ -122,19 +102,17 @@ export default function BookingDetailsPage() {
           <Card className="p-6 border-border shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-foreground mb-1">Booking Status</h2>
+                <h2 className="font-display text-lg font-semibold tracking-tight text-foreground mb-1">Booking Status</h2>
                 <p className="text-sm text-muted-foreground">Current state of this reservation</p>
               </div>
-              <Badge className={`${getStatusColor(booking.status)} text-sm px-4 py-1 capitalize font-medium border-none shadow-none`}>
-                {booking.status}
-              </Badge>
+              <StatusBadge status={booking.status} className="px-3.5 py-1 text-sm" />
             </div>
             {booking.status === 'cancelled' && booking.cancelled_reason && (
-              <div className="mt-4 p-4 bg-red-50 rounded-lg border border-red-100 flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 shrink-0" />
+              <div className="mt-4 p-4 bg-destructive/5 rounded-lg border border-destructive/15 flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-red-800 mb-1">Cancellation Reason</p>
-                  <p className="text-sm text-red-700 leading-relaxed">{booking.cancelled_reason}</p>
+                  <p className="text-sm font-semibold text-destructive mb-1">Cancellation Reason</p>
+                  <p className="text-sm text-foreground/80 leading-relaxed">{booking.cancelled_reason}</p>
                 </div>
               </div>
             )}
@@ -142,7 +120,7 @@ export default function BookingDetailsPage() {
 
           {/* Items / Tour Info */}
           <Card className="p-6 border-border shadow-sm">
-            <h2 className="text-lg font-semibold text-foreground mb-6">Reserved Items</h2>
+            <h2 className="font-display text-lg font-semibold tracking-tight text-foreground mb-6">Reserved Items</h2>
             <div className="space-y-6">
               {booking.items.length === 0 ? (
                 <p className="text-muted-foreground text-center py-4">No items in this booking.</p>
@@ -156,7 +134,7 @@ export default function BookingDetailsPage() {
                       {/* Tour Title & Description */}
                       {tourPlan && (
                         <div className="mb-6">
-                          <h3 className="text-xl font-bold text-foreground mb-2">{tourPlan.title}</h3>
+                          <h3 className="font-display text-xl font-semibold tracking-tight text-foreground mb-2">{tourPlan.title}</h3>
                           <p className="text-sm text-muted-foreground transition-all cursor-pointer">
                             {tourPlan.description}
                           </p>
@@ -239,12 +217,12 @@ export default function BookingDetailsPage() {
                           </div>
 
                           <div className="flex items-start gap-3">
-                            <div className="p-2 bg-green-100 rounded-lg text-green-600">
+                            <div className="p-2 bg-gold/15 rounded-lg text-gold">
                               <Euro size={18} />
                             </div>
                             <div>
                               <p className="text-xs text-muted-foreground uppercase font-semibold">Item Price</p>
-                              <p className="text-xl font-bold text-foreground">€{parseFloat(item.item_price).toFixed(2)}</p>
+                              <p className="font-display text-xl font-semibold tabular-nums text-foreground">€{parseFloat(item.item_price).toFixed(2)}</p>
                             </div>
                           </div>
                         </div>
@@ -264,7 +242,7 @@ export default function BookingDetailsPage() {
                                     <img
                                       src={img.file}
                                       alt={`Tour image ${i + 1}`}
-                                      className="object-fixed w-full h-full hover:scale-110 transition-transform duration-300"
+                                      className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
                                     />
                                   </div>
                                 ))}
@@ -275,14 +253,10 @@ export default function BookingDetailsPage() {
                           {tourPlan && (
                             <div className="grid grid-cols-2 gap-4">
                               {tourPlan.free_cancellation && (
-                                <Badge variant="outline" className="justify-center border-green-200 bg-green-50 text-green-700 py-1">
-                                  Free Cancellation
-                                </Badge>
+                                <StatusBadge status="free cancellation" tone="success" className="justify-center py-1" />
                               )}
                               {tourPlan.pickup_included && (
-                                <Badge variant="outline" className="justify-center border-blue-200 bg-blue-50 text-blue-700 py-1">
-                                  Pickup Included
-                                </Badge>
+                                <StatusBadge status="pickup included" tone="info" className="justify-center py-1" />
                               )}
                             </div>
                           )}
@@ -309,13 +283,13 @@ export default function BookingDetailsPage() {
 
                           <div>
                             <h4 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-success"></span>
                               Included
                             </h4>
                             <ul className="space-y-2 text-sm text-muted-foreground">
                               {tourPlan.includes.map((inc, i) => (
                                 <li key={i} className="flex items-start gap-2">
-                                  <div className="mt-1.5 w-1 h-1 rounded-full bg-green-500 shrink-0"></div>
+                                  <div className="mt-1.5 w-1 h-1 rounded-full bg-success shrink-0"></div>
                                   {inc}
                                 </li>
                               ))}
@@ -325,13 +299,13 @@ export default function BookingDetailsPage() {
                           {tourPlan.excludes.length > 0 && (
                             <div className="mt-4">
                               <h4 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-destructive"></span>
                                 Excluded
                               </h4>
                               <ul className="space-y-2 text-sm text-muted-foreground">
                                 {tourPlan.excludes.map((exc, i) => (
                                   <li key={i} className="flex items-start gap-2">
-                                    <div className="mt-1.5 w-1 h-1 rounded-full bg-red-500 shrink-0"></div>
+                                    <div className="mt-1.5 w-1 h-1 rounded-full bg-destructive shrink-0"></div>
                                     {exc}
                                   </li>
                                 ))}
@@ -378,17 +352,17 @@ export default function BookingDetailsPage() {
                             </div>
                           )}
                           {tourPlan.not_suitable_for.length > 0 && (
-                            <div className="p-4 bg-orange-50 rounded-lg border border-orange-100">
-                              <p className="font-bold text-orange-800 mb-2">Not Suitable For</p>
-                              <ul className="list-disc list-inside text-orange-700 space-y-1">
+                            <div className="p-4 bg-warning-soft rounded-lg border border-warning/20">
+                              <p className="font-bold text-warning mb-2">Not Suitable For</p>
+                              <ul className="list-disc list-inside text-foreground/75 space-y-1">
                                 {tourPlan.not_suitable_for.map((item, i) => <li key={i}>{item}</li>)}
                               </ul>
                             </div>
                           )}
                           {tourPlan.not_allowed.length > 0 && (
-                            <div className="p-4 bg-red-50 rounded-lg border border-red-100">
-                              <p className="font-bold text-red-800 mb-2">Not Allowed</p>
-                              <ul className="list-disc list-inside text-red-700 space-y-1">
+                            <div className="p-4 bg-destructive/5 rounded-lg border border-destructive/15">
+                              <p className="font-bold text-destructive mb-2">Not Allowed</p>
+                              <ul className="list-disc list-inside text-foreground/75 space-y-1">
                                 {tourPlan.not_allowed.map((item, i) => <li key={i}>{item}</li>)}
                               </ul>
                             </div>
@@ -404,7 +378,7 @@ export default function BookingDetailsPage() {
 
           {/* Traveler Details */}
           <Card className="p-6 border-border shadow-sm">
-            <h2 className="text-lg font-semibold text-foreground mb-6">Traveler Details</h2>
+            <h2 className="font-display text-lg font-semibold tracking-tight text-foreground mb-6">Traveler Details</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {booking.traveler_details.map((traveler, index) => (
                 <div key={index} className="p-4 bg-secondary/30 rounded-lg border border-border flex items-start gap-3">
@@ -431,8 +405,9 @@ export default function BookingDetailsPage() {
 
         {/* Sidebar Summary */}
         <div className="lg:col-span-1 space-y-6">
-          <Card className="p-6 border-border shadow-sm sticky top-24">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Summary</h3>
+          <Card className="p-6 border-border/80 shadow-warm sticky top-24">
+            <h3 className="font-display text-lg font-semibold tracking-tight text-foreground mb-1">Summary</h3>
+            <div className="gold-hairline mb-4" aria-hidden="true" />
             <div className="space-y-4">
               <div className="flex justify-between items-center pb-2 border-b border-border">
                 <span className="text-muted-foreground text-sm">User Type</span>
@@ -460,8 +435,8 @@ export default function BookingDetailsPage() {
               </div>
               <div className="pt-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-foreground">Total Price</span>
-                  <span className="text-2xl font-bold text-primary">€{parseFloat(booking.total_price).toFixed(2)}</span>
+                  <span className="text-base font-semibold text-foreground">Total Price</span>
+                  <span className="font-display text-2xl font-semibold tabular-nums text-primary">€{parseFloat(booking.total_price).toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -490,17 +465,19 @@ export default function BookingDetailsPage() {
 
       {/* Lightbox Modal */}
       {lightboxState.isOpen && lightboxState.images.length > 0 && (
-        <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-md flex items-center justify-center animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] bg-scrim/90 flex items-center justify-center animate-in fade-in duration-300">
           <button
             onClick={closeLightbox}
-            className="absolute top-6 right-6 p-2 bg-secondary/50 rounded-full text-foreground hover:bg-secondary transition-colors z-[110]"
+            aria-label="Close gallery"
+            className="absolute top-6 right-6 p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors z-[110] cursor-pointer"
           >
             <X size={24} />
           </button>
 
           <button
             onClick={prevImage}
-            className="absolute left-4 sm:left-6 p-3 bg-secondary/50 rounded-full text-foreground hover:bg-secondary transition-colors z-[110]"
+            aria-label="Previous image"
+            className="absolute left-4 sm:left-6 p-3 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors z-[110] cursor-pointer"
           >
             <ChevronLeft size={32} />
           </button>
@@ -512,14 +489,15 @@ export default function BookingDetailsPage() {
               alt="Full view"
               className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl animate-in zoom-in-95 duration-500"
             />
-            <div className="mt-4 px-4 py-2 bg-secondary/50 rounded-full text-sm font-medium text-foreground">
+            <div className="mt-4 px-4 py-2 bg-white/10 rounded-full text-sm font-medium text-white tabular-nums">
               {lightboxState.currentIndex + 1} / {lightboxState.images.length}
             </div>
           </div>
 
           <button
             onClick={nextImage}
-            className="absolute right-4 sm:right-6 p-3 bg-secondary/50 rounded-full text-foreground hover:bg-secondary transition-colors z-[110]"
+            aria-label="Next image"
+            className="absolute right-4 sm:right-6 p-3 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors z-[110] cursor-pointer"
           >
             <ChevronRight size={32} />
           </button>

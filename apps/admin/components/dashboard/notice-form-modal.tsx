@@ -5,26 +5,21 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Loader2, Save, CheckCircle2, AlertCircle, Plus } from 'lucide-react'
+import { Loader2, Save, CheckCircle2, AlertCircle, Megaphone } from 'lucide-react'
+import { ModalHeader, AlertModalHeader } from '@/components/dashboard/modal-header'
 import { createNotice } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
+    } from '@/components/ui/dialog'
 import {
     AlertDialog,
     AlertDialogAction,
     AlertDialogContent,
-    AlertDialogDescription,
     AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+    } from "@/components/ui/alert-dialog"
 
 interface NoticeFormModalProps {
     open: boolean
@@ -101,15 +96,13 @@ export function NoticeFormModal({ open, onOpenChange, onSaved }: NoticeFormModal
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="max-w-2xl bg-background border-border shadow-2xl p-0 overflow-hidden">
-                    <div className="bg-primary/5 p-6 border-b border-border">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-semibold flex items-center gap-2">
-                                <Plus className="text-primary" />
-                                Create New Notice
-                            </DialogTitle>
-                            <DialogDescription>Publish a new announcement for the system</DialogDescription>
-                        </DialogHeader>
+                <DialogContent className="max-w-2xl p-0 overflow-hidden">
+                    <div className="bg-warm-wash p-6 border-b border-border/70">
+                        <ModalHeader
+                            icon={Megaphone}
+                            title="Create New Notice"
+                            description="Publish a new announcement for the system"
+                        />
                     </div>
                     <form onSubmit={handleSubmit} className="p-6 space-y-6">
                         <div className="space-y-4">
@@ -120,7 +113,7 @@ export function NoticeFormModal({ open, onOpenChange, onSaved }: NoticeFormModal
                                     placeholder="Enter notice title"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="h-12 border-border focus:ring-primary bg-secondary/20"
+                                    className="h-11 border-border bg-background/60"
                                     required
                                 />
                             </div>
@@ -132,24 +125,25 @@ export function NoticeFormModal({ open, onOpenChange, onSaved }: NoticeFormModal
                                     placeholder="Enter notice description"
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="min-h-[250px] border-border focus:ring-primary bg-secondary/20 leading-relaxed text-base"
+                                    className="min-h-[250px] border-border bg-background/60 leading-relaxed text-base"
                                     required
                                 />
                             </div>
                         </div>
-                        <DialogFooter className="pt-4 flex items-center gap-3">
+                        <div className="gold-hairline" aria-hidden="true" />
+                        <DialogFooter className="flex items-center gap-3">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => onOpenChange(false)}
-                                className="h-12 px-6 border-border font-semibold rounded-xl cursor-pointer"
+                                className="h-11 px-6 border-border font-semibold rounded-lg cursor-pointer"
                             >
                                 Cancel
                             </Button>
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shadow-primary/20"
+                                className="h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold rounded-lg flex items-center gap-2 cursor-pointer shadow-lg shadow-primary/15"
                             >
                                 {isLoading ? (
                                     <>
@@ -173,17 +167,13 @@ export function NoticeFormModal({ open, onOpenChange, onSaved }: NoticeFormModal
                 open={alertConfig.show}
                 onOpenChange={(v) => setAlertConfig({ ...alertConfig, show: v })}
             >
-                <AlertDialogContent className="max-w-md border-0 bg-background/95 backdrop-blur-lg shadow-2xl">
-                    <div className={`absolute top-0 left-0 w-full h-1 ${alertConfig.type === 'success' ? 'bg-primary' : 'bg-destructive'}`} />
-                    <AlertDialogHeader>
-                        <div className={`flex items-center gap-2 ${alertConfig.type === 'success' ? 'text-primary' : 'text-destructive'} mb-2`}>
-                            {alertConfig.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
-                            <AlertDialogTitle className="text-xl font-bold">{alertConfig.title}</AlertDialogTitle>
-                        </div>
-                        <AlertDialogDescription className="text-foreground/80 text-base font-medium whitespace-pre-line">
-                            {alertConfig.message}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
+                <AlertDialogContent className="max-w-md">
+                    <AlertModalHeader
+                        icon={alertConfig.type === 'success' ? CheckCircle2 : AlertCircle}
+                        tone={alertConfig.type === 'success' ? 'success' : 'destructive'}
+                        title={alertConfig.title}
+                        description={alertConfig.message}
+                    />
                     <AlertDialogFooter>
                         <AlertDialogAction
                             onClick={() => {

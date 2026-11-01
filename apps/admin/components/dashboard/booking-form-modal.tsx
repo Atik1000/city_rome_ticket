@@ -11,8 +11,10 @@ import {
     Users,
     Clock,
     Info,
-    Search
+    Search,
+    BookOpen
 } from 'lucide-react'
+import { AlertModalHeader } from '@/components/dashboard/modal-header'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useAuth } from '@/app/contexts/auth-context'
@@ -71,7 +73,7 @@ const DatePicker = ({ isOpen, onClose, availableDates, onDateSelect }: any) => {
     }
 
     return (
-        <div className="absolute top-full right-0 mt-2 bg-white border border-border/50 rounded-3xl shadow-2xl p-4 z-1000 animate-in fade-in slide-in-from-top-4 duration-500">
+        <div className="absolute top-full right-0 mt-2 bg-card border border-border/50 rounded-3xl shadow-2xl p-4 z-1000 animate-in fade-in slide-in-from-top-4 duration-500">
             <div className="flex justify-between items-center mb-4 px-2">
                 <h4 className="text-xs font-black uppercase tracking-widest text-primary">Select Manual Date</h4>
                 <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 rounded-full hover:bg-secondary transition-all">
@@ -703,7 +705,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
             if (Array.isArray(value)) {
                 return value.map((msg, idx) => (
                     <div key={`${key}-${idx}`} className="flex items-start gap-2 mb-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-destructive mt-1.5 shrink-0" />
                         <p className="text-sm font-medium text-destructive">
                             <span className="capitalize">{key.replace(/_/g, ' ')}:</span> {msg}
                         </p>
@@ -738,15 +740,20 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="sm:max-w-4xl max-h-[85vh] flex flex-col gap-0 p-0 overflow-hidden">
-                    <DialogHeader className="px-6 py-4 border-b border-border shrink-0">
+                    <DialogHeader className="px-6 py-4 border-b border-border/70 bg-warm-wash shrink-0">
                         <div className="flex items-center justify-between pr-8">
-                            <DialogTitle>
-                                {isEdit ? (
-                                    <>Update <span className="text-primary italic">Booking</span> #{originalBooking?.id}</>
-                                ) : (
-                                    <><span className="text-primary italic">Manual</span> Booking Engine</>
-                                )}
-                            </DialogTitle>
+                            <div className="flex items-center gap-3.5">
+                                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-gold/40" aria-hidden="true">
+                                    <BookOpen size={20} />
+                                </div>
+                                <DialogTitle>
+                                    {isEdit ? (
+                                        <>Update <span className="text-primary italic">Booking</span> #{originalBooking?.id}</>
+                                    ) : (
+                                        <><span className="text-primary italic">Manual</span> Booking Engine</>
+                                    )}
+                                </DialogTitle>
+                            </div>
                             <div className="flex items-center gap-2">
                                 {totalSteps.map(s => (
                                     <div key={s} className={`h-1.5 w-8 rounded-full transition-all duration-500 ${step >= s ? 'bg-primary' : 'bg-muted'}`} />
@@ -763,14 +770,14 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                         ) : step === 1 ? (
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                 {error && (
-                                    <div className="flex items-center gap-3 p-4 bg-red-50 rounded-2xl border border-red-100 text-red-600">
+                                    <div className="flex items-center gap-3 p-4 bg-destructive/5 rounded-xl border border-destructive/15 text-destructive">
                                         <AlertCircle size={20} />
                                         <span className="text-sm font-bold">{error}</span>
                                     </div>
                                 )}
 
                                 {/* 1. Tour Selection */}
-                                <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40">
+                                <div className="bg-card rounded-2xl p-5 shadow-sm border border-border/40">
                                     <div className="flex items-center gap-3 mb-5">
                                         <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                                             <Info size={18} />
@@ -790,13 +797,13 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                             >
                                                 <SelectValue placeholder="Browse available tour plans..." />
                                             </SelectTrigger>
-                                            <SelectContent className="bg-white border border-border/50 rounded-2xl shadow-2xl">
+                                            <SelectContent className="bg-card border border-border/50 rounded-2xl shadow-2xl">
                                                 {tourPlans.map(tour => (
                                                     <SelectItem
                                                         key={tour.id}
                                                         value={tour.id.toString()}
                                                         indicatorPlacement="left"
-                                                        className="font-medium p-4 gap-4 cursor-pointer focus:bg-accent rounded-xl text-black transition-colors"
+                                                        className="font-medium p-4 gap-4 cursor-pointer focus:bg-accent rounded-xl text-foreground transition-colors"
                                                     >
                                                         {tour.title} — From €{(parseFloat(tour.price_adult)).toFixed(2)}
                                                     </SelectItem>
@@ -812,7 +819,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                 {selectedTour && (
                                     <>
                                         {/* 2. Travelers / Group Composition */}
-                                        <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                        <div className="bg-card rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                             <div className="flex items-center gap-3 mb-5">
                                                 <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
                                                     <Users size={18} />
@@ -834,7 +841,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                                 <span className="font-bold text-foreground">{item.label}</span>
                                                                 <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground opacity-70">Age {item.age}</span>
                                                             </div>
-                                                            <div className="flex items-center justify-between bg-white rounded-xl p-2 border border-border/40 shadow-sm">
+                                                            <div className="flex items-center justify-between bg-card rounded-xl p-2 border border-border/40 shadow-sm">
                                                                 <button
                                                                     onClick={() => handleUpdateCount(item.key, -1, item.max)}
                                                                     className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all disabled:opacity-30 cursor-pointer"
@@ -858,7 +865,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                         </div>
 
                                         {/* 3. Date Selection */}
-                                        <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300 relative z-20">
+                                        <div className="bg-card rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300 relative z-20">
                                             <div className="flex items-center gap-3 mb-5">
                                                 <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
                                                     <CalendarIcon size={18} />
@@ -887,7 +894,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                         ${isSelected
                                                                         ? "border-primary bg-primary text-white shadow-xl shadow-primary/20 scale-105 z-10"
                                                                         : availableDate
-                                                                            ? "border-secondary bg-white text-foreground hover:border-primary/50 hover:bg-secondary/20 cursor-pointer shadow-sm"
+                                                                            ? "border-secondary bg-card text-foreground hover:border-primary/50 hover:bg-secondary/20 cursor-pointer shadow-sm"
                                                                             : "border-border/20 bg-secondary/10 text-muted-foreground opacity-40 cursor-not-allowed"
                                                                     }`}
                                                             >
@@ -909,7 +916,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                 <div className="relative pt-0" ref={gridDatePickerRef}>
                                                     <button
                                                         onClick={() => setIsGridDatePickerOpen(!isGridDatePickerOpen)}
-                                                        className="flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl border-2 border-dashed border-muted-foreground/30 bg-white text-muted-foreground hover:border-primary hover:text-primary transition-all duration-300 shadow-sm cursor-pointer"
+                                                        className="flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl border-2 border-dashed border-muted-foreground/30 bg-card text-muted-foreground hover:border-primary hover:text-primary transition-all duration-300 shadow-sm cursor-pointer"
                                                     >
                                                         <CalendarIcon size={24} className="mb-1" />
                                                         <span className="text-[10px] font-bold uppercase tracking-tight">Custom</span>
@@ -926,7 +933,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
 
                                         {/* 4. Time Selection */}
                                         {selectedDate && (
-                                            <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300 relative z-10">
+                                            <div className="bg-card rounded-2xl p-5 shadow-sm border border-border/40 animate-in fade-in slide-in-from-bottom-2 duration-300 relative z-10">
                                                 <div className="flex items-center gap-3 mb-2">
                                                     <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
                                                         <Clock size={18} />
@@ -939,7 +946,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
 
                                                 <div className="flex flex-wrap gap-3">
                                                     {timeSlots.length === 0 ? (
-                                                        <div className="flex items-center gap-3 p-4 bg-red-50 rounded-2xl border border-red-100 text-red-600 w-full animate-in zoom-in duration-300">
+                                                        <div className="flex items-center gap-3 p-4 bg-destructive/5 rounded-xl border border-destructive/15 text-destructive w-full animate-in zoom-in duration-300">
                                                             <AlertCircle size={20} />
                                                             <span className="text-sm font-bold">All slots are currently booked or unavailable for this date.</span>
                                                         </div>
@@ -953,7 +960,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                                     className={`min-w-[100px] px-6 py-4 rounded-2xl border-2 font-black text-base transition-all duration-300 tabular-nums cursor-pointer
                                                                 ${isSelected
                                                                             ? "bg-foreground text-white border-foreground shadow-2xl scale-105 z-10"
-                                                                            : "bg-white text-foreground border-secondary hover:border-foreground/50 hover:bg-secondary/10"
+                                                                            : "bg-card text-foreground border-secondary hover:border-foreground/50 hover:bg-secondary/10"
                                                                         }`}
                                                                 >
                                                                     {slot.start_time.split(':').slice(0, 2).join(':')}
@@ -973,7 +980,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                     {originalBooking?.items.map((item, idx) => {
                                                         const tour = tourPlans.find(t => t.id === item.tour_plan)
                                                         return (
-                                                            <div key={idx} className="p-4 rounded-2xl bg-white border border-border/30 space-y-2">
+                                                            <div key={idx} className="p-4 rounded-2xl bg-card border border-border/30 space-y-2">
                                                                 <div className="flex justify-between items-center">
                                                                     <span className="text-sm font-bold text-primary">{tour?.title || 'Unknown Tour'}</span>
                                                                     <span className="font-black">€{parseFloat(item.item_price).toFixed(2)}</span>
@@ -1043,7 +1050,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                 required
                                                 type="text"
                                                 placeholder="e.g. MARCUS AURELIUS"
-                                                className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                className="w-full p-3 bg-card border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
                                                 value={customerInfo.full_name}
                                                 onChange={e => handleCustomerInfoChange('full_name', e.target.value)}
                                             />
@@ -1054,7 +1061,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                 required
                                                 type="email"
                                                 placeholder="customer@email.com"
-                                                className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                className="w-full p-3 bg-card border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
                                                 value={customerInfo.email}
                                                 onChange={e => handleCustomerInfoChange('email', e.target.value)}
                                             />
@@ -1067,14 +1074,14 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                             <div className="relative">
                                                 <button
                                                     onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                                                    className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base text-left flex justify-between items-center"
+                                                    className="w-full p-3 bg-card border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base text-left flex justify-between items-center"
                                                 >
                                                     {customerInfo.country || "Select Country"}
                                                     <Plus className={isCountryDropdownOpen ? "rotate-45" : ""} size={20} />
                                                 </button>
 
                                                 {isCountryDropdownOpen && (
-                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-border/50 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border/50 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
                                                         <div className="p-4 border-b border-secondary flex items-center gap-3">
                                                             <Search size={18} className="text-muted-foreground" />
                                                             <input
@@ -1115,7 +1122,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                 required
                                                 type="tel"
                                                 placeholder="+1 (555) 000-0000"
-                                                className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                className="w-full p-3 bg-card border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
                                                 value={customerInfo.phone}
                                                 onChange={e => handleCustomerInfoChange('phone', e.target.value)}
                                             />
@@ -1137,9 +1144,9 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
 
                                 <div className="space-y-6">
                                     {travelerDetails.map((traveler, index) => (
-                                        <div key={index} className="group p-5 rounded-2xl bg-secondary/10 border border-border/20 transition-all hover:bg-white hover:shadow-xl hover:border-border/80">
+                                        <div key={index} className="group p-5 rounded-2xl bg-secondary/10 border border-border/20 transition-all hover:bg-card hover:shadow-xl hover:border-border/80">
                                             <div className="flex items-center gap-4 mb-4">
-                                                <div className="w-9 h-9 rounded-full bg-white border border-border text-foreground flex items-center justify-center font-black group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
+                                                <div className="w-9 h-9 rounded-full bg-card border border-border text-foreground flex items-center justify-center font-black group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
                                                     {index + 1}
                                                 </div>
                                                 <h3 className="font-black text-sm uppercase tracking-[0.2em] text-muted-foreground opacity-60">Adult {index + 1}</h3>
@@ -1150,7 +1157,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                                     required
                                                     type="text"
                                                     placeholder="e.g. MARCUS AURELIUS"
-                                                    className="w-full p-3 bg-white border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
+                                                    className="w-full p-3 bg-card border-2 border-secondary rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-base"
                                                     value={traveler.name}
                                                     onChange={e => handleTravelerChange(index, 'name', e.target.value)}
                                                 />
@@ -1163,7 +1170,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                     </div>
 
                     {/* Sticky footer */}
-                    <div className="px-6 py-4 border-t border-border bg-background shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="px-6 py-4 border-t border-border/70 bg-secondary/30 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-6">
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Schedule</span>
@@ -1174,8 +1181,8 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                                 </span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{isEdit ? 'Total Price' : 'Gross Total'}</span>
-                                <span className="text-xl font-black text-foreground tabular-nums tracking-tighter">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">{isEdit ? 'Total Price' : 'Gross Total'}</span>
+                                <span className="font-display text-xl font-semibold text-foreground tabular-nums tracking-tight">
                                     €{isEdit
                                         ? parseFloat(originalBooking?.total_price || '0').toFixed(2)
                                         : grossTotal.toFixed(2)}
@@ -1234,20 +1241,15 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
             </Dialog>
 
             <AlertDialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
-                <AlertDialogContent className="bg-white rounded-[2rem] border-0 shadow-2xl p-8 max-w-md">
-                    <AlertDialogHeader className="mb-6">
-                        <div className="w-16 h-16 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mb-4 mx-auto sm:mx-0">
-                            <AlertCircle size={32} />
-                        </div>
-                        <AlertDialogTitle className="text-2xl font-black text-foreground tracking-tight">
-                            Booking Conflict
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-muted-foreground font-medium text-base">
-                            The system encountered validation errors while processing your reservation.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
+                <AlertDialogContent className="max-w-md">
+                    <AlertModalHeader
+                        icon={AlertCircle}
+                        tone="destructive"
+                        title="Booking Conflict"
+                        description="The system encountered validation errors while processing your reservation."
+                    />
 
-                    <div className="bg-secondary/20 rounded-2xl p-6 mb-8 max-h-[300px] overflow-y-auto border border-border/30">
+                    <div className="bg-secondary/25 rounded-xl p-5 mb-4 max-h-[300px] overflow-y-auto border border-border/50">
                         {apiErrors ? (
                             <div className="space-y-1">
                                 {renderErrorMessages(apiErrors)}
@@ -1260,7 +1262,7 @@ export function BookingFormModal({ open, onOpenChange, booking, onSaved }: Booki
                     <AlertDialogFooter>
                         <AlertDialogAction
                             onClick={() => setErrorDialogOpen(false)}
-                            className="h-14 w-full rounded-xl bg-foreground text-white font-black text-lg transition-all hover:scale-[1.02] active:scale-95 shadow-xl cursor-pointer"
+                            className="h-12 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base transition-all active:scale-95 shadow-lg shadow-primary/15 cursor-pointer"
                         >
                             Acknowledge &amp; Edit
                         </AlertDialogAction>

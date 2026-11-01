@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
   Select,
   SelectContent,
@@ -22,8 +22,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Loader2 } from 'lucide-react'
+import { Loader2, RefreshCcw } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
+import { ModalHeader } from '@/components/dashboard/modal-header'
+import { StatusBadge } from '@/components/dashboard/status-badge'
 
 interface StatusModalProps {
   isOpen: boolean
@@ -99,44 +101,27 @@ export function StatusModal({
     }
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'completed':
-      case 'accepted':
-      case 'confirmed':
-      case 'resolved':
-        return 'bg-green-100 text-green-800'
-      case 'open':
-      case 'in_review':
-      case 'in-progress':
-      case 'pending':
-        return 'bg-blue-100 text-blue-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Update Status</DialogTitle>
-          </DialogHeader>
+          <ModalHeader
+            icon={RefreshCcw}
+            title="Update Status"
+            description={`Change the status of this ${type === 'contact' ? 'contact request' : 'booking'}`}
+          />
 
           <div className="space-y-6">
             {/* Current Status */}
             <div>
               <Label className="text-sm text-muted-foreground mb-2 block">Current Status</Label>
-              <Badge className={getStatusColor(currentStatus)} variant="outline">
-                {currentStatus.replace('_', ' ').charAt(0).toUpperCase() + currentStatus.replace('_', ' ').slice(1)}
-              </Badge>
+              <StatusBadge status={currentStatus} />
             </div>
 
+            <div className="gold-hairline" aria-hidden="true" />
+
             {/* Change Status */}
-            <div className="space-y-2 border-t border-border pt-6">
+            <div className="space-y-2">
               <Label htmlFor="status-select" className="text-foreground">
                 Change Status To
               </Label>
@@ -172,18 +157,18 @@ export function StatusModal({
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex gap-2 border-t border-border pt-6 mt-6">
+          <div className="flex gap-2 border-t border-border/70 pt-5 mt-2">
             <Button
               variant="outline"
               onClick={onClose}
-              className="flex-1 border-border bg-transparent"
+              className="flex-1 border-border bg-transparent cursor-pointer"
               disabled={loading}
             >
               Cancel
             </Button>
             <Button
               onClick={handleSave}
-              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer shadow-lg shadow-primary/15"
               disabled={loading || (newStatus === currentStatus && (newStatus !== 'cancelled' || !cancelledReason))}
             >
               {loading ? (

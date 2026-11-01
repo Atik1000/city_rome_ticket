@@ -76,16 +76,17 @@ export default function DiscountModal() {
 
       {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-        <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
-          {/* Orange Header */}
-          <div className="bg-brand px-6 py-2 relative flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 justify-center">
-              <div className="flex-shrink-0 pt-1">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
-                <Percent className="h-6 w-6 text-brand" />
+        <div className="bg-white rounded-2xl shadow-warm-lg border border-gold/30 w-full max-w-md overflow-hidden">
+          {/* Terracotta header */}
+          <div className="bg-gradient-to-b from-[#ab342d] to-brand px-6 py-3 relative flex items-center justify-between gap-4">
+            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-light/70 to-transparent" />
+            <div className="flex items-center gap-3 justify-center">
+              <div className="flex-shrink-0">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 ring-1 ring-gold-light/60">
+                <Percent className="h-5 w-5 text-brand" />
               </div>
             </div>
-            <h2 className="text-xl font-bold text-white flex-1 leading-tight">
+            <h2 className="font-serif text-xl font-semibold text-white flex-1 leading-tight">
               Important Notice
             </h2>
             </div>
@@ -109,7 +110,7 @@ export default function DiscountModal() {
               <>
                 {notice && (
                   <div className=" space-y-2">
-                    <h4 className="text-lg font-semibold text-[#2A2118]">{notice.description}</h4>
+                    <h4 className="text-lg font-medium text-ink leading-relaxed">{notice.description}</h4>
                   </div>
                 )}
 

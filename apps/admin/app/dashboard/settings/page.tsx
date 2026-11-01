@@ -22,8 +22,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Plus, Edit, Trash2, Loader2 } from 'lucide-react'
+import { Plus, Edit, Trash2, Users } from 'lucide-react'
 import { UserFormModal } from '@/components/dashboard/user-form-modal'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { PageLoader } from '@/components/dashboard/page-loader'
+import { StatusBadge } from '@/components/dashboard/status-badge'
+import { EmptyState } from '@/components/dashboard/empty-state'
+import { AlertModalHeader } from '@/components/dashboard/modal-header'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { getAuthUsers, AuthUser, deleteAuthUser } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 import { useRouter } from 'next/navigation'
@@ -101,103 +107,98 @@ export default function SettingsPage() {
     }
   }
 
-  const getRoleBadge = (role: string) => {
-    switch (role.toUpperCase()) {
-      case 'SUPER_ADMIN':
-        return 'bg-red-100 text-red-800'
-      case 'ADMIN':
-        return 'bg-red-100 text-red-800'
-      case 'MODERATOR':
-      case 'MANAGER':
-        return 'bg-blue-100 text-blue-800'
-      case 'USER':
-        return 'bg-green-100 text-green-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
   return (
     <div className="space-y-6 sm:space-y-8 pb-8">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
-        <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">Settings</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">Manage users and system configurations</p>
-        </div>
-        <Button
-          onClick={handleAddUser}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg cursor-pointer"
-        >
-          <Plus size={20} />
-          Add User
-        </Button>
-      </div>
+      <PageHeader
+        eyebrow="Administration"
+        title="Settings"
+        description="Manage users and system configurations"
+        actions={
+          <Button
+            onClick={handleAddUser}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg cursor-pointer shadow-lg shadow-primary/15"
+          >
+            <Plus size={20} />
+            Add User
+          </Button>
+        }
+      />
 
       {/* Users Table - Responsive */}
-      <Card className="border-border overflow-hidden shadow-sm">
-        <div className="p-4 sm:p-5 border-b border-border bg-secondary">
-          <h2 className="font-bold text-foreground text-sm sm:text-base">User Management</h2>
+      <Card className="border-border/80 overflow-hidden shadow-warm p-0 gap-0">
+        <div className="p-4 sm:p-5 border-b border-border/70 bg-warm-wash flex items-center gap-2">
+          <Users size={18} className="text-gold" aria-hidden="true" />
+          <h2 className="font-display font-semibold tracking-tight text-foreground text-base sm:text-lg">User Management</h2>
         </div>
 
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex items-center justify-center p-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
+            <PageLoader label="Loading users" className="min-h-[200px] p-12" />
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-border bg-secondary hover:bg-secondary">
-                  <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Name</TableHead>
-                  <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Email</TableHead>
-                  <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Phone</TableHead>
-                  <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Role</TableHead>
-                  <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Actions</TableHead>
+                <TableRow className="border-border bg-secondary/50 hover:bg-secondary/50">
+                  <TableHead className="pl-5">Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Phone</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="pr-5 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users.length > 0 ? (
                   users.map((user) => (
-                    <TableRow key={user.email} className="border-border hover:bg-secondary/50 transition-colors">
-                      <TableCell className="font-medium text-foreground text-xs sm:text-sm truncate">
+                    <TableRow key={user.email} className="border-border/70 hover:bg-accent/35 transition-colors">
+                      <TableCell className="pl-5 font-semibold text-foreground text-xs sm:text-sm truncate">
                         {user.first_name} {user.last_name}
                       </TableCell>
                       <TableCell className="text-muted-foreground text-xs sm:text-sm truncate">{user.email}</TableCell>
                       <TableCell className="text-muted-foreground text-xs sm:text-sm truncate">{user.phone || 'N/A'}</TableCell>
                       <TableCell>
-                        <Badge className={`${getRoleBadge(user.role)} text-xs sm:text-sm whitespace-nowrap`}>
-                          {user.role.replace('_', ' ')}
-                        </Badge>
+                        <StatusBadge status={user.role} label={user.role.replace(/_/g, ' ').toLowerCase()} />
                       </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-border text-primary hover:bg-primary/10 bg-transparent h-9 w-9 p-0 rounded cursor-pointer"
-                            title="Edit user"
-                            onClick={() => handleEditUser(user)}
-                          >
-                            <Edit size={16} />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-border text-destructive hover:bg-destructive/10 bg-transparent h-9 w-9 p-0 rounded cursor-pointer"
-                            title="Delete user"
-                            onClick={() => handleDeleteUser(user.id || user.email)}
-                          >
-                            <Trash2 size={16} />
-                          </Button>
+                      <TableCell className="pr-5">
+                        <div className="flex justify-end gap-1.5">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="icon-sm"
+                                className="border-border text-muted-foreground hover:text-primary hover:bg-primary/10 bg-transparent rounded-lg cursor-pointer"
+                                aria-label={`Edit ${user.first_name} ${user.last_name}`}
+                                onClick={() => handleEditUser(user)}
+                              >
+                                <Edit size={15} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Edit user</TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="icon-sm"
+                                className="border-border text-destructive hover:text-destructive hover:bg-destructive/10 bg-transparent rounded-lg cursor-pointer"
+                                aria-label={`Delete ${user.first_name} ${user.last_name}`}
+                                onClick={() => handleDeleteUser(user.id || user.email)}
+                              >
+                                <Trash2 size={15} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Delete user</TooltipContent>
+                          </Tooltip>
                         </div>
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                      No users found
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell colSpan={5} className="p-0">
+                      <EmptyState
+                        title="No users found"
+                        description="Add a team member to give them access to the admin panel."
+                      />
                     </TableCell>
                   </TableRow>
                 )}
@@ -221,16 +222,16 @@ export default function SettingsPage() {
       {/* Delete Confirmation Modal */}
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the user account.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+          <AlertModalHeader
+            icon={Trash2}
+            tone="destructive"
+            title="Delete this user account?"
+            description="This action cannot be undone. The user will permanently lose access to the admin panel."
+          />
           <AlertDialogFooter>
             <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer">
-              Delete
+              Delete User
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

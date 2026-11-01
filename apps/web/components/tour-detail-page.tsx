@@ -153,7 +153,7 @@ function DatePicker({
   if (!isOpen) return null
 
   return (
-    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 md:p-6 z-50 w-[90vw] max-w-[350px] md:max-w-[700px] md:w-[700px]">
+    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 md:p-6 z-50 w-[90vw] max-w-[350px] md:max-w-[700px] md:w-[700px]">
       <div className="flex justify-between items-start">
         {/* Left Arrow */}
         <button onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded mt-1">
@@ -218,7 +218,7 @@ function TravelerCounter({
   if (!isOpen) return null
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10 w-[90vw] sm:w-[350px]">
+    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 z-10 w-[90vw] sm:w-[350px]">
 
       {/* Adult */}
       {tour.max_adults > 0 && (
@@ -229,14 +229,14 @@ function TravelerCounter({
           <div className="flex items-center gap-4">
             <button
               onClick={() => onUpdateCount('adults', -1, tour.max_adults)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Minus size={16} className="text-gray-600" />
             </button>
             <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.adults}</span>
             <button
               onClick={() => onUpdateCount('adults', 1, tour.max_adults)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Plus size={16} className="text-gray-600" />
             </button>
@@ -253,14 +253,14 @@ function TravelerCounter({
           <div className="flex items-center gap-4">
             <button
               onClick={() => onUpdateCount('children', -1, tour.max_children)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Minus size={16} className="text-gray-600" />
             </button>
             <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.children}</span>
             <button
               onClick={() => onUpdateCount('children', 1, tour.max_children)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Plus size={16} className="text-gray-600" />
             </button>
@@ -277,14 +277,14 @@ function TravelerCounter({
           <div className="flex items-center gap-4">
             <button
               onClick={() => onUpdateCount('infants', -1, tour.max_infants)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Minus size={16} className="text-gray-600" />
             </button>
             <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.infants}</span>
             <button
               onClick={() => onUpdateCount('infants', 1, tour.max_infants)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Plus size={16} className="text-gray-600" />
             </button>
@@ -301,14 +301,14 @@ function TravelerCounter({
           <div className="flex items-center gap-4">
             <button
               onClick={() => onUpdateCount('youths', -1, tour.max_youth)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Minus size={16} className="text-gray-600" />
             </button>
             <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.youths}</span>
             <button
               onClick={() => onUpdateCount('youths', 1, tour.max_youth)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Plus size={16} className="text-gray-600" />
             </button>
@@ -325,14 +325,14 @@ function TravelerCounter({
           <div className="flex items-center gap-4">
             <button
               onClick={() => onUpdateCount('students', -1, tour.max_student_eu)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Minus size={16} className="text-gray-600" />
             </button>
             <span className="text-lg font-semibold text-gray-900 w-6 text-center">{counts.students}</span>
             <button
               onClick={() => onUpdateCount('students', 1, tour.max_student_eu)}
-              className="p-2 hover:bg-gray-100 rounded-full border border-gray-300"
+              className="p-2 hover:bg-cream rounded-full border border-ink/20 transition-colors cursor-pointer"
             >
               <Plus size={16} className="text-gray-600" />
             </button>
@@ -353,12 +353,12 @@ function ReviewCard({
 }: { reviewer: string; location: string; date: string; rating: number; text: string }) {
   const getInitial = (name: string) => name.charAt(0).toUpperCase()
   const getAvatarColor = (name: string) => {
-    const colors = ["bg-brand", "bg-brand", "bg-green-500", "bg-purple-500", "bg-pink-500"]
+    const colors = ["bg-brand", "bg-espresso", "bg-gold", "bg-brand-dark", "bg-laurel"]
     return colors[name.charCodeAt(0) % colors.length]
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6">
+    <div className="bg-white border border-gold/25 rounded-2xl p-6 shadow-warm">
       <div className="flex items-start gap-4 mb-4">
         <div
           className={`${getAvatarColor(reviewer)} text-white rounded-full w-12 h-12 flex items-center justify-center font-semibold text-lg flex-shrink-0`}
@@ -368,7 +368,7 @@ function ReviewCard({
         <div className="flex-1">
           <div className="flex items-center gap-1 mb-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+              <Star key={i} size={16} className="fill-gold text-gold" />
             ))}
             <span className="text-sm font-semibold text-gray-900 ml-2">{rating}</span>
           </div>
@@ -764,26 +764,31 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header with Title and Badges */}
-        <div className="mb-6">
-          <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-gray-900 mb-4">{tour.title}</h1>
+        <div className="mb-8">
+          <p className="eyebrow mb-3">Rome · Guided experience</p>
+          <h1 className="font-serif text-4xl sm:text-5xl font-semibold text-ink leading-[1.1] mb-5 max-w-4xl">{tour.title}</h1>
 
           <div className="flex flex-wrap items-center gap-4 mb-4">
             {/* Top Rated Badge */}
-            <div className="bg-gold text-white px-3 py-1 rounded-full font-semibold text-sm">Top rated</div>
+            <div className="inline-flex items-center gap-1.5 bg-espresso border border-gold/50 text-gold-light px-3 py-1 rounded-full font-semibold text-xs uppercase tracking-[0.12em]">
+              <Star size={12} className="fill-current" />
+              Top rated
+            </div>
 
             {/* Rating and Reviews */}
             <div className="flex items-center gap-2">
-              <span className="text-gray-600 text-sm">• Activity provider: {tour.duration_days} day(s)</span>
+              <span className="text-muted-foreground text-sm">• Activity provider: {tour.duration_days} day(s)</span>
             </div>
 
             {/* Action Buttons */}
             <div className="flex gap-2 ml-auto">
-              <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded transition">
-                <Share2 size={20} className="text-gray-600" />
-                <span className="text-gray-700 text-sm">Share</span>
+              <button className="flex items-center gap-2 px-4 py-2 hover:bg-cream/70 rounded-lg transition-colors cursor-pointer">
+                <Share2 size={18} className="text-ink/60" />
+                <span className="text-ink/80 text-sm font-medium">Share</span>
               </button>
             </div>
           </div>
+          <div aria-hidden="true" className="gold-rule" />
         </div>
 
         {/* Main Content Grid */}
@@ -791,7 +796,7 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2">
             {/* Image Gallery - Grid Layout */}
-            <div className="relative mb-6 rounded-lg overflow-auto grid grid-cols-3 gap-2 h-100">
+            <div className="relative mb-8 rounded-2xl overflow-hidden grid grid-cols-3 gap-2 h-100 shadow-warm-md ring-1 ring-gold/20">
               {/* Main large image on the left */}
               <div className="col-span-2 rounded-lg overflow-auto cursor-pointer" onClick={() => openLightbox(0)}>
                 <img
@@ -841,13 +846,14 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
             </div>
 
             {/* Description */}
-            <div className="mb-8">
-              <p className="text-gray-700 text-sm leading-relaxed">{tour.description}</p>
+            <div className="mb-10">
+              <p className="text-ink/75 text-base leading-relaxed max-w-[68ch]">{tour.description}</p>
             </div>
 
             {/* About this activity */}
             <div className="mb-12">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">About this activity</h2>
+              <p className="eyebrow mb-2">The experience</p>
+              <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mb-6">About this activity</h2>
 
               {/* Activity Features */}
               {/* <div className="space-y-4 mb-8">
@@ -912,13 +918,13 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
               {/* Highlights & Full Description */}
               <div className="mb-12 grid grid-cols-1 md:grid-cols-1 gap-8">
                 {tour.highlights && tour.highlights.length > 0 && (
-                  <div>
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4">Highlights</h2>
+                  <div className="rounded-2xl border border-gold/25 bg-cream/50 p-6 sm:p-8">
+                    <h2 className="font-serif text-2xl font-semibold text-ink mb-5">Highlights</h2>
                     <ul className="space-y-3">
                       {tour.highlights.map((highlight, index) => (
-                        <li key={index} className="flex gap-3">
-                          <span className="text-gray-700 font-semibold">•</span>
-                          <span className="text-gray-700 text-sm">{highlight}</span>
+                        <li key={index} className="flex gap-3 items-baseline">
+                          <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rotate-45 bg-gold" />
+                          <span className="text-ink/80 text-sm leading-relaxed">{highlight}</span>
                         </li>
                       ))}
                     </ul>
@@ -926,8 +932,8 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                 )}
 
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Full description</h2>
-                  <div className="text-gray-700 text-sm leading-relaxed mb-3 whitespace-pre-wrap">
+                  <h2 className="font-serif text-2xl font-semibold text-ink mb-4">Full description</h2>
+                  <div className="text-ink/75 text-sm leading-relaxed mb-3 whitespace-pre-wrap max-w-[68ch]">
                     {tour.full_description || tour.description}
                   </div>
                 </div>
@@ -937,12 +943,12 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
               <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-8">
                 {tour.includes && tour.includes.length > 0 && (
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-900 mb-6">Includes</h2>
+                    <h2 className="font-serif text-2xl font-semibold text-ink mb-6">Includes</h2>
                     <ul className="space-y-3">
                       {tour.includes.map((item, index) => (
                         <li key={index} className="flex items-start gap-3">
-                          <Check size={20} className="text-teal-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-700 text-sm">{item}</span>
+                          <Check size={20} className="text-laurel flex-shrink-0 mt-0.5" />
+                          <span className="text-ink/75 text-sm leading-relaxed">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -952,12 +958,12 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                 {/* Excludes */}
                 {tour.excludes && tour.excludes.length > 0 && (
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-900 mb-6">Excludes</h2>
+                    <h2 className="font-serif text-2xl font-semibold text-ink mb-6">Excludes</h2>
                     <ul className="space-y-3">
                       {tour.excludes.map((item, index) => (
                         <li key={index} className="flex items-start gap-3">
-                          <span className="text-red-500 font-semibold text-sm">✕</span>
-                          <span className="text-gray-700 text-sm">{item}</span>
+                          <span className="text-brand font-semibold text-sm">✕</span>
+                          <span className="text-ink/75 text-sm leading-relaxed">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -966,14 +972,14 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
               </div>
 
               {/* Important Information */}
-              <div className="mb-12">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Important information</h2>
+              <div className="mb-12 rounded-2xl border border-gold/20 bg-white p-6 sm:p-8 shadow-warm">
+                <h2 className="font-serif text-2xl font-semibold text-ink mb-6">Important information</h2>
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
                   <div className="space-y-6">
                     {tour.not_suitable_for && tour.not_suitable_for.length > 0 && (
                       <div>
-                        <h3 className="font-semibold text-gray-900 mb-3">Not suitable for</h3>
-                        <ul className="space-y-2 text-gray-700 text-sm">
+                        <h3 className="font-semibold text-ink mb-3">Not suitable for</h3>
+                        <ul className="space-y-2 text-ink/75 text-sm leading-relaxed">
                           {tour.not_suitable_for.map((item, index) => (
                             <li key={index}>• {item}</li>
                           ))}
@@ -983,8 +989,8 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
 
                     {tour.not_allowed && tour.not_allowed.length > 0 && (
                       <div>
-                        <h3 className="font-semibold text-gray-900 mb-3">Not allowed</h3>
-                        <ul className="space-y-2 text-gray-700 text-sm">
+                        <h3 className="font-semibold text-ink mb-3">Not allowed</h3>
+                        <ul className="space-y-2 text-ink/75 text-sm leading-relaxed">
                           {tour.not_allowed.map((item, index) => (
                             <li key={index}>• {item}</li>
                           ))}
@@ -996,8 +1002,8 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                   <div>
                     {tour.know_before_you_go && tour.know_before_you_go.length > 0 && (
                       <div>
-                        <h3 className="font-semibold text-gray-900 mb-3">Know before you go</h3>
-                        <ul className="space-y-2 text-gray-700 text-sm">
+                        <h3 className="font-semibold text-ink mb-3">Know before you go</h3>
+                        <ul className="space-y-2 text-ink/75 text-sm leading-relaxed">
                           {tour.know_before_you_go.map((item, index) => (
                             <li key={index}>• {item}</li>
                           ))}
@@ -1012,15 +1018,16 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
 
           {/* Right Column - Booking Panel */}
           <div className="lg:col-span-1">
-            <div className="bg-white border border-border rounded-2xl p-6 sticky top-24 shadow-lg shadow-black/5">
-              {/* Likely to sell out badge - Removed as not in API data */}
+            <div className="bg-white border border-gold/30 rounded-2xl p-6 sticky top-24 shadow-warm-lg overflow-hidden">
+              {/* Gold hairline across the top, like a fine receipt */}
+              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
 
               {/* Price */}
-              <div className="mb-6">
-                <p className="text-gray-600 text-sm mb-2">From</p>
+              <div className="mb-6 pb-5 border-b border-dashed border-gold/30">
+                <p className="eyebrow mb-2">Reserve your visit</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-semibold text-gray-900">€{maxPrice}</span>
-                  <span className="text-gray-600 text-sm">max per person</span>
+                  <span className="font-serif text-4xl font-semibold text-ink">€{maxPrice}</span>
+                  <span className="text-muted-foreground text-sm">max per person</span>
                 </div>
               </div>
 
@@ -1031,13 +1038,13 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                     e.stopPropagation()
                     setIsTravelerPickerOpen(!isTravelerPickerOpen)
                   }}
-                  className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:border-gray-400 transition text-gray-700 font-medium"
+                  className="w-full flex items-center justify-between px-4 py-3 border border-ink/15 rounded-xl hover:border-gold/60 hover:bg-cream/30 transition-colors text-ink/80 font-medium cursor-pointer"
                 >
-                  <span className="flex items-center gap-2">
-                    <span>👥</span>
+                  <span className="flex items-center gap-2.5">
+                    <Users size={18} className="text-gold" />
                     <span>{getTravelerSummary()}</span>
                   </span>
-                  <ChevronLeft size={20} className="text-gray-600 rotate-180" />
+                  <ChevronLeft size={20} className="text-ink/50 rotate-180" />
                 </button>
                 <TravelerCounter
                   isOpen={isTravelerPickerOpen}
@@ -1052,10 +1059,10 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
               <div className="mb-6 relative" ref={sidebarDatePickerRef}>
                 <button
                   onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-                  className="w-full flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg hover:border-gray-400 transition text-gray-700 font-medium"
+                  className="w-full flex items-center justify-between px-4 py-3 border border-ink/15 rounded-xl hover:border-gold/60 hover:bg-cream/30 transition-colors text-ink/80 font-medium cursor-pointer"
                 >
-                  <span className="flex items-center gap-2">
-                    <span>📅</span>
+                  <span className="flex items-center gap-2.5">
+                    <CalendarIcon size={18} className="text-gold" />
                     <span>
                       {selectedDate
                         ? new Date(selectedDate.date + 'T00:00:00').toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -1063,7 +1070,7 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                       }
                     </span>
                   </span>
-                  <ChevronLeft size={20} className="text-gray-600 rotate-180" />
+                  <ChevronLeft size={20} className="text-ink/50 rotate-180" />
                 </button>
                 <DatePicker
                   isOpen={isDatePickerOpen}
@@ -1077,16 +1084,16 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
               </div>
 
               {/* Benefits */}
-              <div className="space-y-3 border-t border-gray-200 pt-4 mb-4">
+              <div className="space-y-3 border-t border-dashed border-gold/30 pt-4 mb-5">
                 <div className="flex items-start gap-3">
-                  <Check size={20} className="text-teal-600 flex-shrink-0 mt-0.5" />
+                  <Check size={20} className="text-laurel flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-gray-900 text-sm">Free cancellation</p>
                     <p className="text-gray-600 text-xs">Cancel up to 24 hours in advance for a full refund</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Check size={20} className="text-teal-600 flex-shrink-0 mt-0.5" />
+                  <Check size={20} className="text-laurel flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-gray-900 text-sm">Reserve now & pay later</p>
                     <p className="text-gray-600 text-xs">
@@ -1098,16 +1105,20 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
 
               <Link
                 href={`/tour/${tour.id}/availability`}
-                className="w-full block text-center bg-brand text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-dark transition"
+                className="btn-premium w-full px-4 py-3.5 text-center"
               >
                 Check availability
               </Link>
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                No payment taken at this step
+              </p>
             </div>
           </div>
         </div>
 
         <div className="mt-20 pb-12">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-8">You might also like...</h2>
+          <p className="eyebrow mb-2">Keep exploring</p>
+          <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mb-8">You might also like…</h2>
 
           {/* Carousel Container */}
           <div className="relative">
@@ -1123,32 +1134,34 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
             >
               {recommendedTours.map((recTour) => (
                 <div key={recTour.id} className="flex-shrink-0 w-80">
-                  <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition cursor-pointer h-full flex flex-col">
+                  <div className="group bg-white rounded-2xl overflow-hidden border border-gold/20 shadow-warm hover:shadow-warm-lg hover:border-gold/40 transition-[box-shadow,border-color] duration-300 cursor-pointer h-full flex flex-col">
                     <Link href={`/tour/${recTour.id}`} className="block h-full flex flex-col">
-                      <div className="relative">
+                      <div className="relative overflow-hidden">
                         <img
                           src={recTour.images && recTour.images.length > 0 ? recTour.images[0].file : "/placeholder.jpg"}
                           alt={recTour.title}
-                          className="w-full h-60 object-cover"
+                          className="w-full h-60 object-cover transition-transform duration-500 group-hover:scale-105"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-espresso/50 via-transparent to-transparent" />
                       </div>
 
 
                       <div className="p-6 flex flex-col flex-grow">
-                        <div className="text-xs font-semibold text-gray-600 uppercase mb-2">{recTour.status === 'ACTIVE' ? 'ACTIVE TOUR' : 'TOUR'}</div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        <div className="text-[11px] font-semibold text-gold uppercase tracking-[0.2em] mb-2">{recTour.status === 'ACTIVE' ? 'Active tour' : 'Tour'}</div>
+                        <h3 className="font-serif text-lg font-semibold leading-snug text-ink mb-2 group-hover:text-brand transition-colors">
                           {recTour.title}
                         </h3>
 
                         {/* Description used as details for now or truncated */}
-                        <div className="text-xs text-gray-600 mb-3 mt-2 space-y-1 line-clamp-2">
+                        <div className="text-xs text-muted-foreground mb-3 mt-2 space-y-1 line-clamp-2 leading-relaxed">
                           <p>{recTour.description}</p>
                         </div>
 
-                        <div className="mt-auto pt-2">
+                        <div className="mt-auto pt-3 border-t border-dashed border-gold/30">
                           <div className="flex items-baseline gap-2">
-                            <span className="text-gray-600 text-sm">From</span>
-                            <span className="text-red-600 font-semibold text-lg">€{recTour.price_adult}</span>
+                            <span className="text-muted-foreground text-xs">From</span>
+                            <span className="font-serif text-brand font-semibold text-lg">€{recTour.price_adult}</span>
+                            <span className="text-muted-foreground text-xs">/ person</span>
                           </div>
                         </div>
                       </div>
@@ -1167,7 +1180,7 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                       carousel.scrollLeft -= 400
                     }
                   }}
-                  className="absolute -left-6 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition text-brand hover:bg-cream z-10"
+                  className="absolute -left-6 top-1/2 transform -translate-y-1/2 bg-white border border-gold/30 rounded-full p-3 shadow-warm-md hover:shadow-warm-lg transition text-brand hover:bg-cream z-10 cursor-pointer"
                 >
                   <ChevronLeft size={24} />
                 </button>
@@ -1180,7 +1193,7 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                       carousel.scrollLeft += 400
                     }
                   }}
-                  className="absolute -right-6 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition text-brand hover:bg-cream z-10"
+                  className="absolute -right-6 top-1/2 transform -translate-y-1/2 bg-white border border-gold/30 rounded-full p-3 shadow-warm-md hover:shadow-warm-lg transition text-brand hover:bg-cream z-10 cursor-pointer"
                 >
                   <ChevronLeft size={24} className="rotate-180" />
                 </button>

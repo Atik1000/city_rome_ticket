@@ -150,8 +150,9 @@ export default function HeroCarousel() {
             alt="Rome landmarks"
             className="w-full h-full object-cover will-change-transform scale-105"
           />
-          {/* Gradient overlay for legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" />
+          {/* Multi-stop warm gradient overlay for legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-espresso/75 via-black/25 via-45% to-espresso/85" />
+          <div className="absolute inset-0 bg-gradient-to-r from-espresso/35 via-transparent to-espresso/35" />
           {/* Golden dust / ember WebGL layer (decorative) */}
           <AmbientParticles count={220} />
         </div>
@@ -160,11 +161,12 @@ export default function HeroCarousel() {
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6">
           <p
             data-hero-kicker
-            className="mb-4 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.35em] text-gold-light"
+            className="mb-3 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.35em] text-gold-light"
           >
             {slides[currentSlide].kicker}
           </p>
-          <h1 className="font-serif text-4xl sm:text-6xl font-semibold text-white mb-6 sm:mb-8 text-balance drop-shadow-sm">
+          <div aria-hidden="true" className="gold-rule w-24 mb-5" />
+          <h1 className="font-serif text-[2.6rem] leading-[1.08] sm:text-6xl md:text-7xl font-semibold text-white mb-6 sm:mb-9 text-balance drop-shadow-sm">
             {slides[currentSlide].title.split(" ").map((word, i) => (
               <span key={`${currentSlide}-${i}`}>
                 <span className="inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em]">
@@ -178,7 +180,7 @@ export default function HeroCarousel() {
 
           {/* Search (mobile-friendly) */}
           <div className="w-full max-w-lg lg:max-w-lg md:max-w-lg sm:max-w-sm" ref={wrapperRef}>
-            <div className="bg-white/95 backdrop-blur rounded-2xl sm:rounded-full shadow-lg p-2 relative">
+            <div className="bg-white/95 backdrop-blur rounded-2xl sm:rounded-full shadow-warm-lg border border-gold/30 p-2 relative">
               <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 sm:gap-0">
                 <div className="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4">
                   <Search className="w-5 h-5 text-muted-foreground shrink-0" />
@@ -199,7 +201,7 @@ export default function HeroCarousel() {
 
                 <button
                   onClick={handleSearch}
-                  className="w-full sm:w-auto bg-[#9E2B25] hover:bg-[#9E2B25]/90 text-white font-semibold px-6 sm:px-10 py-3 sm:py-4 transition rounded-xl sm:rounded-full flex items-center justify-center gap-2"
+                  className="btn-premium w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-xl sm:rounded-full"
                 >
                   <span>Search</span>
                 </button>
@@ -262,13 +264,16 @@ export default function HeroCarousel() {
         </div>
       </div>
 
+      {/* Gold hairline at the base of the hero */}
+      <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent z-10" />
+
       {/* Dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2.5 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-3 w-3 rounded-full transition ${index === currentSlide ? "bg-white" : "bg-white/50"
+            className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide ? "w-7 bg-gold-light" : "w-2 bg-white/50 hover:bg-white/80"
               }`}
             aria-label={`Go to slide ${index + 1}`}
           />

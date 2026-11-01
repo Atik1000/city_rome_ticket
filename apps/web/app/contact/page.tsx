@@ -71,27 +71,27 @@ export default function Contact() {
       <Navbar />
 
       {/* 1) Thin picture background header */}
-      <section className="relative h-40 sm:h-44 md:h-52 w-full overflow-hidden">
+      <section className="relative h-44 sm:h-52 md:h-60 w-full overflow-hidden">
         <div className="absolute inset-0">
-          {/* Use any image you have in /public, e.g. /ocean.jpg */}
           <img
-            src="/ocean.jpg"
-            alt="Contact header"
+            src="/images/carousel_2.jpg"
+            alt="Rome skyline"
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-[#2A2118]/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-espresso/70 via-espresso/55 to-espresso/80" />
         </div>
 
         <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="text-white">
-            <p className="text-xs sm:text-sm tracking-[0.25em] uppercase text-white/80">
+            <p className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-gold-light mb-2">
               Get in touch
             </p>
-            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
+            <h1 className="font-serif text-4xl sm:text-5xl font-semibold tracking-tight">
               Contact us
             </h1>
           </div>
         </div>
+        <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
       </section>
 
       {/* 2) Content compact so the form fits in one viewport */}
@@ -103,12 +103,12 @@ export default function Contact() {
             <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left: Contact Info (compact + nicer card) */}
               <div className="lg:col-span-4">
-                <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-5 sm:p-6">
+                <div className="rounded-2xl border border-gold/25 bg-white shadow-warm p-5 sm:p-6">
                   <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-[#2A2118]">
+                    <h2 className="font-serif text-xl font-semibold text-ink">
                       Contact details
                     </h2>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       We usually reply within 24 hours.
                     </p>
                   </div>
@@ -151,8 +151,8 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="mt-5 rounded-xl bg-cream border border-cream p-4">
-                    <p className="text-sm text-[#2A2118] font-semibold">
+                  <div className="mt-5 rounded-xl bg-cream/70 border border-gold/30 p-4">
+                    <p className="text-sm text-ink font-semibold">
                       Tip:
                       <span className="font-normal text-gray-600">
                         {" "}
@@ -165,17 +165,17 @@ export default function Contact() {
 
               {/* Right: Form (compact heights so it fits in one screen) */}
               <div className="lg:col-span-8">
-                <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-5 sm:p-6">
+                <div className="rounded-2xl border border-gold/25 bg-white shadow-warm p-5 sm:p-6">
                   <div className="mb-4 flex items-end justify-between gap-3">
                     <div>
-                      <h2 className="text-lg font-semibold text-[#2A2118]">
+                      <h2 className="font-serif text-xl font-semibold text-ink">
                         Send us a message
                       </h2>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         We’ll get back to you soon.
                       </p>
                     </div>
-                    <span className="hidden sm:inline-flex text-xs font-semibold uppercase tracking-widest text-brand">
+                    <span className="hidden sm:inline-flex text-xs font-semibold uppercase tracking-[0.25em] text-gold">
                       Iconic Rome Tickets
                     </span>
                   </div>
@@ -185,7 +185,7 @@ export default function Contact() {
                       <div>
                         <label
                           htmlFor="first_name"
-                          className="block text-xs font-semibold text-[#2A2118] mb-2"
+                          className="block text-xs font-semibold uppercase tracking-[0.12em] text-ink/70 mb-2"
                         >
                           First Name
                         </label>
@@ -196,7 +196,7 @@ export default function Contact() {
                           value={formData.first_name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-xl border border-gray-100 bg-white focus:border-brand outline-none transition text-gray-700 placeholder:text-gray-400 shadow-sm"
+                          className="input-warm"
                           placeholder="First name"
                         />
                       </div>
@@ -204,7 +204,7 @@ export default function Contact() {
                       <div>
                         <label
                           htmlFor="last_name"
-                          className="block text-xs font-semibold text-[#2A2118] mb-2"
+                          className="block text-xs font-semibold uppercase tracking-[0.12em] text-ink/70 mb-2"
                         >
                           Last Name
                         </label>
@@ -215,7 +215,7 @@ export default function Contact() {
                           value={formData.last_name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-xl border border-gray-100 bg-white focus:border-brand outline-none transition text-gray-700 placeholder:text-gray-400 shadow-sm"
+                          className="input-warm"
                           placeholder="Last name"
                         />
                       </div>
@@ -225,7 +225,7 @@ export default function Contact() {
                       <div>
                         <label
                           htmlFor="email"
-                          className="block text-xs font-semibold text-[#2A2118] mb-2"
+                          className="block text-xs font-semibold uppercase tracking-[0.12em] text-ink/70 mb-2"
                         >
                           Email
                         </label>
@@ -236,7 +236,7 @@ export default function Contact() {
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-xl border border-gray-100 bg-white focus:border-brand outline-none transition text-gray-700 placeholder:text-gray-400 shadow-sm"
+                          className="input-warm"
                           placeholder="your@email.com"
                         />
                       </div>
@@ -244,7 +244,7 @@ export default function Contact() {
                       <div>
                         <label
                           htmlFor="phone"
-                          className="block text-xs font-semibold text-[#2A2118] mb-2"
+                          className="block text-xs font-semibold uppercase tracking-[0.12em] text-ink/70 mb-2"
                         >
                           Phone
                         </label>
@@ -255,7 +255,7 @@ export default function Contact() {
                           value={formData.phone}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-xl border border-gray-100 bg-white focus:border-brand outline-none transition text-gray-700 placeholder:text-gray-400 shadow-sm"
+                          className="input-warm"
                           placeholder="Phone number"
                         />
                       </div>
@@ -264,7 +264,7 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="subject"
-                        className="block text-xs font-semibold text-[#2A2118] mb-2"
+                        className="block text-xs font-semibold uppercase tracking-[0.12em] text-ink/70 mb-2"
                       >
                         Subject
                       </label>
@@ -275,7 +275,7 @@ export default function Contact() {
                         value={formData.subject}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl border border-gray-100 bg-white focus:border-brand outline-none transition text-gray-700 placeholder:text-gray-400 shadow-sm"
+                        className="input-warm"
                         placeholder="How can we help?"
                       />
                     </div>
@@ -283,7 +283,7 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="message"
-                        className="block text-xs font-semibold text-[#2A2118] mb-2"
+                        className="block text-xs font-semibold uppercase tracking-[0.12em] text-ink/70 mb-2"
                       >
                         Message
                       </label>
@@ -294,7 +294,7 @@ export default function Contact() {
                         value={formData.message}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl border border-gray-100 bg-white focus:border-brand outline-none transition text-gray-700 placeholder:text-gray-400 shadow-sm resize-none"
+                        className="input-warm resize-none"
                         placeholder="Tell us more..."
                       />
                     </div>
@@ -302,7 +302,7 @@ export default function Contact() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-brand hover:bg-brand-dark text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="btn-premium w-full py-3.5 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {isLoading ? (
                         <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
@@ -327,30 +327,25 @@ export default function Contact() {
         <Dialog open={isSuccessOpen} onOpenChange={setIsSuccessOpen}>
           <DialogContent className="sm:max-w-[425px] border-none shadow-2xl p-0 overflow-hidden rounded-3xl">
             <div className="relative p-10 bg-white">
-              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-green-50 rounded-full blur-3xl opacity-50 pointer-events-none" />
-              <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 bg-cream rounded-full blur-2xl opacity-50 pointer-events-none" />
-
-              <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-green-400 blur-xl opacity-20 animate-pulse rounded-full" />
-                  <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-green-50 rounded-2xl flex items-center justify-center shadow-inner transform rotate-12 transition-all duration-500 group-hover:rotate-0 group-hover:scale-110">
-                    <CheckCircle2 className="w-10 h-10 text-green-600" />
-                  </div>
+              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+              <div className="flex flex-col items-center text-center space-y-6">
+                <div className="w-16 h-16 bg-laurel/10 rounded-full flex items-center justify-center ring-1 ring-laurel/30">
+                  <CheckCircle2 className="w-8 h-8 text-laurel" />
                 </div>
 
                 <div className="space-y-2">
-                  <DialogTitle className="text-3xl font-semibold text-[#2A2118] tracking-tight">
-                    Message Sent!
+                  <DialogTitle className="font-serif text-3xl font-semibold text-ink tracking-tight">
+                    Message Sent
                   </DialogTitle>
-                  <DialogDescription className="text-gray-500 text-lg leading-relaxed">
+                  <DialogDescription className="text-muted-foreground text-base leading-relaxed">
                     We&apos;ve received your inquiry and our team will get back to you within 24 hours.
                   </DialogDescription>
                 </div>
 
-                <div className="w-full pt-4">
+                <div className="w-full pt-2">
                   <button
                     onClick={() => setIsSuccessOpen(false)}
-                    className="w-full bg-gradient-to-r from-brand to-brand-dark hover:from-brand-dark hover:to-brand-dark text-white font-semibold py-4 rounded-xl shadow-lg shadow-cream-dark transition-all duration-300 transform hover:-translate-y-1 active:scale-95"
+                    className="btn-premium w-full py-3.5"
                   >
                     Awesome, thanks!
                   </button>

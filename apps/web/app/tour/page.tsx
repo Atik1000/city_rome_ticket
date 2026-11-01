@@ -168,13 +168,16 @@ function ToursContent() {
             {/* Header Section */}
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-5 md:py-8 border-b border-gray-100 mb-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6 md:py-10 border-b border-gold/25 mb-8">
                     <div>
-                        <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-[#2A2118] mb-3">
-                            {initialSearch ? "Search Results" : "Tours & Tickets in Rome"}
+                        <p className="eyebrow mb-3">The collection</p>
+                        <h1 className="font-serif text-4xl sm:text-5xl font-semibold text-ink leading-[1.08] mb-3">
+                            {initialSearch ? "Search Results" : (
+                                <>Tours & Tickets <span className="italic text-brand">in Rome</span></>
+                            )}
                         </h1>
                         {!initialSearch && (
-                            <p className="text-gray-600 text-lg">
+                            <p className="text-muted-foreground text-base sm:text-lg max-w-[58ch]">
                                 Skip-the-line entry, expert guides, instant tickets — choose your next adventure.
                             </p>
                         )}
@@ -182,11 +185,11 @@ function ToursContent() {
 
                     {/* Search field on the right */}
                     <div className="w-full max-w-md relative" ref={wrapperRef}>
-                        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden p-1">
+                        <div className="bg-white border border-gold/30 rounded-xl shadow-warm overflow-hidden p-1 transition-shadow focus-within:shadow-warm-md">
                             <div className="grid grid-cols-[auto_1fr_auto] items-center">
                                 <button
                                     onClick={handleReset}
-                                    className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-cream rounded-lg transition-colors cursor-pointer"
+                                    className="px-4 py-2 text-sm font-medium text-ink/50 hover:text-brand hover:bg-cream rounded-lg transition-colors cursor-pointer"
                                 >
                                     Reset
                                 </button>
@@ -209,7 +212,7 @@ function ToursContent() {
 
                                 <button
                                     onClick={handleSearch}
-                                    className="bg-[#9E2B25] hover:bg-[#9E2B25]/90 text-white font-semibold px-6 py-2 transition rounded-lg flex items-center justify-center gap-2 text-sm cursor-pointer"
+                                    className="btn-premium px-6 py-2 rounded-lg text-sm"
                                 >
                                     <span>Search</span>
                                 </button>
@@ -265,7 +268,7 @@ function ToursContent() {
                         value={durationFilter || ""}
                         onValueChange={handleDurationChange}
                     >
-                        <SelectTrigger className={`w-fit rounded-full text-xs font-medium border shadow-none ${durationFilter ? 'bg-cream border-brand text-brand-dark [&>svg:last-child]:hidden' : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'}`}>
+                        <SelectTrigger className={`w-fit rounded-full text-xs font-medium border shadow-none ${durationFilter ? 'bg-cream border-brand text-brand-dark [&>svg:last-child]:hidden' : 'bg-white border-gold/35 text-ink/80 hover:border-gold/60 hover:bg-cream/40'}`}>
                             <div className="flex items-center gap-2 mr-1">
                                 <SelectValue placeholder="Any Duration" />
                             </div>
@@ -293,7 +296,7 @@ function ToursContent() {
                         value={priceFilter || ""}
                         onValueChange={handlePriceChange}
                     >
-                        <SelectTrigger className={`w-fit rounded-full text-xs font-medium border shadow-none ${priceFilter ? 'bg-cream border-brand text-brand-dark [&>svg:last-child]:hidden' : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'}`}>
+                        <SelectTrigger className={`w-fit rounded-full text-xs font-medium border shadow-none ${priceFilter ? 'bg-cream border-brand text-brand-dark [&>svg:last-child]:hidden' : 'bg-white border-gold/35 text-ink/80 hover:border-gold/60 hover:bg-cream/40'}`}>
                             <div className="flex items-center gap-2 mr-1">
                                 <SelectValue placeholder="Any Price" />
                             </div>
@@ -337,8 +340,12 @@ function ToursContent() {
 
                 {/* Empty State */}
                 {!loading && !error && tours.length === 0 && (
-                    <div className="text-center py-12">
-                        <p className="text-gray-500 text-2xl font-serif">No tours found.</p>
+                    <div className="text-center py-20">
+                        <p className="font-serif text-2xl text-ink mb-2">No tours found</p>
+                        <p className="text-sm text-muted-foreground mb-6">Try a different search term or clear the filters.</p>
+                        <button onClick={handleReset} className="btn-ghost-gold px-8 py-2.5 text-sm">
+                            Browse all tours
+                        </button>
                     </div>
                 )}
             </div>

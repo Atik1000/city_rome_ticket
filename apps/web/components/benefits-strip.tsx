@@ -41,7 +41,7 @@ export default function BenefitsStrip() {
         <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" y={20}>
           {benefits.map((b) => (
             <div key={b.title} className="flex items-start gap-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand ring-1 ring-gold/25 shadow-warm">
                 <b.icon size={22} strokeWidth={1.75} />
               </span>
               <div>
@@ -53,8 +53,9 @@ export default function BenefitsStrip() {
         </StaggerReveal>
 
         {/* Stats */}
+        <div aria-hidden="true" className="gold-rule mt-8" />
         <StaggerReveal
-          className="mt-8 pt-8 border-t border-gold/20 grid grid-cols-2 lg:grid-cols-4 gap-6 text-center"
+          className="pt-8 grid grid-cols-2 lg:grid-cols-4 gap-6 text-center"
           y={16}
         >
           {stats.map((s) => (

@@ -1,10 +1,11 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { X } from 'lucide-react'
+import { MessageSquare } from 'lucide-react'
+import { ModalHeader } from '@/components/dashboard/modal-header'
+import { StatusBadge } from '@/components/dashboard/status-badge'
 
 interface ContactRequest {
   id: string
@@ -29,40 +30,17 @@ export function ContactRequestModal({
   onClose,
   request,
 }: ContactRequestModalProps) {
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'completed':
-      case 'resolved':
-        return 'bg-green-100 text-green-800'
-      case 'in_review':
-      case 'in-progress':
-        return 'bg-blue-100 text-blue-800'
-      case 'open':
-      case 'new':
-        return 'bg-purple-100 text-purple-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-white border-none shadow-lg outline-none p-0 overflow-hidden rounded-xl">
-        <Card className="border-none shadow-none p-0 max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-2xl p-0 overflow-hidden">
+        <Card className="border-none shadow-none p-0 gap-0 max-h-[90vh] flex flex-col bg-transparent">
           {/* Header inside Card */}
-          <div className="p-6 border-b border-border">
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-xl font-bold text-foreground tracking-tight">Contact Request Details</DialogTitle>
-              {/* <button
-                onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Close"
-              >
-                <X size={20} />
-              </button> */}
-            </div>
+          <div className="p-6 border-b border-border/70 bg-warm-wash">
+            <ModalHeader
+              icon={MessageSquare}
+              title="Contact Request Details"
+              description={`Request #${request.id} from ${request.name}`}
+            />
           </div>
 
           {/* Scrollable Content Area */}
@@ -100,9 +78,7 @@ export function ContactRequestModal({
                 </div>
                 <div>
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Current Status</p>
-                  <Badge className={`${getStatusColor(request.status)} border-none shadow-none text-xs font-bold px-3 py-1 rounded-full`}>
-                    {request.status.replace('_', ' ').charAt(0).toUpperCase() + request.status.replace('_', ' ').slice(1)}
-                  </Badge>
+                  <StatusBadge status={request.status} />
                 </div>
               </div>
 
@@ -121,10 +97,11 @@ export function ContactRequestModal({
               </div>
               {/* Cancelled Reason */}
               {request.cancelled_reason && (
-                <div className="border-t border-border pt-8 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <p className="text-xs font-bold text-red-600 uppercase tracking-wider mb-4">Cancellation Reason</p>
-                  <div className="bg-red-50/50 p-5 rounded-xl border border-red-100">
-                    <p className="text-red-900 leading-relaxed whitespace-pre-wrap text-sm font-medium">
+                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="gold-hairline mb-6" aria-hidden="true" />
+                  <p className="text-xs font-bold text-destructive uppercase tracking-wider mb-4">Cancellation Reason</p>
+                  <div className="bg-destructive/5 p-5 rounded-xl border border-destructive/15">
+                    <p className="text-foreground/85 leading-relaxed whitespace-pre-wrap text-sm font-medium">
                       {request.cancelled_reason}
                     </p>
                   </div>
@@ -132,7 +109,8 @@ export function ContactRequestModal({
               )}
 
               {/* Message */}
-              <div className="border-t border-border pt-8">
+              <div>
+                <div className="gold-hairline mb-6" aria-hidden="true" />
                 <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Customer Message</p>
                 <div className="bg-secondary/30 p-5 rounded-xl border border-border/50">
                   <p className="text-foreground leading-relaxed whitespace-pre-wrap text-sm font-medium">
@@ -144,11 +122,11 @@ export function ContactRequestModal({
           </div>
 
           {/* Footer inside Card */}
-          <div className="p-6 border-t border-border bg-gray-50/50">
+          <div className="p-6 border-t border-border/70 bg-secondary/30">
             <div className="flex justify-end">
               <Button
                 onClick={onClose}
-                className="bg-primary hover:bg-primary/90 text-white font-bold px-10 h-11 rounded-lg shadow-sm transition-all active:scale-95"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10 h-11 rounded-lg shadow-lg shadow-primary/15 transition-all active:scale-95 cursor-pointer"
               >
                 Close
               </Button>

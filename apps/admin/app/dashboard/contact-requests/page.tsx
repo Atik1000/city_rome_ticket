@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -13,11 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Eye, Loader2, AlertCircle, Search, RotateCcw } from 'lucide-react'
+import { Eye, AlertCircle, Search, RotateCcw, RefreshCcw } from 'lucide-react'
 import { useReducedMotion } from 'framer-motion'
 import { MotionTableRow, staggerIn } from '@/components/motion'
 import { StatusModal } from '@/components/dashboard/status-modal'
 import { ContactRequestModal } from '@/components/dashboard/contact-request-modal'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { PageLoader } from '@/components/dashboard/page-loader'
+import { StatusBadge } from '@/components/dashboard/status-badge'
+import { EmptyState } from '@/components/dashboard/empty-state'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { getContactRequests, ContactRequest } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 
@@ -98,34 +102,12 @@ export default function ContactRequestsPage() {
 
   const selectedRequest = requests.find((r) => r.id === selectedRequestId)
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'resolved':
-      case 'completed':
-        return 'bg-green-100 text-green-800'
-      case 'in_review':
-      case 'in-progress':
-        return 'bg-blue-100 text-blue-800'
-      case 'open':
-      case 'new':
-        return 'bg-purple-100 text-purple-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
   const handleStatusChange = () => {
     fetchRequests()
   }
 
   if (loading && requests.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
+    return <PageLoader label="Loading requests" className="min-h-[400px]" />
   }
 
   if (error && requests.length === 0) {
@@ -141,103 +123,115 @@ export default function ContactRequestsPage() {
   return (
     <div className="space-y-6 sm:space-y-8 pb-8">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-xl font-semibold text-foreground">Contact Requests</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">Manage customer inquiries and requests</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={handleReset}
-            className="flex items-center gap-2"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Reset
-          </Button>
-
-          <form onSubmit={handleSearch} className="flex items-center gap-2">
-            <div className="relative">
-              <Input
-                placeholder="Search..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="w-[200px] sm:w-[300px] pl-9"
-              />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            </div>
-            <Button type="submit">Search</Button>
-          </form>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Inbox"
+        title="Contact Requests"
+        description="Manage customer inquiries and requests"
+        actions={
+          <>
+            <form onSubmit={handleSearch} className="flex items-center gap-2">
+              <div className="relative">
+                <Input
+                  placeholder="Search requests..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="w-[200px] sm:w-[280px] pl-9 bg-card"
+                  aria-label="Search contact requests"
+                />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </div>
+              <Button type="submit" className="cursor-pointer shadow-lg shadow-primary/15">Search</Button>
+            </form>
+            <Button
+              variant="ghost"
+              onClick={handleReset}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset
+            </Button>
+          </>
+        }
+      />
 
       {/* Requests Table - Responsive */}
-      <Card className="border-border overflow-hidden shadow-sm">
+      <Card className="border-border/80 overflow-hidden shadow-warm p-0 gap-0">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-border bg-secondary hover:bg-secondary">
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">ID</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Name</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Email</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Status</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Created</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Actions</TableHead>
+              <TableRow className="border-border bg-secondary/50 hover:bg-secondary/50">
+                <TableHead className="pl-5">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead className="pr-5 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paginatedRequests.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    No contact requests found.
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={6} className="p-0">
+                    <EmptyState
+                      title="No contact requests found"
+                      description="New customer inquiries will appear here as they arrive."
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
                 paginatedRequests.map((request, i) => (
                   <MotionTableRow
                     key={`${currentPage}-${request.id}`}
-                    className="border-border hover:bg-secondary/50 transition-colors"
+                    className="border-border/70 hover:bg-accent/35 transition-colors"
                     {...staggerIn(i, reduceMotion)}
                   >
-                    <TableCell className="font-medium text-foreground text-xs sm:text-sm truncate">#{request.id}</TableCell>
-                    <TableCell className="text-muted-foreground text-xs sm:text-sm truncate">{request.name}</TableCell>
+                    <TableCell className="pl-5 font-semibold text-foreground text-xs sm:text-sm truncate">#{request.id}</TableCell>
+                    <TableCell className="text-foreground text-xs sm:text-sm truncate">{request.name}</TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm truncate break-all">{request.email}</TableCell>
                     <TableCell>
-                      <Badge className={`${getStatusColor(request.status)} text-xs sm:text-sm`}>
-                        {request.status.replace('_', ' ').charAt(0).toUpperCase() + request.status.replace('_', ' ').slice(1)}
-                      </Badge>
+                      <StatusBadge status={request.status} />
                     </TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm">
                       {request.createdAt !== 'N/A'
                         ? new Date(request.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
                         : 'N/A'}
                     </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-border text-black/80 hover:text-black/80 hover:bg-primary/10 bg-transparent text-xs h-8 px-2 rounded"
-                          onClick={() => {
-                            setSelectedRequestId(request.id)
-                            setDetailsModalOpen(true)
-                          }}
-                        >
-                          <Eye size={14} />
-                          <span className="hidden sm:inline ml-1">View</span>
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-border text-black/80 hover:text-black/80 hover:bg-primary/10 bg-transparent text-xs h-8 px-2 rounded"
-                          onClick={() => {
-                            setSelectedRequestId(request.id)
-                            setStatusModalOpen(true)
-                          }}
-                        >
-                          Status
-                        </Button>
+                    <TableCell className="pr-5">
+                      <div className="flex justify-end gap-1.5">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="icon-sm"
+                              className="border-border text-muted-foreground hover:text-primary hover:bg-primary/10 bg-transparent rounded-lg cursor-pointer"
+                              aria-label={`View request #${request.id}`}
+                              onClick={() => {
+                                setSelectedRequestId(request.id)
+                                setDetailsModalOpen(true)
+                              }}
+                            >
+                              <Eye size={15} />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>View request</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="icon-sm"
+                              className="border-border text-muted-foreground hover:text-primary hover:bg-primary/10 bg-transparent rounded-lg cursor-pointer"
+                              aria-label={`Update status of request #${request.id}`}
+                              onClick={() => {
+                                setSelectedRequestId(request.id)
+                                setStatusModalOpen(true)
+                              }}
+                            >
+                              <RefreshCcw size={15} />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Update status</TooltipContent>
+                        </Tooltip>
                       </div>
                     </TableCell>
                   </MotionTableRow>

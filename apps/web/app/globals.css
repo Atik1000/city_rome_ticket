@@ -144,6 +144,15 @@
   --color-cream: #f3ebdd;
   --color-cream-dark: #e9dcc6;
   --color-ink: #2a2118;
+  --color-espresso: #2a1b16;        /* deep-espresso dark sections */
+  --color-espresso-light: #3c2a22;  /* raised surfaces on espresso */
+  --color-laurel: #4e7a5a;          /* laurel green for positive checks */
+
+  /* Warm-tinted layered shadows (shadow-warm, shadow-warm-md, shadow-warm-lg, shadow-glow-brand) */
+  --shadow-warm: 0 1px 2px rgb(42 27 22 / 0.05), 0 3px 10px -2px rgb(42 27 22 / 0.08);
+  --shadow-warm-md: 0 2px 4px rgb(42 27 22 / 0.05), 0 8px 24px -6px rgb(42 27 22 / 0.14);
+  --shadow-warm-lg: 0 4px 8px rgb(42 27 22 / 0.06), 0 18px 44px -12px rgb(122 62 30 / 0.28);
+  --shadow-glow-brand: 0 2px 6px rgb(42 27 22 / 0.08), 0 10px 26px -8px rgb(158 43 37 / 0.45);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -164,6 +173,107 @@
   h1,
   h2 {
     font-family: var(--font-serif);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--color-gold) 30%, transparent);
+  }
+}
+
+@layer components {
+  /* Uppercase letter-spaced gold eyebrow above headings */
+  .eyebrow {
+    @apply block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-gold;
+  }
+
+  /* Thin gold hairline, fading at both ends */
+  .gold-rule {
+    height: 1px;
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in oklab, var(--color-gold) 65%, transparent) 20%,
+      color-mix(in oklab, var(--color-gold) 65%, transparent) 80%,
+      transparent
+    );
+  }
+
+  /* Primary CTA: subtle single-hue terracotta gradient + warm glow on hover */
+  .btn-premium {
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-white rounded-xl cursor-pointer transition-all duration-200;
+    background-image: linear-gradient(to bottom, #ab342d, var(--color-brand) 55%, var(--color-brand-dark));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 1px 2px rgb(42 27 22 / 0.2);
+  }
+  .btn-premium:hover {
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), var(--shadow-glow-brand);
+    filter: brightness(1.04);
+  }
+  .btn-premium:active {
+    filter: brightness(0.97);
+  }
+  .btn-premium:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gold) 45%, transparent);
+  }
+  .btn-premium:disabled {
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  /* Secondary ghost button: gold underline grows on hover */
+  .btn-ghost-gold {
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-ink rounded-xl border border-gold/40 bg-transparent cursor-pointer transition-colors duration-200 relative;
+  }
+  .btn-ghost-gold::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0.45rem;
+    height: 1px;
+    width: 0;
+    transform: translateX(-50%);
+    background: var(--color-gold);
+    transition: width 220ms ease;
+  }
+  .btn-ghost-gold:hover {
+    @apply bg-cream/50 border-gold/70;
+  }
+  .btn-ghost-gold:hover::after {
+    width: calc(100% - 2.5rem);
+  }
+  .btn-ghost-gold:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gold) 45%, transparent);
+  }
+
+  /* Premium card surface: warm shadow, low-alpha gold border, lifted hover */
+  .card-premium {
+    @apply bg-card rounded-2xl border border-gold/20 shadow-warm transition-shadow duration-300;
+  }
+  .card-premium:hover {
+    @apply shadow-warm-lg border-gold/35;
+  }
+
+  /* Warm input treatment */
+  .input-warm {
+    @apply w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/35 outline-none transition-all duration-200;
+  }
+  .input-warm:hover {
+    @apply border-ink/25;
+  }
+  .input-warm:focus {
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gold) 22%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-premium,
+    .btn-ghost-gold,
+    .btn-ghost-gold::after,
+    .card-premium,
+    .input-warm {
+      transition: none;
+    }
   }
 }

@@ -55,36 +55,46 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
   const linkHover = reduceMotion ? {} : { whileHover: 'hover' as const }
   const iconVariants = reduceMotion ? undefined : { hover: { scale: 1.05 } }
 
-  const routes = [
+  const sections = [
     {
-      label: 'Dashboard',
-      icon: LayoutDashboard,
-      href: '/dashboard',
-      active: pathname === '/dashboard',
+      label: 'Overview',
+      routes: [
+        {
+          label: 'Dashboard',
+          icon: LayoutDashboard,
+          href: '/dashboard',
+          active: pathname === '/dashboard',
+        },
+      ],
     },
     {
-      label: 'Tours',
-      icon: Plane,
-      href: '/dashboard/tours',
-      active: pathname.includes('/tours'),
-    },
-    {
-      label: 'Bookings',
-      icon: BookOpen,
-      href: '/dashboard/bookings',
-      active: pathname.includes('/bookings'),
-    },
-    {
-      label: 'Contact Requests',
-      icon: MessageSquare,
-      href: '/dashboard/contact-requests',
-      active: pathname.includes('/contact-requests'),
-    },
-    {
-      label: 'Notices',
-      icon: Bell,
-      href: '/dashboard/notices',
-      active: pathname.includes('/notices'),
+      label: 'Manage',
+      routes: [
+        {
+          label: 'Tours',
+          icon: Plane,
+          href: '/dashboard/tours',
+          active: pathname.includes('/tours'),
+        },
+        {
+          label: 'Bookings',
+          icon: BookOpen,
+          href: '/dashboard/bookings',
+          active: pathname.includes('/bookings'),
+        },
+        {
+          label: 'Contact Requests',
+          icon: MessageSquare,
+          href: '/dashboard/contact-requests',
+          active: pathname.includes('/contact-requests'),
+        },
+        {
+          label: 'Notices',
+          icon: Bell,
+          href: '/dashboard/notices',
+          active: pathname.includes('/notices'),
+        },
+      ],
     },
   ]
 
@@ -120,15 +130,15 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
             isCollapsed && !isMobile ? 'justify-center' : ''
           )}
         >
-          <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center flex-shrink-0 shadow-md ring-1 ring-gold/40">
+          <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center flex-shrink-0 shadow-md ring-1 ring-gold/50">
             <Landmark size={20} className="text-sidebar-primary-foreground" />
           </div>
           {shouldShowLabels && (
             <div className="min-w-0">
-              <p className="font-bold text-base leading-tight tracking-tight text-sidebar-foreground truncate">
+              <p className="font-display font-semibold text-lg leading-tight tracking-tight text-sidebar-foreground truncate">
                 Iconic Rome
               </p>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gold font-semibold">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
                 Admin Panel
               </p>
             </div>
@@ -136,36 +146,62 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-2">
-          {routes.map((route) => {
-            const Icon = route.icon
-            return (
-              <MotionLink
-                key={route.href}
-                href={route.href}
-                onClick={handleLinkClick}
-                {...linkHover}
-                className={cn(
-                  'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 text-sm font-base',
-                  isCollapsed && !isMobile ? 'justify-center p-3' : '',
-                  route.active
-                    ? 'text-sidebar-primary-foreground'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-                )}
-                title={isCollapsed && !isMobile ? route.label : undefined}
-              >
-                {route.active && activePill}
-                <motion.span
-                  className="relative flex-shrink-0 flex items-center"
-                  variants={iconVariants}
-                  transition={{ duration: 0.15 }}
+        <nav className="flex-1 overflow-y-auto py-4 px-3">
+          {sections.map((section, sectionIndex) => (
+            <div key={section.label}>
+              {shouldShowLabels ? (
+                <p
+                  className={cn(
+                    'px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-sidebar-foreground/45',
+                    sectionIndex === 0 ? 'pt-2' : 'pt-6'
+                  )}
                 >
-                  <Icon size={20} />
-                </motion.span>
-                {shouldShowLabels && <span className="relative">{route.label}</span>}
-              </MotionLink>
-            )
-          })}
+                  {section.label}
+                </p>
+              ) : (
+                sectionIndex > 0 && (
+                  <div className="mx-3 my-4 h-px bg-sidebar-border" aria-hidden="true" />
+                )
+              )}
+              <div className="space-y-1.5">
+                {section.routes.map((route) => {
+                  const Icon = route.icon
+                  return (
+                    <MotionLink
+                      key={route.href}
+                      href={route.href}
+                      onClick={handleLinkClick}
+                      {...linkHover}
+                      className={cn(
+                        'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 text-sm font-base outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60',
+                        isCollapsed && !isMobile ? 'justify-center p-3' : '',
+                        route.active
+                          ? 'text-sidebar-primary-foreground'
+                          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                      )}
+                      title={isCollapsed && !isMobile ? route.label : undefined}
+                    >
+                      {route.active && activePill}
+                      {route.active && (
+                        <span
+                          className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-gold"
+                          aria-hidden="true"
+                        />
+                      )}
+                      <motion.span
+                        className="relative flex-shrink-0 flex items-center"
+                        variants={iconVariants}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <Icon size={20} />
+                      </motion.span>
+                      {shouldShowLabels && <span className="relative">{route.label}</span>}
+                    </MotionLink>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         {/* Bottom Section - Settings & Logout */}
@@ -177,7 +213,7 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
               onClick={handleLinkClick}
               {...linkHover}
               className={cn(
-                'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 text-sm font-base',
+                'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 text-sm font-base outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60',
                 isCollapsed && !isMobile ? 'justify-center p-3' : '',
                 pathname.includes('/settings')
                   ? 'text-sidebar-primary-foreground'
@@ -186,6 +222,12 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
               title={isCollapsed && !isMobile ? 'Settings' : undefined}
             >
               {pathname.includes('/settings') && activePill}
+              {pathname.includes('/settings') && (
+                <span
+                  className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-gold"
+                  aria-hidden="true"
+                />
+              )}
               <motion.span
                 className="relative flex-shrink-0 flex items-center"
                 variants={iconVariants}
@@ -202,7 +244,7 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
             onClick={() => setShowLogoutDialog(true)}
             {...linkHover}
             className={cn(
-              'cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 w-full text-sm font-base',
+              'cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 w-full text-sm font-base outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60',
               isCollapsed && !isMobile ? 'justify-center p-3' : '',
               'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
             )}
@@ -223,15 +265,15 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
       <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmation</AlertDialogTitle>
+            <AlertDialogTitle>Log out of Iconic Rome?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to log out? You will need to sign in again to access the admin panel.
+              You will need to sign in again to access the admin panel.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmLogout} className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer">
-              Logout
+              Log out
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

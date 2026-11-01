@@ -102,13 +102,12 @@ const BlogSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold mb-3">
-            Stories & tips
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-foreground mb-4">
-            From Our Travel Journal
+          <p className="eyebrow mb-3">Stories & tips</p>
+          <h2 className="font-serif text-4xl sm:text-5xl font-semibold text-foreground mb-4 leading-[1.1]">
+            From Our <span className="italic text-brand">Travel Journal</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <div aria-hidden="true" className="gold-rule w-28 mx-auto mb-4" />
+          <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Ticket tips, itinerary ideas, and local insights to help you explore Italy smoothly.
           </p>
         </motion.div>
@@ -124,7 +123,7 @@ const BlogSection = () => {
             <motion.article
               key={blog.id}
               variants={itemVariants}
-              className="group bg-card rounded-2xl overflow-hidden border border-black/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              className="group bg-card rounded-2xl overflow-hidden border border-gold/20 shadow-warm hover:shadow-warm-lg hover:border-gold/40 hover:-translate-y-1 transition-all duration-300"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
@@ -133,8 +132,9 @@ const BlogSection = () => {
                   alt={blog.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-espresso/55 via-espresso/10 via-40% to-transparent" />
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-[#9E2B25] hover:bg-[#9E2B25]/90 text-white text-xs font-semibold rounded-full">
+                  <span className="px-3 py-1 bg-espresso/85 border border-gold/50 text-gold-light text-[11px] font-semibold uppercase tracking-[0.12em] rounded-full backdrop-blur">
                     {blog.category}
                   </span>
                 </div>
@@ -142,14 +142,14 @@ const BlogSection = () => {
 
               {/* Content */}
               <div className="p-6">
-                <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
-                  <Calendar className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-[0.15em] mb-3">
+                  <Calendar className="w-3.5 h-3.5 text-gold" />
                   <span>{blog.date}</span>
                 </div>
-                <h3 className="font-serif text-lg font-semibold text-foreground mb-3 group-hover:text-brand transition-colors duration-300">
+                <h3 className="font-serif text-lg font-semibold leading-snug text-foreground mb-3 group-hover:text-brand transition-colors duration-300">
                   {blog.title}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">
                   {blog.excerpt}
                 </p>
                 <a

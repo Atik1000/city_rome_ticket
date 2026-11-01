@@ -6,8 +6,12 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ChevronLeft, Plus, Edit, Loader2, AlertCircle, Trash2 } from 'lucide-react'
+import { Plus, Edit, Loader2, AlertCircle, Trash2 } from 'lucide-react'
 import { TimeFormModal } from '@/components/dashboard/time-form-modal'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { PageLoader } from '@/components/dashboard/page-loader'
+import { EmptyState } from '@/components/dashboard/empty-state'
+import { AlertModalHeader } from '@/components/dashboard/modal-header'
 import { getTourTimes, TourTime, deleteTourTime } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 import {
@@ -122,11 +126,7 @@ export default function TimesPage() {
   }) || 'Date'
 
   if (isLoading && timeSlots.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    )
+    return <PageLoader label="Loading time slots" className="min-h-screen" />
   }
 
   if (error) {
@@ -146,44 +146,35 @@ export default function TimesPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href={`/dashboard/tours/${tourId}`}>
-          <Button variant="outline" size="icon" className="border-border bg-transparent cursor-pointer">
-            <ChevronLeft size={20} />
+      <PageHeader
+        eyebrow="Schedule"
+        backHref={`/dashboard/tours/${tourId}`}
+        title={`Time Slots for ${timeSlots[0] ? selectedDate : 'this date'}`}
+        description="Manage available time slots and tickets"
+        actions={
+          <Button
+            onClick={() => {
+              setEditingTime(null)
+              setTimeModalOpen(true)
+            }}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 cursor-pointer shadow-lg shadow-primary/15"
+          >
+            <Plus size={20} />
+            Add New Time
           </Button>
-        </Link>
-        <div>
-          <h1 className="text-4xl font-bold text-foreground mb-2">
-            Time Slots for {timeSlots[0] ? selectedDate : 'this date'}
-          </h1>
-          <p className="text-muted-foreground">Manage available time slots and tickets</p>
-        </div>
-      </div>
-
-      {/* Add New Time Button */}
-      <div className="flex justify-end">
-        <Button
-          onClick={() => {
-            setEditingTime(null)
-            setTimeModalOpen(true)
-          }}
-          className="text-black/80 hover:bg-primary/10 bg-transparent border border-1 flex items-center gap-2 cursor-pointer"
-        >
-          <Plus size={20} />
-          Add New Time
-        </Button>
-      </div>
+        }
+      />
 
       {/* Time Slots Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {timeSlots.map((slot) => (
-          <Card key={slot.id} className="border-border overflow-hidden hover:shadow-lg transition-shadow">
+          <Card key={slot.id} className="border-border/80 overflow-hidden hover:shadow-warm-lg transition-shadow p-0 gap-0">
             {/* Time Header */}
-            <div className="bg-gradient-to-r from-primary/20 to-primary/10 p-4 border-b border-border">
-              <h3 className="text-2xl font-bold text-primary mb-1">
+            <div className="bg-warm-wash p-4 border-b border-border/70">
+              <h3 className="font-display text-2xl font-semibold tracking-tight text-primary mb-1 tabular-nums">
                 {slot.start_time.substring(0, 5)}
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 Total Capacity: {
                   slot.available_adults +
                   slot.available_children +
@@ -196,57 +187,46 @@ export default function TimesPage() {
 
             {/* Ticket Details */}
             <div className="p-4 space-y-3">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <Badge variant="outline">Adult</Badge>
-                  <span className="text-sm font-semibold">
-                    {slot.available_adults} tickets
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <Badge variant="outline">Child</Badge>
-                  <span className="text-sm font-semibold">
-                    {slot.available_children} tickets
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <Badge variant="outline">Infant</Badge>
-                  <span className="text-sm font-semibold">
-                    {slot.available_infants} tickets
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <Badge variant="outline">Youth</Badge>
-                  <span className="text-sm font-semibold">
-                    {slot.available_youth} tickets
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <Badge variant="outline">Student EU</Badge>
-                  <span className="text-sm font-semibold">
-                    {slot.available_student_eu} tickets
-                  </span>
-                </div>
+              <div className="space-y-1">
+                {[
+                  ['Adult', slot.available_adults],
+                  ['Child', slot.available_children],
+                  ['Infant', slot.available_infants],
+                  ['Youth', slot.available_youth],
+                  ['Student EU', slot.available_student_eu],
+                ].map(([label, count]) => (
+                  <div
+                    key={label as string}
+                    className="flex justify-between items-center py-1.5 border-b border-border/50 last:border-0"
+                  >
+                    <span className="text-sm text-muted-foreground">{label}</span>
+                    <span className="text-sm font-semibold tabular-nums text-foreground">
+                      {count} tickets
+                    </span>
+                  </div>
+                ))}
               </div>
 
-              <div className='flex flex-row gap-2'>
+              <div className='flex flex-row gap-2 pt-1'>
                 {/* Edit Button */}
                 <Button
+                  variant="outline"
                   onClick={() => {
                     setEditingTime(slot)
                     setTimeModalOpen(true)
                   }}
-                  className=" flex-1 text-black/80 hover:bg-primary/10 bg-transparent border border-1 flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 border-border text-foreground hover:text-primary hover:bg-primary/10 bg-card flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Edit size={18} />
                   Edit
                 </Button>
                 <Button
+                  variant="outline"
                   onClick={() => {
                     setIdToDelete(slot.id.toString())
                     setIsDeleteDialogOpen(true)
                   }}
-                  className="flex-1 bg-destructive text-white hover:bg-destructive/90 flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 border-destructive/25 text-destructive hover:text-destructive hover:bg-destructive/10 bg-card flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Trash2 size={18} />
                   Delete
@@ -259,17 +239,23 @@ export default function TimesPage() {
 
       {/* Empty State */}
       {!isLoading && timeSlots.length === 0 && (
-        <Card className="p-12 border-border text-center">
-          <p className="text-muted-foreground mb-4">No time slots scheduled for this date</p>
-          <Button
-            onClick={() => {
-              setEditingTime(null)
-              setTimeModalOpen(true)
-            }}
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            Add First Time Slot
-          </Button>
+        <Card className="p-0 border-border/80">
+          <EmptyState
+            title="No time slots scheduled"
+            description="Add the first time slot to open this date for bookings."
+            action={
+              <Button
+                onClick={() => {
+                  setEditingTime(null)
+                  setTimeModalOpen(true)
+                }}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer shadow-lg shadow-primary/15"
+              >
+                <Plus size={18} />
+                Add First Time Slot
+              </Button>
+            }
+          />
         </Card>
       )}
 
@@ -289,12 +275,12 @@ export default function TimesPage() {
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the time slot.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+          <AlertModalHeader
+            icon={Trash2}
+            tone="destructive"
+            title="Delete this time slot?"
+            description="This action cannot be undone. The time slot will be permanently deleted."
+          />
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting} onClick={() => setIdToDelete(null)} className='cursor-pointer'>Cancel</AlertDialogCancel>
             <AlertDialogAction

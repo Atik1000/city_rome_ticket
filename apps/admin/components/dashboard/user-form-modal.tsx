@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { ModalHeader, AlertModalHeader } from '@/components/dashboard/modal-header'
 import {
   Select,
   SelectContent,
@@ -16,12 +17,9 @@ import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { Loader2 } from 'lucide-react'
+  } from '@/components/ui/alert-dialog'
+import { Loader2, UserRound, CheckCircle2, AlertCircle } from 'lucide-react'
 import { createAuthUser, getAuthUserDetail, updateAuthUser, AuthUser } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 
@@ -186,11 +184,15 @@ export function UserFormModal({ isOpen, onClose, onSaved, user }: UserFormModalP
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {isEdit ? 'Update User' : 'Add New User'}
-            </DialogTitle>
-          </DialogHeader>
+          <ModalHeader
+            icon={UserRound}
+            title={isEdit ? 'Update User' : 'Add New User'}
+            description={
+              isEdit
+                ? 'Edit this team member’s details and role'
+                : 'Give a team member access to the admin panel'
+            }
+          />
 
           {loading ? (
             <div className="flex items-center justify-center p-12">
@@ -280,19 +282,19 @@ export function UserFormModal({ isOpen, onClose, onSaved, user }: UserFormModalP
                 </Select>
               </div>
 
-              <div className="flex gap-2 border-t border-border pt-6 mt-6">
+              <div className="flex gap-2 border-t border-border/70 pt-5 mt-6">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className="flex-1 border-border bg-transparent"
+                  className="flex-1 border-border bg-transparent cursor-pointer"
                   disabled={saving}
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer shadow-lg shadow-primary/15"
                   disabled={saving}
                 >
                   {saving ? (
@@ -312,14 +314,12 @@ export function UserFormModal({ isOpen, onClose, onSaved, user }: UserFormModalP
 
       <AlertDialog open={alertConfig.isOpen} onOpenChange={(open) => !open && handleAlertClose()}>
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className={alertConfig.type === 'error' ? 'text-destructive' : 'text-primary'}>
-              {alertConfig.title}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="whitespace-pre-line">
-              {alertConfig.description}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+          <AlertModalHeader
+            icon={alertConfig.type === 'success' ? CheckCircle2 : AlertCircle}
+            tone={alertConfig.type === 'success' ? 'success' : 'destructive'}
+            title={alertConfig.title}
+            description={alertConfig.description}
+          />
           <AlertDialogFooter>
             <AlertDialogAction onClick={handleAlertClose}>OK</AlertDialogAction>
           </AlertDialogFooter>

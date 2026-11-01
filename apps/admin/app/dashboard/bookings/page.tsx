@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
   Table,
   TableBody,
@@ -13,11 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Eye, Plus, Loader2, AlertCircle, Search, RotateCcw } from 'lucide-react'
+import { Eye, Plus, AlertCircle, Search, RotateCcw, RefreshCcw } from 'lucide-react'
 import { useReducedMotion } from 'framer-motion'
 import { MotionTableRow, staggerIn } from '@/components/motion'
 import { StatusModal } from '@/components/dashboard/status-modal'
 import { BookingFormModal } from '@/components/dashboard/booking-form-modal'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { PageLoader } from '@/components/dashboard/page-loader'
+import { StatusBadge } from '@/components/dashboard/status-badge'
+import { EmptyState } from '@/components/dashboard/empty-state'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { getBookings, Booking } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 import { Input } from '@/components/ui/input'
@@ -99,30 +103,12 @@ export default function BookingsPage() {
 
   const selectedBooking = bookings.find((b) => b.id === selectedBookingId)
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'open':
-      case 'confirmed':
-        return 'bg-green-100 text-green-800'
-      case 'pending':
-        return 'bg-blue-100 text-blue-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
   const handleStatusChange = () => {
     fetchBookings(currentPage, search, activeDateFrom, activeDateTo)
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    )
+    return <PageLoader label="Loading bookings" className="min-h-screen" />
   }
 
   if (error && bookings.length === 0) {
@@ -138,112 +124,124 @@ export default function BookingsPage() {
   return (
     <div className="space-y-6 sm:space-y-8 pb-8">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-foreground mb-2">Bookings</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">Manage tour bookings and reservations</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+      <PageHeader
+        eyebrow="Reservations"
+        title="Bookings"
+        description="Manage tour bookings and reservations"
+        actions={
           <Button
-            variant="outline"
-            onClick={handleReset}
-            className="h-10 px-3 border-border text-muted-foreground hover:text-foreground flex items-center gap-2"
-            title="Reset Filters"
+            onClick={() => setCreateModalOpen(true)}
+            className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg shadow-lg shadow-primary/15"
           >
-            <RotateCcw size={16} />
-            Reset
+            <Plus size={20} />
+            Add New Booking
           </Button>
+        }
+      />
 
-          <div className="flex items-center gap-2">
-            <Input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
-              className="h-10 border-border w-full sm:w-40"
-              title="From Date"
-            />
-            <Input
-              type="date"
-              value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
-              className="h-10 border-border w-full sm:w-40"
-              title="To Date"
-            />
-          </div>
-
-          <Button
-            onClick={handleDateSearch}
-            className="h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            Search
-          </Button>
-
-          <div className="relative flex-1 sm:w-64">
+      {/* Filter Toolbar */}
+      <Card className="p-3 sm:p-4 gap-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative flex-1 min-w-[200px] sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Search bookings..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="pl-9 h-10 border-border"
+              className="pl-9 h-10 border-border bg-background/60"
+              aria-label="Search bookings"
             />
           </div>
-
           <Button
             onClick={handleTextSearch}
-            className="h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90"
+            className="h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
           >
             Search
           </Button>
 
+          <div
+            className="mx-1 hidden h-6 w-px bg-border sm:block"
+            aria-hidden="true"
+          />
+
+          <div className="flex items-center gap-2">
+            <Input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="h-10 border-border bg-background/60 w-full sm:w-40"
+              aria-label="From date"
+              title="From Date"
+            />
+            <span className="text-xs text-muted-foreground">to</span>
+            <Input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="h-10 border-border bg-background/60 w-full sm:w-40"
+              aria-label="To date"
+              title="To Date"
+            />
+          </div>
           <Button
-            onClick={() => setCreateModalOpen(true)}
-            className="cursor-pointer text-black/80 hover:bg-primary/10 bg-transparent border border-1 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg"
+            variant="outline"
+            onClick={handleDateSearch}
+            className="h-10 px-4 border-border cursor-pointer"
           >
-            <Plus size={20} />
-            Add New Booking
+            Filter by Date
+          </Button>
+
+          <Button
+            variant="ghost"
+            onClick={handleReset}
+            className="h-10 px-3 text-muted-foreground hover:text-foreground flex items-center gap-2 cursor-pointer"
+            title="Reset Filters"
+          >
+            <RotateCcw size={16} />
+            Reset
           </Button>
         </div>
-      </div>
+      </Card>
 
       {/* Bookings Table - Responsive */}
-      <Card className="border-border overflow-hidden shadow-sm">
+      <Card className="border-border/80 overflow-hidden shadow-warm p-0 gap-0">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-border bg-secondary hover:bg-secondary">
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">ID</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">User Type</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Price</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Status</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Created At</TableHead>
-                <TableHead className="text-foreground text-xs sm:text-sm font-semibold">Actions</TableHead>
+              <TableRow className="border-border bg-secondary/50 hover:bg-secondary/50">
+                <TableHead className="pl-5">ID</TableHead>
+                <TableHead>User Type</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead className="pr-5 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {bookings.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                    No bookings found.
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={6} className="p-0">
+                    <EmptyState
+                      title="No bookings found"
+                      description="Adjust the filters or add a new booking to get started."
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
                 bookings.map((booking, i) => (
                   <MotionTableRow
                     key={`${currentPage}-${booking.id}`}
-                    className="border-border hover:bg-secondary/50 transition-colors"
+                    className="border-border/70 hover:bg-accent/35 transition-colors"
                     {...staggerIn(i, reduceMotion, 0.03)}
                   >
-                    <TableCell className="font-medium text-foreground text-xs sm:text-sm">#{booking.id}</TableCell>
+                    <TableCell className="pl-5 font-semibold text-foreground text-xs sm:text-sm">#{booking.id}</TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm capitalize">{booking.user_type}</TableCell>
-                    <TableCell className="text-muted-foreground text-xs sm:text-sm font-medium">
+                    <TableCell className="text-foreground text-xs sm:text-sm font-semibold tabular-nums">
                       €{parseFloat(booking.total_price).toFixed(2)}
                     </TableCell>
                     <TableCell>
-                      <Badge className={`${getStatusColor(booking.status)} text-xs sm:text-sm capitalize font-normal border-none shadow-none`}>
-                        {booking.status.replace('_', ' ')}
-                      </Badge>
+                      <StatusBadge status={booking.status} />
                     </TableCell>
                     <TableCell className="text-muted-foreground text-xs sm:text-sm">
                       {new Date(booking.created_at).toLocaleDateString('en-GB', {
@@ -252,29 +250,40 @@ export default function BookingsPage() {
                         year: 'numeric'
                       })}
                     </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2 flex-wrap">
-                        <Link href={`/dashboard/bookings/${booking.id}`}>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-border text-black/80 hover:bg-primary/10 bg-transparent hover:text-black/80 text-xs h-8 px-2 rounded"
-                          >
-                            <Eye size={14} />
-                            <span className="hidden sm:inline ml-1">View</span>
-                          </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-border text-black/80 hover:bg-primary/10 bg-transparent hover:text-black/80 text-xs h-8 px-2 rounded"
-                          onClick={() => {
-                            setSelectedBookingId(booking.id)
-                            setStatusModalOpen(true)
-                          }}
-                        >
-                          Status
-                        </Button>
+                    <TableCell className="pr-5">
+                      <div className="flex justify-end gap-1.5">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              asChild
+                              variant="outline"
+                              size="icon-sm"
+                              className="border-border text-muted-foreground hover:text-primary hover:bg-primary/10 bg-transparent rounded-lg cursor-pointer"
+                            >
+                              <Link href={`/dashboard/bookings/${booking.id}`} aria-label={`View booking #${booking.id}`}>
+                                <Eye size={15} />
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>View booking</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="icon-sm"
+                              className="border-border text-muted-foreground hover:text-primary hover:bg-primary/10 bg-transparent rounded-lg cursor-pointer"
+                              aria-label={`Update status of booking #${booking.id}`}
+                              onClick={() => {
+                                setSelectedBookingId(booking.id)
+                                setStatusModalOpen(true)
+                              }}
+                            >
+                              <RefreshCcw size={15} />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Update status</TooltipContent>
+                        </Tooltip>
                       </div>
                     </TableCell>
                   </MotionTableRow>
@@ -307,9 +316,9 @@ export default function BookingsPage() {
                   key={i + 1}
                   variant={currentPage === i + 1 ? 'default' : 'outline'}
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`text-sm h-10 w-10 p-0 rounded-lg ${currentPage === i + 1
-                    ? 'bg-primary text-primary-foreground'
-                    : 'border-border hover:bg-secondary hover:text-black/80'
+                  className={`cursor-pointer text-sm h-10 w-10 p-0 rounded-lg ${currentPage === i + 1
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/15'
+                    : 'border-border hover:bg-secondary'
                     }`}
                 >
                   {i + 1}

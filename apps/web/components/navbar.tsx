@@ -111,8 +111,8 @@ export default function Navbar() {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`w-full sticky top-0 z-[100] border-b transition-all duration-300 ${
           isScrolled
-            ? "bg-white/85 backdrop-blur-md shadow-sm border-black/5"
-            : "bg-white/95 backdrop-blur-sm border-transparent"
+            ? "bg-[#FAF7F2]/88 backdrop-blur-md shadow-warm border-gold/30"
+            : "bg-[#FAF7F2]/96 backdrop-blur-sm border-transparent"
         }`}
       >
         {/* Top bar */}
@@ -122,20 +122,23 @@ export default function Navbar() {
             <Logo />
 
             <div className="hidden md:flex items-center gap-8">
-              <Link href="/tour" className="text-gray-600 font-medium hover:text-[#9E2B25] text-sm">
+              <Link href="/tour" className="relative group text-ink/70 font-medium hover:text-brand text-sm uppercase tracking-[0.12em] transition-colors">
                 {t.nav.tours}
+                <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
               </Link>
-              <Link href="/about-us" className="text-gray-600 font-medium hover:text-[#9E2B25] text-sm">
+              <Link href="/about-us" className="relative group text-ink/70 font-medium hover:text-brand text-sm uppercase tracking-[0.12em] transition-colors">
                 {t.nav.aboutUs}
+                <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
               </Link>
-              <Link href="/contact" className="text-gray-600 font-medium hover:text-[#9E2B25] text-sm">
+              <Link href="/contact" className="relative group text-ink/70 font-medium hover:text-brand text-sm uppercase tracking-[0.12em] transition-colors">
                 {t.nav.contact}
+                <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
               </Link>
             </div>
 
             {/* Right menu items */}
             <div className="flex items-center gap-6">
-              <Link href="/cart" className="relative group flex flex-col items-center gap-1 text-gray-600 hover:text-gray-900 cursor-pointer">
+              <Link href="/cart" className="relative group flex flex-col items-center gap-1 text-ink/65 hover:text-ink cursor-pointer transition-colors">
                 <div className="relative">
                   <ShoppingCart size={20} />
                   <AnimatePresence>
@@ -154,19 +157,19 @@ export default function Navbar() {
                   </AnimatePresence>
                 </div>
                 <span className="text-xs font-medium">{t.nav.cart}</span>
-                <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-2 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full"></span>
               </Link>
 
               <div className="relative group z-50" ref={languageRef}>
                 <button
                   onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-                  className="relative group flex flex-col items-center gap-1 text-gray-600 hover:text-gray-900 cursor-pointer"
+                  className="relative group flex flex-col items-center gap-1 text-ink/65 hover:text-ink cursor-pointer transition-colors"
                 >
                   <Globe size={20} />
                   <span className="text-xs font-medium uppercase">
                     {language?.toUpperCase()}
                   </span>
-                  <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-2 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full"></span>
                 </button>
 
                 {/* Language Dropdown */}
@@ -176,7 +179,7 @@ export default function Navbar() {
                     isLanguageOpen ? 'block' : 'hidden md:group-hover:block'
                   } transition-all duration-200 z-[100]`}
                 >
-                  <div className="bg-white rounded-xl shadow-[0_2px_20px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="bg-white rounded-xl shadow-warm-lg border border-gold/20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="p-2">
                       {/* English */}
                       <button
@@ -184,7 +187,7 @@ export default function Navbar() {
                           setLanguage('en')
                           setIsLanguageOpen(false)
                         }}
-                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-cream/60 rounded-lg transition-colors"
                       >
                         <span className="font-medium">English</span>
                         {language === 'en' && <Check size={16} className="text-brand" />}
@@ -196,7 +199,7 @@ export default function Navbar() {
                           setLanguage('it')
                           setIsLanguageOpen(false)
                         }}
-                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-cream/60 rounded-lg transition-colors"
                       >
                         <span className="font-medium">Italiano</span>
                         {language === 'it' && <Check size={16} className="text-brand" />}
@@ -208,7 +211,7 @@ export default function Navbar() {
                           setLanguage('de')
                           setIsLanguageOpen(false)
                         }}
-                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-cream/60 rounded-lg transition-colors"
                       >
                         <span className="font-medium">Deutsch</span>
                         {language === 'de' && <Check size={16} className="text-brand" />}
@@ -220,7 +223,7 @@ export default function Navbar() {
                           setLanguage('es')
                           setIsLanguageOpen(false)
                         }}
-                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-cream/60 rounded-lg transition-colors"
                       >
                         <span className="font-medium">Español</span>
                         {language === 'es' && <Check size={16} className="text-brand" />}
@@ -232,7 +235,7 @@ export default function Navbar() {
                           setLanguage('fr')
                           setIsLanguageOpen(false)
                         }}
-                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-gray-50 rounded-lg transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2A2118] hover:bg-cream/60 rounded-lg transition-colors"
                       >
                         <span className="font-medium">Français</span>
                         {language === 'fr' && <Check size={16} className="text-brand" />}
@@ -245,16 +248,16 @@ export default function Navbar() {
               <div className="relative group z-50" ref={profileRef}>
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex flex-col items-center gap-1 text-gray-600 hover:text-gray-900 cursor-pointer"
+                  className="flex flex-col items-center gap-1 text-ink/65 hover:text-ink cursor-pointer transition-colors"
                 >
                   <User size={20} />
                   <span className="text-xs font-medium">{userName}</span>
-                  <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-2 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full"></span>
                 </button>
 
                 {/* Profile Dropdown */}
                 <div className={`absolute right-0 top-full pt-[10px] w-80 ${isProfileOpen ? 'block' : 'hidden md:group-hover:block'} transition-all duration-200 z-[100]`}>
-                  <div className="bg-white rounded-xl shadow-[0_2px_20px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="bg-white rounded-xl shadow-warm-lg border border-gold/20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="p-4 bg-transparent">
                       <h3 className="text-xl font-bold text-[#2A2118] mb-4 text-left">{userName}</h3>
                       <Link href="/contact" className="flex items-center justify-between py-2.5 cursor-pointer hover:bg-gray-50 -mx-4 px-4">
@@ -308,7 +311,7 @@ export default function Navbar() {
               {/* Mobile Hamburger Menu */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden flex flex-col items-center gap-1 text-gray-600 hover:text-gray-900 cursor-pointer transition-all duration-200"
+                className="md:hidden flex flex-col items-center gap-1 text-ink/65 hover:text-ink cursor-pointer transition-all duration-200"
               >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 <span className="text-xs font-medium">{isMenuOpen ? (language === 'en' ? "Close" : "Chiudi") : (language === 'en' ? "Menu" : "Menu")}</span>
@@ -319,26 +322,26 @@ export default function Navbar() {
 
         {/* Mobile menu content */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100 animate-in slide-in-from-top duration-200">
-            <div className="px-4 pt-2 pb-6 space-y-2">
+          <div className="md:hidden bg-[#FAF7F2]/98 backdrop-blur-md border-t border-gold/25 animate-in slide-in-from-top duration-200">
+            <div className="px-4 pt-3 pb-6 space-y-1 divide-y divide-gold/10">
               <Link
                 href="/tour"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-[#9E2B25] rounded-lg transition-colors"
+                className="block px-4 py-3.5 font-serif text-lg text-ink hover:bg-cream/70 hover:text-brand rounded-lg transition-colors border-l-2 border-transparent hover:border-gold"
               >
                 {t.nav.tours}
               </Link>
               <Link
                 href="/about-us"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-[#9E2B25] rounded-lg transition-colors"
+                className="block px-4 py-3.5 font-serif text-lg text-ink hover:bg-cream/70 hover:text-brand rounded-lg transition-colors border-l-2 border-transparent hover:border-gold"
               >
                 {t.nav.aboutUs}
               </Link>
               <Link
                 href="/contact"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-[#9E2B25] rounded-lg transition-colors"
+                className="block px-4 py-3.5 font-serif text-lg text-ink hover:bg-cream/70 hover:text-brand rounded-lg transition-colors border-l-2 border-transparent hover:border-gold"
               >
                 {t.nav.contact}
               </Link>

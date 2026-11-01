@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Badge } from '@/components/ui/badge'
-import { X, Loader2 } from 'lucide-react'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { X, Loader2, CalendarPlus } from 'lucide-react'
+import { ModalHeader } from '@/components/dashboard/modal-header'
 import {
   fetchTourDates,
   addTourDate,
@@ -98,14 +98,16 @@ export function DateModal({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Add New Date</DialogTitle>
-          </DialogHeader>
+          <ModalHeader
+            icon={CalendarPlus}
+            title="Add New Date"
+            description="Schedule a new date for this tour"
+          />
 
           <div className="space-y-6">
             {/* Dates List */}
             <div>
-              <h3 className="text-sm font-medium text-foreground mb-3">Scheduled Dates</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-3">Scheduled Dates</h3>
               {isLoading && dates.length === 0 ? (
                 <div className="flex justify-center py-4">
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -115,12 +117,16 @@ export function DateModal({
                   {dates.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between bg-secondary p-3 rounded-lg border border-border"
+                      className="flex items-center justify-between bg-secondary/40 p-3 rounded-lg border border-border/70"
                     >
-                      <Badge variant="default">{item.date}</Badge>
+                      <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <span className="size-1.5 rounded-full bg-gold" aria-hidden="true" />
+                        {item.date}
+                      </span>
                       <button
                         onClick={() => handleRemoveDate(item.id)}
-                        className="text-destructive hover:bg-destructive/10 p-2 rounded cursor-pointer transition-colors"
+                        aria-label={`Remove date ${item.date}`}
+                        className="text-destructive hover:bg-destructive/10 p-2 rounded cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-destructive/40"
                       >
                         <X size={16} />
                       </button>
@@ -133,7 +139,8 @@ export function DateModal({
             </div>
 
             {/* Add Date Form */}
-            <div className="space-y-4 border-t border-border pt-6">
+            <div className="gold-hairline" aria-hidden="true" />
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="new-date" className="text-foreground">
                   Select Date
@@ -159,17 +166,17 @@ export function DateModal({
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex gap-2 border-t border-border pt-6">
+          <div className="flex gap-2 border-t border-border/70 pt-5">
             <Button
               variant="outline"
               onClick={onClose}
-              className="flex-1 border-border bg-transparent"
+              className="flex-1 border-border bg-transparent cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               onClick={handleAddDate}
-              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer shadow-lg shadow-primary/15"
             >
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
               Add Date

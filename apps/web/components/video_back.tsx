@@ -45,8 +45,8 @@ export default function VideoBackgroundPage() {
         playsInline
       />
 
-      {/* Warm overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+      {/* Warm espresso overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-espresso/80 via-espresso/40 to-espresso/85" />
 
       {/* Lighter ember layer */}
       <AmbientParticles count={110} />
@@ -57,12 +57,16 @@ export default function VideoBackgroundPage() {
           <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.4em] text-gold-light">
             Iconic Rome Tickets
           </p>
-          <h2 className="font-serif text-white text-4xl sm:text-6xl md:text-7xl font-semibold text-balance">
+          <h2 className="font-serif text-white text-4xl sm:text-6xl md:text-7xl font-semibold text-balance leading-[1.08]">
             Book the Past,
             <br />
-            Experience the Eternal.
+            Experience <span className="italic text-gold-light">the Eternal.</span>
           </h2>
-          <div className="mt-4 h-px w-24 bg-gold/70" />
+          <div aria-hidden="true" className="mt-4 flex items-center gap-3">
+            <span className="h-px w-16 bg-gradient-to-r from-transparent to-gold/70" />
+            <span className="h-1.5 w-1.5 rotate-45 bg-gold/80" />
+            <span className="h-px w-16 bg-gradient-to-l from-transparent to-gold/70" />
+          </div>
           <p className="text-white/85 text-base sm:text-lg max-w-xl">
             Two thousand years of history, one unforgettable visit.
           </p>

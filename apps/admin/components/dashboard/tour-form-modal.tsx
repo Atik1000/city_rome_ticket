@@ -13,8 +13,10 @@ import {
     ImagePlus,
     X,
     MapPin,
-    Edit2
+    Edit2,
+    Landmark
 } from 'lucide-react'
+import { ModalHeader, AlertModalHeader } from '@/components/dashboard/modal-header'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -278,7 +280,7 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
     }) => {
         const [tempValue, setTempValue] = useState('')
         return (
-            <Card className="p-4 border-border bg-card/50 backdrop-blur-sm shadow-sm space-y-4">
+            <Card className="p-4 border-border bg-card shadow-warm-sm space-y-4">
                 <div className="flex items-center gap-2 text-primary font-semibold">
                     <Icon size={18} />
                     <Label className="text-foreground">{label}</Label>
@@ -444,20 +446,18 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="sm:max-w-4xl max-h-[85vh] p-0 gap-0 flex flex-col overflow-hidden border-primary/20">
+                <DialogContent className="sm:max-w-4xl max-h-[85vh] p-0 gap-0 flex flex-col overflow-hidden">
                     {/* Sticky Header */}
-                    <div className="px-6 py-4 border-b border-border bg-primary/5">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                                <Info className="text-primary" size={20} />
-                                {isEditMode ? 'Update Tour' : 'Create New Tour'}
-                            </DialogTitle>
-                            <DialogDescription>
-                                {isEditMode
+                    <div className="px-6 py-5 border-b border-border/70 bg-warm-wash">
+                        <ModalHeader
+                            icon={Landmark}
+                            title={isEditMode ? 'Update Tour' : 'Create New Tour'}
+                            description={
+                                isEditMode
                                     ? 'Modify the details of your tour offering'
-                                    : 'Fill in the details to publish a new tour offering'}
-                            </DialogDescription>
-                        </DialogHeader>
+                                    : 'Fill in the details to publish a new tour offering'
+                            }
+                        />
                     </div>
 
                     <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
@@ -465,7 +465,7 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
                         <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8">
                             {/* Basic Information */}
                             <div className="space-y-4">
-                                <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                                <h2 className="font-display text-lg font-semibold tracking-tight text-foreground flex items-center gap-2">
                                     <Info className="text-primary" size={18} />
                                     Basic Information
                                 </h2>
@@ -636,7 +636,7 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
 
                             {/* Pricing Sections */}
                             <div className="space-y-4 pt-4 border-t border-border">
-                                <h2 className="text-lg font-bold text-foreground">Pricing & Age Groups</h2>
+                                <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">Pricing & Age Groups</h2>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {/* Adults */}
@@ -819,7 +819,7 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
 
                             {/* Tour Status */}
                             <div className="space-y-4 pt-4 border-t border-border">
-                                <h2 className="text-lg font-bold text-foreground">Tour Status</h2>
+                                <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">Tour Status</h2>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg">
@@ -873,7 +873,7 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
 
                             {/* List Fields */}
                             <div className="space-y-4 pt-4 border-t border-border">
-                                <h2 className="text-lg font-bold text-foreground">Tour Details & Lists</h2>
+                                <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">Tour Details & Lists</h2>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <ArrayField
@@ -923,19 +923,19 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
                         </div>
 
                         {/* Sticky Footer */}
-                        <DialogFooter className="px-6 py-4 border-t border-border bg-background">
+                        <DialogFooter className="px-6 py-4 border-t border-border/70 bg-secondary/30">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => onOpenChange(false)}
-                                className="cursor-pointer border-border bg-transparent hover:bg-secondary px-6"
+                                className="cursor-pointer border-border bg-card hover:bg-secondary px-6"
                             >
                                 Cancel
                             </Button>
                             <Button
                                 type="submit"
                                 disabled={isSaving}
-                                className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 px-8"
+                                className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 px-8 shadow-lg shadow-primary/15"
                             >
                                 {isSaving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                                 {isEditMode ? 'Update Tour' : 'Create'}
@@ -947,13 +947,11 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
 
             {/* Location Modal */}
             <Dialog open={isLocationModalOpen} onOpenChange={setIsLocationModalOpen}>
-                <DialogContent className="max-w-md border-primary/20 bg-background/95 backdrop-blur-lg">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2 text-primary font-bold">
-                            <MapPin size={20} />
-                            {editingLocation ? 'Update Location' : 'Add New Location'}
-                        </DialogTitle>
-                    </DialogHeader>
+                <DialogContent className="max-w-md border-primary/20">
+                    <ModalHeader
+                        icon={MapPin}
+                        title={editingLocation ? 'Update Location' : 'Add New Location'}
+                    />
                     <div className="space-y-4 py-4">
                         <div className="space-y-2">
                             <Label htmlFor="loc-name">Location Name</Label>
@@ -1002,16 +1000,13 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
                 open={errorDialog.isOpen}
                 onOpenChange={(v) => setErrorDialog({ ...errorDialog, isOpen: v })}
             >
-                <AlertDialogContent className="max-w-md border-destructive/20 bg-background/95 backdrop-blur-lg">
-                    <AlertDialogHeader>
-                        <div className="flex items-center gap-2 text-destructive mb-2">
-                            <AlertCircle size={24} />
-                            <AlertDialogTitle>{errorDialog.title}</AlertDialogTitle>
-                        </div>
-                        <AlertDialogDescription className="text-foreground/80 whitespace-pre-line font-medium">
-                            {errorDialog.message}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
+                <AlertDialogContent className="max-w-md border-destructive/20">
+                    <AlertModalHeader
+                        icon={AlertCircle}
+                        tone="destructive"
+                        title={errorDialog.title}
+                        description={errorDialog.message}
+                    />
                     <AlertDialogFooter>
                         <AlertDialogAction className="cursor-pointer bg-destructive hover:bg-destructive/90 text-white border-0">
                             Okay
@@ -1025,18 +1020,15 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
                 open={successDialogOpen}
                 onOpenChange={setSuccessDialogOpen}
             >
-                <AlertDialogContent className="max-w-md border-primary/20 bg-background/95 backdrop-blur-lg">
-                    <AlertDialogHeader>
-                        <div className="flex items-center gap-2 text-primary mb-2">
-                            <CheckCircle2 size={24} />
-                            <AlertDialogTitle>Success!</AlertDialogTitle>
-                        </div>
-                        <AlertDialogDescription className="text-foreground/80 font-medium">
-                            {isEditMode
-                                ? 'Tour details have been updated successfully.'
-                                : 'Your new tour has been created successfully and is now live.'}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
+                <AlertDialogContent className="max-w-md border-primary/20">
+                    <AlertModalHeader
+                        icon={CheckCircle2}
+                        tone="success"
+                        title="Success!"
+                        description={isEditMode
+                            ? 'Tour details have been updated successfully.'
+                            : 'Your new tour has been created successfully and is now live.'}
+                    />
                     <AlertDialogFooter>
                         <AlertDialogAction
                             onClick={() => {

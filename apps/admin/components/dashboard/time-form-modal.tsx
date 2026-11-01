@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { ModalHeader, ModalSectionDivider } from '@/components/dashboard/modal-header'
 import {
   Select,
   SelectContent,
@@ -23,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Loader2 } from 'lucide-react'
+import { Loader2, Clock } from 'lucide-react'
 
 interface TimeFormModalProps {
   isOpen: boolean
@@ -161,11 +162,11 @@ export function TimeFormModal({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {mode === 'create' ? 'Add New Time Slot' : 'Edit Time Slot'}
-            </DialogTitle>
-          </DialogHeader>
+          <ModalHeader
+            icon={Clock}
+            title={mode === 'create' ? 'Add New Time Slot' : 'Edit Time Slot'}
+            description="Set the start time and ticket availability"
+          />
 
           <div className="space-y-6">
             {/* Time Selection */}
@@ -188,6 +189,7 @@ export function TimeFormModal({
             </div>
 
             {/* Ticket Types */}
+            <ModalSectionDivider label="Ticket Availability" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="adults">Available Adults</Label>
@@ -248,7 +250,7 @@ export function TimeFormModal({
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex gap-2 border-t border-border pt-6 mt-6 cursor-pointer">
+          <div className="flex gap-2 border-t border-border/70 pt-5 mt-2">
             <Button
               variant="outline"
               onClick={onClose}
@@ -260,7 +262,7 @@ export function TimeFormModal({
             <Button
               onClick={handleSave}
               disabled={isSubmitting}
-              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer shadow-lg shadow-primary/15"
             >
               {isSubmitting ? (
                 <>

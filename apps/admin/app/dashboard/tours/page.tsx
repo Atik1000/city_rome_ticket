@@ -6,10 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Search, Plus, Clock, Loader2, AlertCircle } from 'lucide-react'
+import { Search, Plus, Clock, AlertCircle } from 'lucide-react'
 import { useReducedMotion } from 'framer-motion'
 import { MotionCard, staggerIn } from '@/components/motion'
 import { TourFormModal } from '@/components/dashboard/tour-form-modal'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { PageLoader } from '@/components/dashboard/page-loader'
+import { EmptyState } from '@/components/dashboard/empty-state'
 import { getTourPlans, TourPlan } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 
@@ -59,11 +62,7 @@ export default function ToursPage() {
   )
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    )
+    return <PageLoader label="Loading tours" className="min-h-screen" />
   }
 
   if (error) {
@@ -79,40 +78,33 @@ export default function ToursPage() {
   return (
     <div className="space-y-6 sm:space-y-8 pb-8">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-foreground mb-2">Tours</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">Manage and organize all your tour offerings</p>
-        </div>
-        <Button
-          onClick={() => setIsCreateModalOpen(true)}
-          className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg"
-        >
-          <Plus size={20} />
-          Add New Tours
-        </Button>
-      </div>
+      <PageHeader
+        eyebrow="Catalogue"
+        title="Tours"
+        description="Manage and organize all your tour offerings"
+        actions={
+          <Button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 whitespace-nowrap text-sm sm:text-base px-4 py-2 h-10 sm:h-11 rounded-lg shadow-lg shadow-primary/15"
+          >
+            <Plus size={20} />
+            Add New Tour
+          </Button>
+        }
+      />
 
       {/* Search Bar */}
-      {/* <Card className="p-4 sm:p-6 border-border shadow-sm">
-        
-      </Card> */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
-          <Input
-            placeholder="Search tours by title or description..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value)
-              setCurrentPage(1)
-            }}
-            className="pl-10 h-10 sm:h-11 border-border text-sm"
-          />
-        </div>
-        <Button variant="outline" className="cursor-pointer border-border bg-transparent text-sm sm:text-base h-10 sm:h-11 hover:bg-secondary">
-          Search
-        </Button>
+      <div className="relative max-w-xl">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+        <Input
+          placeholder="Search tours by title or description..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value)
+            setCurrentPage(1)
+          }}
+          className="pl-10 h-10 sm:h-11 border-border bg-card text-sm"
+        />
       </div>
 
       {/* Tours Grid - Fully responsive */}
@@ -120,7 +112,7 @@ export default function ToursPage() {
         {paginatedTours.map((tour, i) => (
           <MotionCard
             key={`${currentPage}-${tour.id}`}
-            className="overflow-hidden border-border hover:shadow-lg transition-all duration-300 flex flex-col group"
+            className="p-0 gap-0 overflow-hidden border-border/80 hover:shadow-warm-lg transition-all duration-300 flex flex-col group"
             {...staggerIn(i, reduceMotion, 0.06)}
           >
             {/* Tour Image */}
@@ -128,16 +120,20 @@ export default function ToursPage() {
               <img
                 src={tour.images[0]?.file || "/placeholder.svg"}
                 alt={tour.title}
-                className="w-full h-full object-fixed group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-              <Badge className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-primary text-primary-foreground text-xs sm:text-sm px-2 sm:px-3 py-1 rounded">
-                ${tour.price_adult}
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-scrim/50 to-transparent"
+                aria-hidden="true"
+              />
+              <Badge className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-primary text-primary-foreground ring-1 ring-gold/50 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full tabular-nums shadow-warm">
+                €{tour.price_adult}
               </Badge>
             </div>
 
             {/* Tour Info */}
             <div className="p-4 sm:p-5 flex-1 flex flex-col">
-              <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+              <h3 className="font-display text-base sm:text-lg font-semibold tracking-tight text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                 {tour.title}
               </h3>
               <p className="text-muted-foreground text-xs sm:text-sm mb-4 line-clamp-3 flex-1">
@@ -220,15 +216,34 @@ export default function ToursPage() {
 
       {/* Empty State */}
       {paginatedTours.length === 0 && !isLoading && !error && (
-        <Card className="p-8 sm:p-12 border-border text-center bg-secondary/30">
-          <p className="text-muted-foreground mb-6 text-sm sm:text-base font-medium">No tours found matching your search.</p>
-          <Button
-            variant="outline"
-            className="cursor-pointer border-border bg-primary text-primary-foreground hover:bg-primary/90 text-sm h-10 px-6 rounded-lg"
-            onClick={() => setSearchTerm('')}
-          >
-            Clear Search
-          </Button>
+        <Card className="p-0 border-border/80">
+          <EmptyState
+            title={searchTerm ? 'No tours match your search' : 'No tours yet'}
+            description={
+              searchTerm
+                ? 'Try a different title or description, or clear the search to see every tour.'
+                : 'Create your first tour to start taking bookings.'
+            }
+            action={
+              searchTerm ? (
+                <Button
+                  variant="outline"
+                  className="cursor-pointer border-border text-sm h-10 px-6 rounded-lg"
+                  onClick={() => setSearchTerm('')}
+                >
+                  Clear Search
+                </Button>
+              ) : (
+                <Button
+                  className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 text-sm h-10 px-6 rounded-lg"
+                  onClick={() => setIsCreateModalOpen(true)}
+                >
+                  <Plus size={18} />
+                  Add New Tour
+                </Button>
+              )
+            }
+          />
         </Card>
       )}
 

@@ -24,7 +24,7 @@ const paymentLogos = [
 export default function Footer() {
   const { t } = useLanguage()
   return (
-    <footer className="w-full bg-[#1d1712] text-white">
+    <footer className="w-full bg-espresso text-white">
       {/* Gold hairline */}
       <div className="h-px w-full bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
 
@@ -83,22 +83,22 @@ export default function Footer() {
               </h3>
               <ul className="mt-4 space-y-3 text-sm">
                 <li>
-                  <Link href="/contact" className="text-white/75 hover:text-white transition">
+                  <Link href="/contact" className="text-white/70 hover:text-gold-light transition-colors">
                     {t.footer.contact}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal-notice" className="text-white/75 hover:text-white transition">
+                  <Link href="/legal-notice" className="text-white/70 hover:text-gold-light transition-colors">
                     {t.footer.legalNotice}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy-policy" className="text-white/75 hover:text-white transition">
+                  <Link href="/privacy-policy" className="text-white/70 hover:text-gold-light transition-colors">
                     {t.footer.privacyPolicy}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms-and-conditions" className="text-white/75 hover:text-white transition">
+                  <Link href="/terms-and-conditions" className="text-white/70 hover:text-gold-light transition-colors">
                     {t.footer.terms}
                   </Link>
                 </li>
@@ -112,17 +112,17 @@ export default function Footer() {
               </h3>
               <ul className="mt-4 space-y-3 text-sm">
                 <li>
-                  <Link href="/about-us" className="text-white/75 hover:text-white transition">
+                  <Link href="/about-us" className="text-white/70 hover:text-gold-light transition-colors">
                     {t.footer.aboutUs}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog" className="text-white/75 hover:text-white transition">
+                  <Link href="/blog" className="text-white/70 hover:text-gold-light transition-colors">
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link href="/tour" className="text-white/75 hover:text-white transition">
+                  <Link href="/tour" className="text-white/70 hover:text-gold-light transition-colors">
                     {t.nav.tours}
                   </Link>
                 </li>

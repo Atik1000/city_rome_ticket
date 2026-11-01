@@ -19,6 +19,8 @@ const VaticanSistineBlog = () => {
             alt="Vatican Museums and Sistine Chapel"
             className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-espresso/30 via-transparent to-espresso/70" />
+          <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
         </section>
 
         {/* Content Section */}
@@ -33,21 +35,21 @@ const VaticanSistineBlog = () => {
                 transition={{ duration: 0.6 }}
                 className="lg:col-span-8"
               >
-                <h1 className="font-heading text-3xl font-semibold text-foreground mb-4">
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[2.6rem] leading-[1.12] font-semibold text-foreground mb-4">
                   Vatican Museums & Sistine Chapel: A Complete Visitor Guide
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-4 text-muted-foreground text-sm">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
+                    <User className="w-4 h-4 text-gold" />
                     <span>Team Iconic Rome Tickets</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 text-gold" />
                     <span>March 2026</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-4 h-4 text-gold" />
                     <span>6 min read</span>
                   </div>
                 </div>
@@ -58,12 +60,12 @@ const VaticanSistineBlog = () => {
                     The Vatican Museums and the Sistine Chapel are among the most visited cultural sites in the world. Located within Vatican City, these landmarks offer an extraordinary journey through art, history, and religion.
                   </p>
 
-                  <h2 className="text-2xl font-semibold mt-10 mb-4">What Are the Vatican Museums?</h2>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-10 mb-4">What Are the Vatican Museums?</h2>
                   <p className="text-muted-foreground mb-6">
                     The Vatican Museums are a vast complex of galleries, halls, and corridors filled with artworks collected by the Popes over centuries. The collection includes classical sculptures, Renaissance masterpieces, tapestries, maps, and more.
                   </p>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 my-8">
                     <ul className="space-y-3 text-muted-foreground">
                       <li>✔️ Over 20,000 artworks on display</li>
                       <li>✔️ Includes Raphael Rooms and Gallery of Maps</li>
@@ -71,24 +73,24 @@ const VaticanSistineBlog = () => {
                     </ul>
                   </div>
 
-                  <h2 className="text-2xl font-semibold mt-10 mb-4">The Sistine Chapel Explained</h2>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-10 mb-4">The Sistine Chapel Explained</h2>
                   <p className="text-muted-foreground mb-6">
                     The Sistine Chapel is the final highlight of the Vatican Museums visit. It is world-famous for Michelangelo’s ceiling frescoes and "The Last Judgment" on the altar wall.
                   </p>
 
-                  <div className="bg-accent/10 border border-accent/20 rounded-2xl p-6 my-8">
+                  <div className="border-l-2 border-gold bg-cream/40 rounded-r-2xl p-6 my-8">
                     <p className="italic text-foreground">
                       The Sistine Chapel is not just art — it is a functioning chapel where papal conclaves are held.
                     </p>
                   </div>
 
-                  <h2 className="text-2xl font-semibold mt-10 mb-4">How Long Does a Visit Take?</h2>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-10 mb-4">How Long Does a Visit Take?</h2>
                   <p className="text-muted-foreground mb-6">
                     A typical visit takes between 2 to 4 hours, depending on your pace. The walking distance inside the museums is significant, so comfortable footwear is recommended.
                   </p>
 
-                  <h2 className="text-2xl font-semibold mt-10 mb-4">Best Time to Visit</h2>
-                  <div className="bg-secondary/50 rounded-2xl p-6 my-8">
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-10 mb-4">Best Time to Visit</h2>
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 my-8">
                     <ul className="space-y-3 text-muted-foreground">
                       <li>✔️ Early morning (before 10 AM)</li>
                       <li>✔️ Late afternoon slots</li>
@@ -96,12 +98,12 @@ const VaticanSistineBlog = () => {
                     </ul>
                   </div>
 
-                  <h2 className="text-2xl font-semibold mt-10 mb-4">Ticket Tips</h2>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-10 mb-4">Ticket Tips</h2>
                   <p className="text-muted-foreground mb-6">
                     Booking tickets in advance is essential. Skip-the-line tickets or guided tours can save hours of waiting time.
                   </p>
 
-                  <div className="bg-secondary/50 rounded-2xl p-6 my-8">
+                  <div className="bg-cream/60 border border-gold/25 rounded-2xl p-6 my-8">
                     <ul className="space-y-3 text-muted-foreground">
                       <li>✔️ Always pre-book tickets</li>
                       <li>✔️ Consider guided tours for deeper insights</li>
@@ -109,18 +111,18 @@ const VaticanSistineBlog = () => {
                     </ul>
                   </div>
 
-                  <h2 className="text-2xl font-semibold mt-10 mb-4">Important Visitor Rules</h2>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-10 mb-4">Important Visitor Rules</h2>
                   <p className="text-muted-foreground mb-6">
                     Visitors must follow a strict dress code. Shoulders and knees must be covered. Photography is not allowed inside the Sistine Chapel.
                   </p>
 
-                  <div className="bg-accent/10 border border-accent/20 rounded-2xl p-6 my-8">
+                  <div className="border-l-2 border-gold bg-cream/40 rounded-r-2xl p-6 my-8">
                     <p className="italic text-foreground">
                       Silence is required inside the Sistine Chapel to preserve its sacred atmosphere.
                     </p>
                   </div>
 
-                  <h2 className="text-2xl font-semibold mt-10 mb-4">Final Thoughts</h2>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-ink mt-10 mb-4">Final Thoughts</h2>
                   <p className="text-muted-foreground mb-6">
                     Visiting the Vatican Museums and Sistine Chapel is a must when in Rome. With proper planning and early booking, you can fully enjoy one of the greatest artistic experiences in the world.
                   </p>
@@ -128,7 +130,7 @@ const VaticanSistineBlog = () => {
                 </div>
 
                 {/* Back Button */}
-                <div className="mt-12 pt-8 border-t">
+                <div className="mt-12 pt-8 border-t border-gold/25">
                   <Link href="/">
                     <Button variant="outline" className="gap-2">
                       <ArrowLeft className="w-4 h-4" />
@@ -147,10 +149,10 @@ const VaticanSistineBlog = () => {
               >
                 <div className="lg:sticky lg:top-28 space-y-8">
 
-                  <div className="bg-card rounded-2xl p-6">
+                  <div className="bg-card rounded-2xl p-6 border border-gold/20 shadow-warm">
                     <h3 className="text-lg font-semibold mb-4">About the Author</h3>
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-secondary rounded-full flex items-center justify-center">
+                      <div className="w-14 h-14 bg-cream ring-1 ring-gold/30 rounded-full flex items-center justify-center">
                         <User className="w-6 h-6 text-muted-foreground" />
                       </div>
                       <div>
@@ -160,11 +162,11 @@ const VaticanSistineBlog = () => {
                     </div>
                   </div>
 
-                  <div className="bg-charcoal rounded-2xl p-6 text-center">
-                    <h3 className="text-xl font-semibold text-soft-white mb-3">
+                  <div className="bg-espresso border border-gold/30 rounded-2xl p-6 text-center shadow-warm-lg">
+                    <h3 className="text-xl font-semibold text-gold-light mb-3">
                       Plan Your Vatican Visit
                     </h3>
-                    <p className="text-soft-white/70 text-sm mb-4">
+                    <p className="text-white/70 text-sm mb-4">
                       Discover guided tours and priority access tickets.
                     </p>
                     <Link href="/tour">

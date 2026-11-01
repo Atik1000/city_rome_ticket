@@ -21,7 +21,7 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
         whileHover={{ y: -6 }}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 320, damping: 24 }}
-        className="group bg-card rounded-2xl overflow-hidden border border-black/5 shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer h-full flex flex-col"
+        className="group bg-card rounded-2xl overflow-hidden border border-gold/20 shadow-warm hover:shadow-warm-lg hover:border-gold/40 transition-[box-shadow,border-color] duration-300 cursor-pointer h-full flex flex-col"
       >
         {/* Image */}
         <div className="relative h-48 sm:h-56 overflow-hidden flex-shrink-0">
@@ -30,7 +30,7 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
             alt={tour.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-espresso/60 via-espresso/10 via-40% to-transparent" />
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
@@ -47,11 +47,12 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
           </div>
 
           {tour.duration_days != null && (
-            <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/55 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white">
-              <Clock size={12} />
+            <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-espresso/70 border border-white/20 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white">
+              <Clock size={12} className="text-gold-light" />
               {tour.duration_days === 1 ? "Day trip" : `${tour.duration_days} days`}
             </span>
           )}
+
         </div>
 
         {/* Content */}
@@ -78,14 +79,16 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
           <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{tour.description}</p>
 
           {/* Price */}
-          <div className="mt-auto pt-3 border-t border-dashed border-border flex items-baseline justify-between">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xs text-muted-foreground">From</span>
-              <span className="inline-block text-xl font-bold text-brand transition-transform duration-200 group-hover:scale-105 origin-left">
-                €{tour.price_adult}
-              </span>
-              <span className="text-xs text-muted-foreground">/ person</span>
-            </div>
+          <div className="mt-auto pt-3 border-t border-dashed border-gold/30 flex items-center justify-between gap-2">
+            {/* Gilded price tag */}
+            <span className="inline-flex items-baseline gap-1.5 rounded-lg bg-espresso border border-gold/50 px-2.5 py-1.5 shadow-warm transition-transform duration-200 group-hover:-translate-y-0.5">
+              <span className="text-[10px] uppercase tracking-[0.12em] text-gold-light/80">From</span>
+              <span className="font-serif text-lg leading-none font-semibold text-gold-light">€{tour.price_adult}</span>
+              <span className="text-[10px] text-gold-light/70">/ person</span>
+            </span>
+            <span className="text-xs font-medium text-gold group-hover:text-brand transition-colors whitespace-nowrap">
+              View tour →
+            </span>
           </div>
         </div>
       </motion.div>

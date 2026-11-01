@@ -11,8 +11,10 @@ import {
 } from 'lucide-react'
 import { animate, useReducedMotion } from 'framer-motion'
 import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { MotionCard, MotionTableRow, staggerIn } from '@/components/motion'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { StatusBadge } from '@/components/dashboard/status-badge'
+import { EmptyState } from '@/components/dashboard/empty-state'
 import {
   Table,
   TableBody,
@@ -70,35 +72,27 @@ function StatCard({ title, value, icon, chipClass, sub, loading, index = 0 }: St
   }
 
   return (
-    <MotionCard className="p-5 gap-0 hover:shadow-md transition-shadow" {...staggerIn(index, reduceMotion, 0.08)}>
+    <MotionCard
+      className="p-5 gap-0 bg-warm-wash hover:shadow-warm transition-shadow"
+      {...staggerIn(index, reduceMotion, 0.08)}
+    >
       <div className="flex items-start justify-between mb-4">
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${chipClass}`}>
+        <div
+          className={`w-11 h-11 rounded-xl flex items-center justify-center ring-1 ring-gold/30 shadow-warm-sm ${chipClass}`}
+        >
           {icon}
         </div>
       </div>
-      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground mb-1.5">
         {title}
       </p>
-      <p className="text-3xl font-black text-foreground tabular-nums tracking-tight">{value}</p>
+      <p className="font-display text-3xl font-semibold text-foreground tabular-nums tracking-tight">
+        {value}
+      </p>
+      <div className="gold-hairline mt-4" aria-hidden="true" />
       {sub && <div className="mt-3">{sub}</div>}
     </MotionCard>
   )
-}
-
-function getStatusColor(status: string) {
-  switch (status.toLowerCase()) {
-    case 'open':
-    case 'confirmed':
-    case 'completed':
-      return 'bg-green-100 text-green-800'
-    case 'pending':
-    case 'in_review':
-      return 'bg-blue-100 text-blue-800'
-    case 'cancelled':
-      return 'bg-red-100 text-red-800'
-    default:
-      return 'bg-gray-100 text-gray-800'
-  }
 }
 
 export default function DashboardPage() {
@@ -134,14 +128,11 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 sm:space-y-8 pb-8">
       {/* Page Header */}
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-black tracking-tight text-foreground">
-          {user?.first_name ? `Welcome back, ${user.first_name}` : 'Dashboard'}
-        </h1>
-        <p className="text-muted-foreground text-sm sm:text-base">
-          Here's what's happening with Iconic Rome Tickets today.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Overview"
+        title={user?.first_name ? `Welcome back, ${user.first_name}` : 'Dashboard'}
+        description="Here's what's happening with Iconic Rome Tickets today."
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -156,8 +147,8 @@ export default function DashboardPage() {
         <StatCard
           title="Completed"
           value={<CountUp value={stats?.completed_bookings ?? 0} />}
-          icon={<CheckCircle2 size={22} className="text-green-700" />}
-          chipClass="bg-green-100"
+          icon={<CheckCircle2 size={22} className="text-success" />}
+          chipClass="bg-success-soft"
           sub={
             <div>
               <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
@@ -196,8 +187,8 @@ export default function DashboardPage() {
         <StatCard
           title="Client Requests"
           value={<CountUp value={stats?.total_client_request ?? 0} />}
-          icon={<MessageSquare size={22} className="text-blue-700" />}
-          chipClass="bg-blue-100"
+          icon={<MessageSquare size={22} className="text-info" />}
+          chipClass="bg-info-soft"
           loading={loading}
           index={3}
         />
@@ -205,14 +196,16 @@ export default function DashboardPage() {
 
       {/* Recent Bookings */}
       <Card className="p-0 gap-0 overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border/70 bg-warm-wash">
           <div>
-            <h2 className="text-base font-bold text-foreground">Recent Bookings</h2>
+            <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">
+              Recent Bookings
+            </h2>
             <p className="text-xs text-muted-foreground">The latest reservations across all tours</p>
           </div>
           <Link
             href="/dashboard/bookings"
-            className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+            className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline underline-offset-4 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           >
             View all
             <ArrowUpRight size={16} />
@@ -226,9 +219,10 @@ export default function DashboardPage() {
             ))}
           </div>
         ) : recentBookings.length === 0 ? (
-          <div className="p-10 text-center text-sm text-muted-foreground">
-            No bookings yet. Create your first one from the Bookings page.
-          </div>
+          <EmptyState
+            title="No bookings yet"
+            description="Create your first one from the Bookings page."
+          />
         ) : (
           <Table>
             <TableHeader>
@@ -245,7 +239,7 @@ export default function DashboardPage() {
               {recentBookings.map((booking, i) => (
                 <MotionTableRow
                   key={booking.id}
-                  className="border-border hover:bg-secondary/40 transition-colors"
+                  className="border-border/70 hover:bg-accent/35 transition-colors"
                   {...staggerIn(i, reduceMotion)}
                 >
                   <TableCell className="pl-5 font-semibold text-foreground">
@@ -261,11 +255,7 @@ export default function DashboardPage() {
                     €{parseFloat(booking.total_price).toFixed(2)}
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      className={`${getStatusColor(booking.status)} capitalize font-normal border-none shadow-none`}
-                    >
-                      {booking.status.replace('_', ' ')}
-                    </Badge>
+                    <StatusBadge status={booking.status} />
                   </TableCell>
                   <TableCell className="pr-5 text-muted-foreground whitespace-nowrap">
                     {new Date(booking.created_at).toLocaleDateString('en-GB', {

@@ -7,7 +7,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ChevronLeft, ChevronRight, Edit, Trash2, Plus, Clock, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Edit, Trash2, Plus, Clock, Loader2, AlertCircle, CheckCircle2, CalendarDays } from 'lucide-react'
+import { PageHeader } from '@/components/dashboard/page-header'
+import { PageLoader } from '@/components/dashboard/page-loader'
+import { StatusBadge } from '@/components/dashboard/status-badge'
+import { EmptyState } from '@/components/dashboard/empty-state'
+import { AlertModalHeader } from '@/components/dashboard/modal-header'
 import { getTourPlanDetail, deleteTourPlan, TourPlan } from '@/app/lib/api'
 import { getCookie } from '@/app/lib/cookies'
 import { LocationModal } from '@/components/dashboard/location-modal'
@@ -20,11 +25,8 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+  } from "@/components/ui/alert-dialog"
 
 const TimeSlotCount = ({ dateId }: { dateId: string }) => {
   const [count, setCount] = useState<number | null>(null)
@@ -164,11 +166,7 @@ export default function TourDetailsPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    )
+    return <PageLoader label="Loading tour" className="min-h-screen" />
   }
 
   if (error || !tour) {
@@ -190,30 +188,25 @@ export default function TourDetailsPage() {
   return (
     <div className="space-y-8 pb-10">
       {/* Back Button & Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-start sm:items-center gap-4">
-          <Link href="/dashboard/tours">
-            <Button variant="outline" size="icon" className="border-border bg-transparent flex-shrink-0">
-              <ChevronLeft size={20} />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-xl font-semibold text-foreground mb-2">{tour.title}</h1>
-            <p className="text-muted-foreground text-sm sm:text-base line-clamp-2 md:line-clamp-none">{tour.description}</p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Tour Details"
+        backHref="/dashboard/tours"
+        title={tour.title}
+        description={
+          <span className="line-clamp-2 md:line-clamp-none">{tour.description}</span>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column - Image & Quick Info */}
         <div className="lg:col-span-1 space-y-6">
           {/* Image Carousel */}
-          <Card className="border-border overflow-hidden shadow-md">
+          <Card className="border-border/80 overflow-hidden shadow-warm p-0 gap-0">
             <div className="relative bg-secondary h-76 sm:h-100">
               <img
                 src={tour.images[currentImageIndex]?.file || "/placeholder.svg"}
                 alt={tour.title}
-                className="w-full h-full object-fixed"
+                className="w-full h-full object-cover"
               />
               {tour.images.length > 1 && (
                 <>
@@ -244,39 +237,37 @@ export default function TourDetailsPage() {
           </Card>
 
           {/* Price & Duration Card */}
-          <Card className="p-6 border-border shadow-md space-y-4">
+          <Card className="p-6 border-border/80 shadow-warm space-y-4 bg-warm-wash">
             <div>
-              <p className="text-muted-foreground text-xs uppercase font-semibold tracking-wider mb-1">Starting From</p>
-              <p className="text-2x font-semibold text-primary">${tour.price_adult}</p>
+              <p className="text-gold text-[11px] uppercase font-semibold tracking-[0.18em] mb-1">Starting From</p>
+              <p className="font-display text-3xl font-semibold tracking-tight text-primary tabular-nums">${tour.price_adult}</p>
             </div>
+            <div className="gold-hairline" aria-hidden="true" />
             {tour.duration_days && (
-              <div className="flex items-center gap-2 pt-2 border-t border-border">
+              <div className="flex items-center gap-2">
                 <Clock className="text-muted-foreground" size={20} />
                 <span className="text-foreground font-medium">{tour.duration_days} Days</span>
               </div>
             )}
-            <div className={`flex items-center gap-2 ${!tour.duration_days ? 'pt-2 border-t border-border' : ''}`}>
-              <Badge variant={tour.is_active ? "default" : "secondary"}>
-                {tour.status}
-              </Badge>
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge
+                status={tour.status}
+                tone={tour.is_active ? 'success' : 'neutral'}
+              />
               {tour.free_cancellation && (
-                <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
-                  Free Cancellation
-                </Badge>
+                <StatusBadge status="free cancellation" tone="success" />
               )}
               {tour.pickup_included && (
-                <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50">
-                  Pickup Included
-                </Badge>
+                <StatusBadge status="pickup included" tone="info" />
               )}
             </div>
           </Card>
           {/* Actions */}
-          <div className="p-4 border-t border-border flex gap-2">
+          <div className="flex gap-2">
             <Button
               variant="outline"
               onClick={() => setEditModalOpen(true)}
-              className="flex-1 border-border text-black/80 hover:text-black/80 hover:bg-primary/10 bg-transparent h-10 cursor-pointer"
+              className="flex-1 border-border text-foreground hover:text-primary hover:bg-primary/10 bg-card h-10 cursor-pointer"
             >
               <Edit size={18} />
               Edit
@@ -284,7 +275,7 @@ export default function TourDetailsPage() {
             <Button
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(true)}
-              className="flex-1 border-border text-destructive hover:text-destructive hover:bg-destructive/10 bg-transparent h-10 cursor-pointer"
+              className="flex-1 border-destructive/25 text-destructive hover:text-destructive hover:bg-destructive/10 bg-card h-10 cursor-pointer"
             >
               <Trash2 size={18} />
               Delete
@@ -295,8 +286,8 @@ export default function TourDetailsPage() {
         {/* Right Column - Comprehensive Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Overview Section */}
-          <Card className="p-6 border-border shadow-md space-y-6">
-            <h2 className="text-lg font-medium text-foreground">Overview</h2>
+          <Card className="p-6 border-border/80 shadow-warm space-y-6">
+            <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">Overview</h2>
 
             {tour.full_description && (
               <div className="prose prose-sm max-w-none text-muted-foreground wrap-break-word">
@@ -306,7 +297,7 @@ export default function TourDetailsPage() {
 
             {tour.highlights && tour.highlights.length > 0 && (
               <div className="space-y-3 pt-4 border-t border-border">
-                <h3 className="text-lg font-medium text-foreground">Highlights</h3>
+                <h3 className="font-display text-lg font-semibold tracking-tight text-foreground">Highlights</h3>
                 <ul className="grid grid-cols-1 md:grid-cols-1 gap-2">
                   {tour.highlights.map((item, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -320,9 +311,9 @@ export default function TourDetailsPage() {
           </Card>
 
           {/* Locations Section - RESTORED */}
-          <Card className="p-6 border-border shadow-md">
+          <Card className="p-6 border-border/80 shadow-warm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium text-foreground">Locations</h2>
+              <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">Locations</h2>
               {/* <Button
                 size="sm"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2"
@@ -341,14 +332,13 @@ export default function TourDetailsPage() {
                 {tour.locations.map((location) => (
                   <div
                     key={location.id}
-                    className="flex items-center justify-between bg-secondary p-3 rounded-lg border border-border"
+                    className="flex items-start gap-3 bg-secondary/40 p-3 rounded-lg border border-border/70"
                   >
-                    <div>
-                      <Badge className="bg-primary text-primary-foreground mb-1">
-                        {location.name}
-                      </Badge>
+                    <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-foreground">{location.name}</p>
                       {location.description && (
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-xs text-muted-foreground mt-0.5">
                           {location.description}
                         </p>
                       )}
@@ -375,15 +365,15 @@ export default function TourDetailsPage() {
           </Card>
 
           {/* Inclusions & Exclusions */}
-          <Card className="p-6 border-border shadow-md">
+          <Card className="p-6 border-border/80 shadow-warm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-medium text-foreground mb-4">Includes</h3>
+                <h3 className="font-display text-lg font-semibold tracking-tight text-foreground mb-4">Includes</h3>
                 {tour.includes.length > 0 ? (
                   <ul className="space-y-2">
                     {tour.includes.map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <span className="text-green-500 flex-shrink-0">✓</span>
+                        <span className="text-success flex-shrink-0">✓</span>
                         {item}
                       </li>
                     ))}
@@ -393,7 +383,7 @@ export default function TourDetailsPage() {
                 )}
               </div>
               <div className="pt-6 md:pt-0 border-t md:border-t-0 md:border-l border-border md:pl-8">
-                <h3 className="text-lg font-medium text-foreground mb-4">Excludes</h3>
+                <h3 className="font-display text-lg font-semibold tracking-tight text-foreground mb-4">Excludes</h3>
                 {tour.excludes.length > 0 ? (
                   <ul className="space-y-2">
                     {tour.excludes.map((item, i) => (
@@ -411,17 +401,17 @@ export default function TourDetailsPage() {
           </Card>
 
           {/* Important Information */}
-          <Card className="p-6 border-border shadow-md space-y-6">
-            <h2 className="text-lg font-medium text-foreground">Important Information</h2>
+          <Card className="p-6 border-border/80 shadow-warm space-y-6">
+            <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">Important Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-foreground mb-3">Know Before You Go</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-tight text-foreground mb-3">Know Before You Go</h3>
                   {tour.know_before_you_go.length > 0 ? (
                     <ul className="space-y-3">
                       {tour.know_before_you_go.map((item, i) => (
                         <li key={i} className="text-sm text-muted-foreground pb-2 border-b border-border/50 last:border-0 flex items-start gap-2">
-                          <span className="text-destructive flex-shrink-0">{i + 1}.</span>
+                          <span className="text-gold font-semibold flex-shrink-0 tabular-nums">{i + 1}.</span>
                           {item}
                         </li>
                       ))}
@@ -433,7 +423,7 @@ export default function TourDetailsPage() {
               </div>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-foreground mb-3">Not Allowed</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-tight text-foreground mb-3">Not Allowed</h3>
                   {tour.not_allowed.length > 0 ? (
                     <ul className="space-y-2">
                       {tour.not_allowed.map((item, i) => (
@@ -448,7 +438,7 @@ export default function TourDetailsPage() {
                   )}
                 </div>
                 <div className="pt-6 border-t border-border">
-                  <h3 className="text-lg font-medium text-foreground mb-3">Not Suitable For</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-tight text-foreground mb-3">Not Suitable For</h3>
                   {tour.not_suitable_for.length > 0 ? (
                     <ul className="space-y-2">
                       {tour.not_suitable_for.map((item, i) => (
@@ -467,12 +457,13 @@ export default function TourDetailsPage() {
           </Card>
 
           {/* Dates & Tickets Section - RESTORED */}
-          <Card className="p-6 border-border shadow-md">
+          <Card className="p-6 border-border/80 shadow-warm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium text-foreground">Date & Tickets</h2>
+              <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">Date & Tickets</h2>
               <Button
                 size="sm"
-                className="cursor-pointer text-black/80 hover:bg-primary/10 bg-transparent border border-1 flex items-center gap-2"
+                variant="outline"
+                className="cursor-pointer border-border text-foreground hover:text-primary hover:bg-primary/10 bg-card flex items-center gap-2"
                 onClick={() => setDateModalOpen(true)}
               >
                 <Plus size={16} />
@@ -488,28 +479,33 @@ export default function TourDetailsPage() {
               <div className="space-y-2 mb-4">
                 {reduxDates.map((date: any) => (
                   <Link key={date.id} href={`/dashboard/tours/${tour.id}/dates/${date.id}`}>
-                  <div
-                    className="flex items-center justify-between bg-secondary p-3 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
-                  >
-                    {/* <div className="flex flex-row justify-between gap-2"> */}
-                    
-                      <Badge className="bg-primary text-primary-foreground">
-                        {new Date(date.date).toLocaleDateString()}
-                      </Badge>
-                    
-                    <div className="flex flex-row justify-between gap-2">
-
-                      <TimeSlotCount dateId={date.id.toString()} />
+                    <div className="group flex items-center justify-between gap-3 bg-secondary/40 p-3 rounded-lg border border-border/70 hover:border-gold/60 hover:bg-accent/35 transition-colors cursor-pointer">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-gold/25">
+                          <CalendarDays size={15} />
+                        </span>
+                        <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {new Date(date.date).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <TimeSlotCount dateId={date.id.toString()} />
+                        <ChevronRight size={16} className="text-muted-foreground/60 group-hover:text-primary transition-colors" aria-hidden="true" />
+                      </div>
                     </div>
-                    {/* </div> */}
-                  </div>
                   </Link>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm py-4 text-center">
-                No dates scheduled yet
-              </p>
+              <EmptyState
+                title="No dates scheduled yet"
+                description="Add a date to open this tour for bookings."
+                className="py-8"
+              />
             )}
           </Card>
         </div>
@@ -550,18 +546,13 @@ export default function TourDetailsPage() {
 
       {/* Delete Confirmation Modal */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent className="max-w-md border-destructive/20 bg-background/95 backdrop-blur-lg">
-          <AlertDialogHeader>
-            <div className="flex items-center gap-2 text-destructive mb-2">
-              <Trash2 size={24} />
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            </div>
-            <AlertDialogDescription className="text-foreground/80 font-medium">
-              This action cannot be undone. This will permanently delete the tour
-              <span className="font-semibold text-destructive px-1">"{tour?.title}"</span>
-              and all of its associated data including dates and time slots.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+        <AlertDialogContent className="max-w-md border-destructive/20">
+          <AlertModalHeader
+            icon={Trash2}
+            tone="destructive"
+            title={`Delete tour "${tour?.title}"?`}
+            description="This action cannot be undone. The tour and all of its associated data, including dates and time slots, will be permanently deleted."
+          />
           <AlertDialogFooter>
             <AlertDialogCancel className="cursor-pointer border-border bg-transparent hover:bg-secondary">
               Cancel
@@ -582,17 +573,13 @@ export default function TourDetailsPage() {
         open={alertConfig.show}
         onOpenChange={(v) => setAlertConfig({ ...alertConfig, show: v })}
       >
-        <AlertDialogContent className={`max-w-md border-0 bg-background/95 backdrop-blur-lg shadow-2xl`}>
-          <div className={`absolute top-0 left-0 w-full h-1 ${alertConfig.type === 'success' ? 'bg-primary' : 'bg-destructive'}`} />
-          <AlertDialogHeader>
-            <div className={`flex items-center gap-2 ${alertConfig.type === 'success' ? 'text-primary' : 'text-destructive'} mb-2`}>
-              {alertConfig.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
-              <AlertDialogTitle className="text-lg font-semibold">{alertConfig.title}</AlertDialogTitle>
-            </div>
-            <AlertDialogDescription className="text-foreground/80 text-base font-medium whitespace-pre-line">
-              {alertConfig.message}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+        <AlertDialogContent className="max-w-md">
+          <AlertModalHeader
+            icon={alertConfig.type === 'success' ? CheckCircle2 : AlertCircle}
+            tone={alertConfig.type === 'success' ? 'success' : 'destructive'}
+            title={alertConfig.title}
+            description={alertConfig.message}
+          />
           <AlertDialogFooter>
             <AlertDialogAction
               onClick={() => {
