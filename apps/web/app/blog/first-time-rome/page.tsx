@@ -15,7 +15,7 @@ const RomeItineraryBlog = () => {
         {/* Hero */}
         <section className="relative h-[50vh] md:h-[60vh] overflow-hidden">
           <img
-            src="/blogs/rome-itinerary.png"
+            src="https://images.unsplash.com/photo-1555992828-ca4dbe41d294?auto=format&fit=crop&w=1200&q=80"
             alt="Rome 3 Day Itinerary"
             className="w-full h-full object-cover"
           />
@@ -40,7 +40,7 @@ const RomeItineraryBlog = () => {
                 <div className="flex flex-wrap items-center gap-4 text-muted-foreground text-sm">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4" />
-                    <span>Team Cityrometickets</span>
+                    <span>Team Iconic Rome Tickets</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
@@ -154,7 +154,7 @@ const RomeItineraryBlog = () => {
                         <User className="w-6 h-6 text-muted-foreground" />
                       </div>
                       <div>
-                        <p className="font-semibold">Team Cityrometickets</p>
+                        <p className="font-semibold">Team Iconic Rome Tickets</p>
                         <p className="text-sm text-muted-foreground">Rome Travel Experts</p>
                       </div>
                     </div>

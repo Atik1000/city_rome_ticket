@@ -39,7 +39,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Google Translate cookie logic
     const googtrans = GT_COOKIE_MAP[lang] ?? "/en/en"
     document.cookie = `googtrans=${googtrans}; path=/`
-    document.cookie = `googtrans=${googtrans}; path=/; domain=.asse.devtunnels.ms` // Handle potential tunnel domain
 
     // Reload to apply translation
     window.location.reload()

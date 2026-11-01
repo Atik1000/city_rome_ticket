@@ -35,7 +35,7 @@ const blogs = [
       "Vatican Museums & Sistine Chapel: A Complete Visitor Guide",
     excerpt:
       "The Vatican Museums and the Sistine Chapel are among the most visited cultural sites in the world. Located within Vatican City, these landmarks offer an extraordinary journey through art, history, and religion.",
-    image: "/blogs/vatican-sistine.png",
+    image: "https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&fit=crop&w=1200&q=80",
     date: "March 2026",
     category: "Ticket Guide",
     slug: "/blog/vatican-sistine",
@@ -46,7 +46,7 @@ const blogs = [
       "St. Peter’s Basilica & Colosseum: What to Know Before You Visit",
     excerpt:
       "Rome is home to some of the most iconic landmarks in the world, and two of the most essential stops on any itinerary are St. Peter’s Basilica and the Colosseum. While they represent very different eras of history, both offer unforgettable experiences.",
-    image: "/blogs/stpeter-colosseum.png",
+    image: "https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=1200&q=80",
     date: "March 2026",
     category: "Ticket Guide",
     slug: "/blog/stpeter-colosseum",
@@ -57,7 +57,7 @@ const blogs = [
       "First Time in Rome? The Perfect 3-Day Itinerary (With Smart Ticket Planning)",
     excerpt:
       "Planning your first trip to Rome can feel overwhelming. With so many iconic landmarks, long queues, and limited time, having a smart itinerary is essential. This 3-day plan helps you experience the best of Rome while booking tickets strategically to avoid crowds.",
-    image: "/blogs/rome-itinerary.png",
+    image: "https://images.unsplash.com/photo-1555992828-ca4dbe41d294?auto=format&fit=crop&w=1200&q=80",
     date: "March 2026",
     category: "Ticket Guide",
     slug: "/blog/first-time-rome",
@@ -68,7 +68,7 @@ const blogs = [
       "Rome Travel Tips 2026: 15 Mistakes Tourists Make (And How to Avoid Them)",
     excerpt:
       "Rome is one of the most visited cities in the world—but many travelers make simple mistakes that cost time, money, and experience. Here are 15 common mistakes and how you can avoid them for a smoother trip.",
-    image: "/blogs/rome-travel-tips.png",
+    image: "https://images.unsplash.com/photo-1529154036614-a60975f5c760?auto=format&fit=crop&w=1200&q=80",
     date: "March 2026",
     category: "Travel Tips",
     slug: "/blog/rome-travel-tips",

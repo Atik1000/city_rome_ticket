@@ -223,7 +223,7 @@ const ColosseumPrivateTourBlog = () => {
                       the city.
                     </p>
                     <p className="text-accent font-semibold mt-4">
-                      — Team Cityrometickets
+                      — Team Iconic Rome Tickets
                     </p>
                   </div>
 
@@ -309,7 +309,7 @@ const ColosseumPrivateTourBlog = () => {
                       </div>
                       <div>
                         <p className="font-semibold text-foreground">
-                          Team Cityrometickets
+                          Team Iconic Rome Tickets
                         </p>
                         <p className="text-sm text-muted-foreground">
                           Rome Tours & Experiences

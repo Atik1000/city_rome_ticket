@@ -6,19 +6,15 @@ const U = (id: string, w = 1600) =>
 
 const IMG = {
   colosseum: U("photo-1552832230-c0197dd311b5"),
-  vatican: U("photo-1531572753322-ad063cecc140"),
+  colosseumAerial: U("photo-1555992828-ca4dbe41d294"),
+  colosseumClose: U("photo-1515542622106-78bda8ba0e5b"),
+  colosseumNight: U("photo-1604580864964-0462f5d5b1a8"),
+  colosseumTraveler: U("photo-1537799943037-f5da89a65689"),
+  stPeters: U("photo-1529260830199-42c24126f198"),
+  vaticanSquare: U("photo-1531572753322-ad063cecc140"),
   trevi: U("photo-1525874684015-58379d421a52"),
-  rome1: U("photo-1555992828-ca4dbe41d294"),
-  rome2: U("photo-1529260830199-42c24126f198"),
-  rome3: U("photo-1515542622106-78bda8ba0e5b"),
-  rome4: U("photo-1498307833015-e7b400441eb8"),
-  rome5: U("photo-1569416078500-3857b00616f8"),
-  rome6: U("photo-1604580864964-0462f5d5b1a8"),
-  italy1: U("photo-1523906834658-6e24ef2386f9"),
-  night: U("photo-1541370976299-4d24ebbc9077"),
-  street: U("photo-1512918728675-ed5a9ecdebfd"),
-  forum: U("photo-1551867633-194f125bddfa"),
-  basilica: U("photo-1593698054469-2bb6fdf4b512"),
+  treviSquare: U("photo-1529154036614-a60975f5c760"),
+  ivyStreet: U("photo-1569416078500-3857b00616f8"),
 };
 
 interface TourSeed {
@@ -77,7 +73,7 @@ const TOURS: TourSeed[] = [
       "A valid photo ID is required for entry",
       "The tour runs rain or shine — bring sun protection in summer",
     ],
-    images: [IMG.colosseum, IMG.forum, IMG.rome2, IMG.rome1],
+    images: [IMG.colosseum, IMG.colosseumTraveler, IMG.colosseumAerial, IMG.colosseumClose],
     locations: ["Colosseum", "Roman Forum", "Palatine Hill"],
   },
   {
@@ -109,7 +105,7 @@ const TOURS: TourSeed[] = [
       "Strict dress code: knees and shoulders must be covered",
       "Allow at least 3 hours for your visit",
     ],
-    images: [IMG.vatican, IMG.basilica, IMG.rome3, IMG.italy1],
+    images: [IMG.vaticanSquare, IMG.stPeters, IMG.treviSquare],
     locations: ["Vatican City", "Sistine Chapel"],
   },
   {
@@ -141,7 +137,7 @@ const TOURS: TourSeed[] = [
       "Dress code applies: knees and shoulders covered",
       "Early morning slots have the clearest views",
     ],
-    images: [IMG.basilica, IMG.vatican, IMG.rome4],
+    images: [IMG.stPeters, IMG.vaticanSquare, IMG.colosseumAerial],
     locations: ["Vatican City", "St. Peter's Basilica"],
   },
   {
@@ -172,7 +168,7 @@ const TOURS: TourSeed[] = [
       "The route covers about 2.5 km on cobblestones — wear comfortable shoes",
       "The Pantheon enforces silence inside",
     ],
-    images: [IMG.rome1, IMG.street, IMG.rome5],
+    images: [IMG.ivyStreet, IMG.treviSquare, IMG.colosseumAerial],
     locations: ["Pantheon", "Piazza Navona", "Historic Center"],
   },
   {
@@ -202,7 +198,7 @@ const TOURS: TourSeed[] = [
       "The underground site is cool year-round — bring a light layer",
       "Evening slots see the fountain beautifully lit",
     ],
-    images: [IMG.trevi, IMG.night, IMG.rome6],
+    images: [IMG.trevi, IMG.treviSquare, IMG.colosseumNight],
     locations: ["Trevi Fountain", "Historic Center"],
   },
   {
@@ -233,7 +229,7 @@ const TOURS: TourSeed[] = [
       "Basic cycling confidence is required",
       "The route is about 14 km over 3 hours at a relaxed pace",
     ],
-    images: [IMG.night, IMG.rome2, IMG.colosseum],
+    images: [IMG.colosseumNight, IMG.stPeters, IMG.colosseum],
     locations: ["Colosseum", "Trevi Fountain", "Vatican City", "Historic Center"],
   },
   {
@@ -263,7 +259,7 @@ const TOURS: TourSeed[] = [
       "The day involves 4–5 km of walking, some of it uphill",
       "Villa d'Este's fountains run at full power in the morning",
     ],
-    images: [IMG.italy1, IMG.rome5, IMG.rome4],
+    images: [IMG.treviSquare, IMG.ivyStreet, IMG.colosseumAerial],
     locations: ["Tivoli", "Villa d'Este", "Hadrian's Villa"],
   },
   {
@@ -293,7 +289,7 @@ const TOURS: TourSeed[] = [
       "Sunset slots offer the best light from the terrace",
       "Allow about 2 hours for the full visit",
     ],
-    images: [IMG.rome3, IMG.rome6, IMG.street],
+    images: [IMG.stPeters, IMG.colosseumNight, IMG.colosseumClose],
     locations: ["Castel Sant'Angelo", "Historic Center"],
   },
 ];

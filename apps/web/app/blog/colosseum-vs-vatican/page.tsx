@@ -86,7 +86,7 @@ const RomeTicketComparisonBlog = () => {
                 <div className="flex flex-wrap items-center gap-4 md:gap-6 text-soft-white/80 text-sm md:text-base">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4" />
-                    <span>Team Cityrometickets</span>
+                    <span>Team Iconic Rome Tickets</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
@@ -168,7 +168,7 @@ const RomeTicketComparisonBlog = () => {
                       first — especially in peak season.
                     </p>
                     <p className="text-accent font-semibold mt-4">
-                      — Team Cityrometickets
+                      — Team Iconic Rome Tickets
                     </p>
                   </div>
 
@@ -271,7 +271,7 @@ const RomeTicketComparisonBlog = () => {
                       they book in order of availability.
                     </p>
                     <p className="text-accent font-semibold mt-4">
-                      — Team Cityrometickets
+                      — Team Iconic Rome Tickets
                     </p>
                   </div>
 
@@ -323,7 +323,7 @@ const RomeTicketComparisonBlog = () => {
                       </div>
                       <div>
                         <p className="font-semibold text-foreground">
-                          Team Cityrometickets
+                          Team Iconic Rome Tickets
                         </p>
                         <p className="text-sm text-muted-foreground">
                           Rome Tours & Ticket Experts
