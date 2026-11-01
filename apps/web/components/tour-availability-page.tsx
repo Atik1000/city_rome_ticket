@@ -59,7 +59,7 @@ function DatePicker({
     tourId: number
     onDateSelect: (date: TourDate) => void
 }) {
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1))
+    const [currentDate, setCurrentDate] = useState(() => { const now = new Date(); return new Date(now.getFullYear(), now.getMonth(), 1) })
     const [availableDates, setAvailableDates] = useState<TourDate[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -599,8 +599,8 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
 
     const getPriceSummary = () => {
         const parts = []
-        if (counts.adults > 0) parts.push(`${counts.adults} Adult x $${tour?.price_adult}`)
-        if (counts.children > 0) parts.push(`${counts.children} Child x $${tour?.price_child}`)
+        if (counts.adults > 0) parts.push(`${counts.adults} Adult x €${tour?.price_adult}`)
+        if (counts.children > 0) parts.push(`${counts.children} Child x €${tour?.price_child}`)
         // Add others as needed
         return parts.join(", ")
     }

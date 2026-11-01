@@ -63,7 +63,7 @@ function DatePicker({
     tourId: number
     onDateSelect: (date: TourDate) => void
 }) {
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1))
+    const [currentDate, setCurrentDate] = useState(() => { const now = new Date(); return new Date(now.getFullYear(), now.getMonth(), 1) })
     const [availableDates, setAvailableDates] = useState<TourDate[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -888,7 +888,7 @@ export default function CartPage() {
                                     //         setIsLoginOpen(true)
                                     //     }
                                     // }}
-                                    className="block w-full bg-[#0071EB] text-white font-semibold py-3.5 rounded-full hover:bg-brand transition-colors mb-4 text-center cursor-pointer"
+                                    className="block w-full bg-brand text-white font-semibold py-3.5 rounded-full hover:bg-brand-dark transition-colors mb-4 text-center cursor-pointer"
                                 >
                                     Go to checkout
                                 </button>

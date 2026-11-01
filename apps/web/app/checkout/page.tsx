@@ -642,7 +642,7 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
 
-                            <button type="submit" className="w-full bg-[#0071EB] text-white font-bold py-3 rounded-lg hover:bg-brand transition mt-4 cursor-pointer">
+                            <button type="submit" className="w-full bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition mt-4 cursor-pointer">
                                 Continue
                             </button>
                         </form>
@@ -675,7 +675,7 @@ export default function CheckoutPage() {
 
                         <button
                             onClick={handleFinalSubmit}
-                            className="w-full bg-[#0071EB] text-white font-bold py-3 rounded-lg hover:bg-brand transition mt-8 flex items-center justify-center gap-2 cursor-pointer"
+                            className="w-full bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition mt-8 flex items-center justify-center gap-2 cursor-pointer"
                         >
                             <Check size={20} />
                             Final Submit
