@@ -21,8 +21,6 @@ import {
 } from "@/services/tourService"
 import { isLoggedIn } from "@/services/authService"
 import { motion, AnimatePresence } from "framer-motion"
-import { LoginModal } from "@/components/auth/LoginModal"
-import { RegisterModal } from "@/components/auth/RegisterModal"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -375,8 +373,6 @@ export default function CartPage() {
     const [isEditDatePickerOpen, setIsEditDatePickerOpen] = useState(false)
     const [editShowBookingButtons, setEditShowBookingButtons] = useState(true) // Default true for edit since we want to show times? Or logic applies?
 
-    const [isLoginOpen, setIsLoginOpen] = useState(false)
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false)
 
     const travelerPickerRefSidebar = useRef<HTMLDivElement>(null)
     const sidebarDatePickerRef = useRef<HTMLDivElement>(null)
@@ -991,22 +987,6 @@ export default function CartPage() {
 
             <Footer />
 
-            <LoginModal
-                isOpen={isLoginOpen}
-                onClose={() => setIsLoginOpen(false)}
-                onSwitchToRegister={() => {
-                    setIsLoginOpen(false)
-                    setIsRegisterOpen(true)
-                }}
-            />
-            <RegisterModal
-                isOpen={isRegisterOpen}
-                onClose={() => setIsRegisterOpen(false)}
-                onSwitchToLogin={() => {
-                    setIsRegisterOpen(false)
-                    setIsLoginOpen(true)
-                }}
-            />
         </div>
     )
 }

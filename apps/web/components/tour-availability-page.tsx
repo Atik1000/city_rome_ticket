@@ -37,8 +37,6 @@ import { useAppDispatch } from "@/lib/hooks"
 import { fetchCartCount } from "@/lib/features/cart/cartSlice"
 import { useRouter } from "next/navigation"
 import { isLoggedIn } from "@/services/authService"
-import { LoginModal } from "@/components/auth/LoginModal"
-import { RegisterModal } from "@/components/auth/RegisterModal"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -353,8 +351,6 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
     const [error, setError] = useState<string | null>(null)
     const [isBookingLoading, setIsBookingLoading] = useState(false)
     const [isCartLoading, setIsCartLoading] = useState(false)
-    const [isLoginOpen, setIsLoginOpen] = useState(false)
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false)
 
     const showMessage = (title: string, content: string) => {
         if (title === "Success") toast.success(content)
@@ -911,22 +907,6 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
             </div>
 
 
-            <LoginModal
-                isOpen={isLoginOpen}
-                onClose={() => setIsLoginOpen(false)}
-                onSwitchToRegister={() => {
-                    setIsLoginOpen(false)
-                    setIsRegisterOpen(true)
-                }}
-            />
-            <RegisterModal
-                isOpen={isRegisterOpen}
-                onClose={() => setIsRegisterOpen(false)}
-                onSwitchToLogin={() => {
-                    setIsRegisterOpen(false)
-                    setIsLoginOpen(true)
-                }}
-            />
 
 
         </div>

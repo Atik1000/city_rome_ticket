@@ -5,16 +5,12 @@ import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import Logo from "./logo"
-import { RegisterModal } from "./auth/RegisterModal"
-import { LoginModal } from "./auth/LoginModal"
 import { isLoggedIn, removeTokens, getUserProfile } from "@/services/authService"
 import { useAppDispatch, useAppSelector } from "@/lib/hooks"
 import { fetchCartCount } from "@/lib/features/cart/cartSlice"
 import { useLanguage } from "@/components/LanguageProvider"
 
 export default function Navbar() {
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false)
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isLoggedInState, setIsLoggedInState] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -80,31 +76,12 @@ export default function Navbar() {
   }, [])
 
   const openRegister = () => {
-    setIsRegisterOpen(true)
-    setIsLoginOpen(false)
-  }
-
-  const openLogin = () => {
-    setIsLoginOpen(true)
-    setIsRegisterOpen(false)
+    setIsProfileOpen(false)
+    router.push("/register")
   }
 
   return (
     <>
-      <RegisterModal
-        isOpen={isRegisterOpen}
-        onClose={() => setIsRegisterOpen(false)}
-        onSwitchToLogin={openLogin}
-      />
-      <LoginModal
-        isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-        onSwitchToRegister={openRegister}
-        onLoginSuccess={() => {
-          setIsLoggedInState(true)
-          dispatch(fetchCartCount())
-        }}
-      />
       <motion.nav
         initial={{ y: -72, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
