@@ -45,8 +45,12 @@ export default function DashboardLayout({
 
   return (
     <div className="bg-background min-h-screen flex flex-col">
-      {/* Topbar - Fixed at top, full width */}
-      <div className="fixed top-0 left-0 right-0 h-16 z-40">
+      {/* Topbar - Fixed at top, beside the sidebar on desktop */}
+      <div
+        className={`fixed top-0 right-0 h-16 z-30 transition-all duration-300 ${
+          !isMobile ? (isSidebarCollapsed ? 'left-20' : 'left-64') : 'left-0'
+        }`}
+      >
         <Topbar 
           isSidebarOpen={isSidebarOpen} 
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -59,14 +63,14 @@ export default function DashboardLayout({
       {/* Backdrop for mobile */}
       {isSidebarOpen && isMobile && (
         <div
-          className="fixed inset-0 bg-black/50 z-20 top-16"
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={handleBackdropClick}
         />
       )}
 
       {/* Sidebar - Fixed on desktop, overlay on mobile */}
       <div
-        className={`fixed top-16 left-0 bottom-0 z-30 transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 bottom-0 z-50 transition-all duration-300 ease-in-out ${
           isMobile
             ? isSidebarOpen
               ? 'translate-x-0'
