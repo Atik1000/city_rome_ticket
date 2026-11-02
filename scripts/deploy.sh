@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
-# Deploy Iconic Rome Tickets to the VPS.
-# Usage: VPS_PASS='...' ./scripts/deploy.sh
+# Deploy Iconic Rome Tours to the VPS: sync sources, rebuild images, restart containers.
+# Usage: ./scripts/deploy.sh          (reads VPS_PASS from repo-root .env)
+#    or: VPS_PASS='...' ./scripts/deploy.sh
 set -euo pipefail
 
 VPS_HOST="${VPS_HOST:-130.185.118.24}"
 VPS_USER="${VPS_USER:-root}"
 REMOTE_DIR="${REMOTE_DIR:-/root/iconic-rome-tickets}"
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+
+# Fall back to VPS_PASS from the local .env (gitignored, never synced).
+if [ -z "${VPS_PASS:-}" ] && [ -f "$ROOT_DIR/.env" ]; then
+  VPS_PASS="$(grep -E '^VPS_PASS=' "$ROOT_DIR/.env" | head -1 | cut -d= -f2-)"
+fi
 
 if [ -z "${VPS_PASS:-}" ]; then
-  echo "Set VPS_PASS env var (VPS root password)." >&2
+  echo "Set VPS_PASS env var, or add VPS_PASS=... to the repo-root .env." >&2
   exit 1
 fi
 

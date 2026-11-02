@@ -34,8 +34,13 @@ server, and change the password after first login (Settings → users).
 ## Deployment (VPS 130.185.118.24)
 
 ```bash
-VPS_PASS='<root password>' ./scripts/deploy.sh
+./scripts/deploy.sh
 ```
+
+One command: syncs your local changes to the server, rebuilds the Docker
+images and restarts the containers. It reads `VPS_PASS` from the repo-root
+`.env` (gitignored); you can also pass it inline:
+`VPS_PASS='<root password>' ./scripts/deploy.sh`.
 
 The script rsyncs the repo to `/root/iconic-rome-tickets`, then builds and
 starts `docker compose` services: `migrate` (db push + seed, runs once),
