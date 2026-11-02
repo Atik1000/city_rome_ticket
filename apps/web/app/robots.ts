@@ -11,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         "/admin/",
       ],
     },
-    sitemap: "https://iconicrometickets.com/sitemap.xml",
+    sitemap: "https://iconicrometours.com/sitemap.xml",
   };
 }

@@ -19,7 +19,7 @@ export default function LegalNoticePage() {
                         <h2 className="font-serif text-2xl font-semibold text-ink mb-4">1. Identification</h2>
                         <p>
                             This website is operated by Iconic Rome Tickets. Our official address is located in Via santamaura 32, Italy.
-                            For any inquiries, you can contact us at <a href="mailto:info@iconicrometickets.com">info@iconicrometickets.com</a> or via phone at +39 371 046 2213.
+                            For any inquiries, you can contact us at <a href="mailto:info@iconicrometours.com">info@iconicrometours.com</a> or via phone at +39 371 046 2213.
                         </p>
                     </section>
 

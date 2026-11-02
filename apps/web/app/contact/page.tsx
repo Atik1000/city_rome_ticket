@@ -122,9 +122,9 @@ export default function Contact() {
                         <p className="font-semibold text-[#2A2118]">Email</p>
                         <a
                           className="text-brand-dark font-semibold text-sm hover:underline break-all"
-                          href="mailto:info@iconicrometickets.com"
+                          href="mailto:info@iconicrometours.com"
                         >
-                          info@iconicrometickets.com
+                          info@iconicrometours.com
                         </a>
                         <p className="text-xs text-gray-500 mt-1">
                           Send us an email anytime

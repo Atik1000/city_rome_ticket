@@ -18,12 +18,14 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 echo "==> Syncing sources to $VPS_HOST:$REMOTE_DIR"
 sshpass -p "$VPS_PASS" rsync -az --delete \
   --exclude node_modules --exclude .next --exclude .turbo --exclude .git \
-  --exclude 'data/*.db*' --exclude data/uploads \
+  --exclude .env --exclude 'data/*.db*' --exclude data/uploads \
   -e "ssh -o StrictHostKeyChecking=accept-new" \
   "$ROOT/" "$VPS_USER@$VPS_HOST:$REMOTE_DIR/"
 
-echo "==> Ensuring .env with JWT_SECRET exists on server"
-$SSH "cd $REMOTE_DIR && mkdir -p data/uploads && { test -f .env || echo JWT_SECRET=\$(openssl rand -hex 32) > .env; }"
+echo "==> Ensuring .env with JWT_SECRET + ADMIN_PASSWORD exists on server"
+$SSH "cd $REMOTE_DIR && mkdir -p data/uploads && touch .env \
+  && { grep -q '^JWT_SECRET=' .env || echo JWT_SECRET=\$(openssl rand -hex 32) >> .env; } \
+  && { grep -q '^ADMIN_PASSWORD=' .env || echo ADMIN_PASSWORD=\$(openssl rand -hex 8) >> .env; }"
 
 echo "==> Building and starting containers"
 $SSH "cd $REMOTE_DIR && docker compose up -d --build"

@@ -6,6 +6,8 @@ services:
     restart: "no"
     environment:
       DATABASE_URL: "file:/app/data/app.db"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL:-}"
     volumes:
       - ./data:/app/data
     command: sh -c "pnpm --filter @iconic/db db:push && pnpm --filter @iconic/db db:seed"

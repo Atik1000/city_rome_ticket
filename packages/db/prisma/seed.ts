@@ -298,15 +298,21 @@ async function main() {
   console.log("Seeding database…");
 
   // --- Admin user ---
-  const adminEmail = "admin@iconicrometickets.com";
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@iconicrometours.com";
   const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
   if (!existingAdmin) {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) {
+      throw new Error(
+        "ADMIN_PASSWORD env var is required to seed the admin user (no users exist yet)."
+      );
+    }
     await prisma.user.create({
       data: {
         firstName: "Iconic",
         lastName: "Admin",
         email: adminEmail,
-        passwordHash: await hashPassword("Admin@Rome2026"),
+        passwordHash: await hashPassword(adminPassword),
         role: "admin",
         phone: "+39 06 0000 0000",
       },

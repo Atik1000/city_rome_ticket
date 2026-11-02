@@ -46,14 +46,14 @@ export default function Footer() {
               {/* Quick contact */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <a
-                  href="mailto:info@iconicrometickets.com"
+                  href="mailto:info@iconicrometours.com"
                   className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition"
                 >
                   <span className="h-9 w-9 rounded-lg bg-gold/15 flex items-center justify-center text-gold">
                     <Mail size={18} />
                   </span>
                   <span className="text-sm text-white break-all">
-                    info@iconicrometickets.com
+                    info@iconicrometours.com
                   </span>
                 </a>
 
@@ -154,7 +154,7 @@ export default function Footer() {
         {/* Bottom row */}
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-white/55 text-center sm:text-left">
-            © 2019 – 2026 Iconic Rome Tickets · iconicrometickets.com
+            © 2019 – 2026 Iconic Rome Tickets · iconicrometours.com
           </p>
 
           <div className="flex items-center gap-3">

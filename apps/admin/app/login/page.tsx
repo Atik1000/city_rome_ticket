@@ -158,7 +158,7 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@iconicrometickets.com"
+                  placeholder="admin@iconicrometours.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

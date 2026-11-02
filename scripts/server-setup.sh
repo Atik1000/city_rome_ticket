@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # One-time VPS setup for Iconic Rome Tickets (run ON the server as root).
 # Installs Docker + nginx, and configures nginx for:
-#   iconicrometickets.com / www -> 127.0.0.1:5000   (landing)
-#   panel.iconicrometickets.com -> 127.0.0.1:8000   (admin)
+#   iconicrometours.com / www -> 127.0.0.1:5000   (landing)
+#   panel.iconicrometours.com -> 127.0.0.1:8000   (admin)
 set -euo pipefail
 
 echo "==> Installing Docker"
@@ -19,7 +19,7 @@ echo "==> Writing nginx site configs"
 cat > /etc/nginx/sites-available/iconic-web <<'EOF'
 server {
     listen 80;
-    server_name iconicrometickets.com www.iconicrometickets.com;
+    server_name iconicrometours.com www.iconicrometours.com;
     client_max_body_size 20m;
     location / {
         proxy_pass http://127.0.0.1:5000;
@@ -33,7 +33,7 @@ EOF
 cat > /etc/nginx/sites-available/iconic-admin <<'EOF'
 server {
     listen 80;
-    server_name panel.iconicrometickets.com;
+    server_name panel.iconicrometours.com;
     client_max_body_size 20m;
     location / {
         proxy_pass http://127.0.0.1:8000;
@@ -52,4 +52,4 @@ nginx -t && systemctl reload nginx
 echo "==> Done."
 echo "After DNS A records (@, www, panel) point to this server, enable HTTPS with:"
 echo "  apt-get install -y certbot python3-certbot-nginx"
-echo "  certbot --nginx -d iconicrometickets.com -d www.iconicrometickets.com -d panel.iconicrometickets.com"
+echo "  certbot --nginx -d iconicrometours.com -d www.iconicrometours.com -d panel.iconicrometours.com"

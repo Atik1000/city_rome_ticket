@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Iconic Rome Tickets - Skip-the-Line Tours & Experiences in Rome",
   description:
     "Book skip-the-line tickets and expert-guided tours of the Colosseum, Vatican, Pantheon and more with Iconic Rome Tickets. Free cancellation and instant mobile tickets.",
-  metadataBase: new URL("https://iconicrometickets.com"),
+  metadataBase: new URL("https://iconicrometours.com"),
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",

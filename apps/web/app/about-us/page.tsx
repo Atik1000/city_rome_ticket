@@ -62,7 +62,7 @@ export default function AboutUsPage() {
                                 </button> */}
                                 <div className="flex items-center gap-2 text-gray-800 font-semibold">
                                     <Mail size={18} className="text-[#C8963E]" />
-                                    <a href="mailto:info@iconicrometickets.com">info@iconicrometickets.com</a>
+                                    <a href="mailto:info@iconicrometours.com">info@iconicrometours.com</a>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-800 font-semibold">
                                     <Phone size={18} className="text-[#C8963E]" />
