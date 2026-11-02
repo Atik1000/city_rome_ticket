@@ -9,16 +9,7 @@ import { isLoggedIn, getUserProfile } from "@/services/authService"
 import { Loader2, User, Mail, Globe, Phone, Check, CheckCircle2, AlertCircle, ShieldCheck, ChevronsUpDown } from "lucide-react"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { BookingSuccessModal } from "@/components/booking-success-modal"
 import {
     Command,
     CommandEmpty,
@@ -286,6 +277,14 @@ export default function CheckoutPage() {
 
     const [isBookNow, setIsBookNow] = useState(false)
 
+    // Booking success modal — redirect happens when the user closes it
+    const [successOpen, setSuccessOpen] = useState(false)
+    const [successBooking, setSuccessBooking] = useState<{
+        id?: number | string
+        total_price?: string
+        email?: string
+    }>({})
+
     const showMessage = (title: string, content: string, onClose?: () => void) => {
         if (title === "Success") toast.success(content)
         else if (title === "Error" || title.includes("Failed")) toast.error(content)
@@ -302,6 +301,7 @@ export default function CheckoutPage() {
     })
 
     const [travelerDetails, setTravelerDetails] = useState<TravelerDetail[]>([])
+    const [accountEmail, setAccountEmail] = useState("")
 
     useEffect(() => {
         checkAuthAndLoad()
@@ -322,6 +322,7 @@ export default function CheckoutPage() {
             try {
                 const profile = await getUserProfile();
                 prepopulatedName = `${profile.first_name} ${profile.last_name}`.trim();
+                if (profile.email) setAccountEmail(profile.email);
             } catch (error) {
                 console.error("Failed to fetch user profile", error);
             }
@@ -464,17 +465,22 @@ export default function CheckoutPage() {
                 }
             }
 
-            await createBooking(payload, token)
-            showMessage("Success", "Booking successful!", () => {
-                // Cleanup
-                if (isBookNow) {
-                    localStorage.removeItem('bookNowData')
-                } else {
-                    localStorage.removeItem('cartItemId')
-                }
-                localStorage.removeItem('guestCheckoutDetails')
-                window.location.href = "/"
+            const booking = await createBooking(payload, token)
+
+            // Clear the basket now; the redirect waits for the user to close the modal
+            if (isBookNow) {
+                localStorage.removeItem('bookNowData')
+            } else {
+                localStorage.removeItem('cartItemId')
+            }
+            localStorage.removeItem('guestCheckoutDetails')
+
+            setSuccessBooking({
+                id: booking?.id,
+                total_price: booking?.total_price,
+                email: booking?.email || accountEmail || guestDetails.email || undefined,
             })
+            setSuccessOpen(true)
 
         } catch (error: any) {
             console.error("Booking failed", error)
@@ -696,6 +702,17 @@ export default function CheckoutPage() {
             </main>
 
             <Footer />
+
+            <BookingSuccessModal
+                open={successOpen}
+                onClose={() => {
+                    setSuccessOpen(false)
+                    window.location.href = "/"
+                }}
+                bookingId={successBooking.id}
+                totalPrice={successBooking.total_price}
+                email={successBooking.email}
+            />
 
         </div>
     )
