@@ -22,7 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Loader2, RefreshCcw } from 'lucide-react'
+import { Loader2, ArrowRightLeft } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
 import { ModalHeader } from '@/components/dashboard/modal-header'
 import { StatusBadge } from '@/components/dashboard/status-badge'
@@ -106,7 +106,7 @@ export function StatusModal({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-md">
           <ModalHeader
-            icon={RefreshCcw}
+            icon={ArrowRightLeft}
             title="Update Status"
             description={`Change the status of this ${type === 'contact' ? 'contact request' : 'booking'}`}
           />

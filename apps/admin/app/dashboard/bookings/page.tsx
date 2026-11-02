@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Eye, Plus, AlertCircle, Search, RotateCcw, RefreshCcw } from 'lucide-react'
+import { Eye, Plus, AlertCircle, Search, RotateCcw, ArrowRightLeft } from 'lucide-react'
 import { useReducedMotion } from 'framer-motion'
 import { MotionTableRow, staggerIn } from '@/components/motion'
 import { StatusModal } from '@/components/dashboard/status-modal'
@@ -279,7 +279,7 @@ export default function BookingsPage() {
                                 setStatusModalOpen(true)
                               }}
                             >
-                              <RefreshCcw size={15} />
+                              <ArrowRightLeft size={15} />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>Update status</TooltipContent>
