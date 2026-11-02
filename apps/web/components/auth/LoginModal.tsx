@@ -1,17 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { X, Loader2, AlertTriangle, CheckCircle2 } from "lucide-react"
+import { X, Loader2 } from "lucide-react"
+import { toast } from "sonner"
 import { loginUser, setTokens } from "@/services/authService"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
 
 interface LoginModalProps {
     isOpen: boolean
@@ -27,31 +19,6 @@ export function LoginModal({ isOpen, onClose, onSwitchToRegister, onLoginSuccess
         password: "",
     })
 
-    // Alert Dialog state
-    const [alertDialogState, setAlertDialogState] = useState<{
-        isOpen: boolean;
-        title: string;
-        description: string;
-        type: 'success' | 'error';
-    }>({
-        isOpen: false,
-        title: "",
-        description: "",
-        type: 'success'
-    })
-
-    const showAlert = (title: string, description: string, type: 'success' | 'error') => {
-        setAlertDialogState({ isOpen: true, title, description, type })
-    }
-
-    const handleAlertClose = () => {
-        setAlertDialogState(prev => ({ ...prev, isOpen: false }))
-        if (alertDialogState.type === 'success') {
-            if (onLoginSuccess) onLoginSuccess()
-            onClose()
-        }
-    }
-
     if (!isOpen) return null
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,9 +31,11 @@ export function LoginModal({ isOpen, onClose, onSwitchToRegister, onLoginSuccess
         try {
             const data = await loginUser(formData)
             setTokens(data)
-            showAlert("Success", "Login successful!", 'success')
+            toast.success("Login successful! Welcome back.")
+            if (onLoginSuccess) onLoginSuccess()
+            onClose()
         } catch (error: any) {
-            showAlert("Login Failed", error.message || "Invalid credentials. Please try again.", 'error')
+            toast.error(error.message || "Invalid credentials. Please try again.")
         } finally {
             setIsLoading(false)
         }
@@ -144,34 +113,6 @@ export function LoginModal({ isOpen, onClose, onSwitchToRegister, onLoginSuccess
                     </div>
                 </div>
             </div>
-
-            <AlertDialog open={alertDialogState.isOpen} onOpenChange={(open) => !open && handleAlertClose()}>
-                <AlertDialogContent className="bg-white rounded-2xl p-8 max-w-sm z-[10000]">
-                    <AlertDialogHeader>
-                        <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto ${alertDialogState.type === 'success' ? 'bg-green-50' : 'bg-red-50'}`}>
-                            {alertDialogState.type === 'success' ? (
-                                <CheckCircle2 className="text-green-600 w-8 h-8" />
-                            ) : (
-                                <AlertTriangle className="text-red-600 w-8 h-8" />
-                            )}
-                        </div>
-                        <AlertDialogTitle className="text-2xl font-bold text-[#2A2118] text-center">
-                            {alertDialogState.title}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-500 text-center text-base pt-2">
-                            {alertDialogState.description}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter className="pt-6 sm:justify-center">
-                        <AlertDialogAction
-                            onClick={handleAlertClose}
-                            className="btn-premium py-3 px-12 rounded-full border-none"
-                        >
-                            OK
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
         </>
     )
 }

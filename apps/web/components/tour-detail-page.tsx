@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
+import { toast } from "sonner"
 import {
   Heart,
   Star,
@@ -391,15 +392,10 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
 
   const [error, setError] = useState<string | null>(null)
 
-  // Message Modal State
-  const [messageModalOpen, setMessageModalOpen] = useState(false)
-  const [messageModalTitle, setMessageModalTitle] = useState("")
-  const [messageModalContent, setMessageModalContent] = useState("")
-
   const showMessage = (title: string, content: string) => {
-    setMessageModalTitle(title)
-    setMessageModalContent(content)
-    setMessageModalOpen(true)
+    if (title === "Success") toast.success(content)
+    else if (title === "Error" || title.includes("Failed")) toast.error(content)
+    else toast.warning(content)
   }
 
   const [isFavorite, setIsFavorite] = useState(false)
@@ -609,6 +605,12 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
     } catch (error: any) {
       console.error("Add to cart failed", error)
       showMessage("Error", error.message || "Failed to add to cart")
+      if (/invalid time slot|invalid tour|does not belong/i.test(error.message || "")) {
+        localStorage.removeItem('selectedDate')
+        localStorage.removeItem('selectedTimeSlot')
+        setSelectedDate(null)
+        setSelectedTimeSlot(null)
+      }
     }
   }
 

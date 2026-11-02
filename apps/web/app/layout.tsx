@@ -7,6 +7,7 @@ import StoreProvider from "@/components/StoreProvider"
 import { LanguageProvider } from "@/components/LanguageProvider"
 import GoogleTranslate from "@/components/GoogleTranslate"
 import MotionProvider from "@/components/animation/motion-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const fraunces = Fraunces({
@@ -42,6 +43,7 @@ export default function RootLayout({
             </MotionProvider>
           </StoreProvider>
         </LanguageProvider>
+        <Toaster position="top-center" richColors closeButton />
         <Analytics />
       </body>
     </html>

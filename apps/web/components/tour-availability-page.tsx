@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
+import { toast } from "sonner"
 import {
     Heart,
     Star,
@@ -355,15 +356,10 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
     const [isLoginOpen, setIsLoginOpen] = useState(false)
     const [isRegisterOpen, setIsRegisterOpen] = useState(false)
 
-    // Message Modal State
-    const [messageModalOpen, setMessageModalOpen] = useState(false)
-    const [messageModalTitle, setMessageModalTitle] = useState("")
-    const [messageModalContent, setMessageModalContent] = useState("")
-
     const showMessage = (title: string, content: string) => {
-        setMessageModalTitle(title)
-        setMessageModalContent(content)
-        setMessageModalOpen(true)
+        if (title === "Success") toast.success(content)
+        else if (title === "Error" || title.includes("Failed")) toast.error(content)
+        else toast.warning(content)
     }
 
     // Booking State
@@ -539,6 +535,12 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
         } catch (error: any) {
             console.error("Add to cart failed", error)
             showMessage("Error", error.message || "Failed to add to cart")
+            if (/invalid time slot|invalid tour|does not belong/i.test(error.message || "")) {
+                localStorage.removeItem('selectedDate')
+                localStorage.removeItem('selectedTimeSlot')
+                setSelectedDate(null)
+                setSelectedTimeSlot(null)
+            }
         } finally {
             setIsCartLoading(false)
         }
@@ -927,53 +929,6 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
             />
 
 
-            <AlertDialog open={messageModalOpen} onOpenChange={setMessageModalOpen}>
-                <AlertDialogContent className="sm:max-w-md bg-white border-0 shadow-2xl rounded-2xl p-0 overflow-hidden">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.92 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ type: "spring", stiffness: 380, damping: 28 }}
-                    >
-                    <div className={`p-6 flex flex-col items-center justify-center border-b ${messageModalTitle === "Success" ? "bg-green-50 border-green-100" :
-                        messageModalTitle === "Error" ? "bg-red-50 border-red-100" :
-                            "bg-cream border-cream"
-                        }`}>
-                        <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-inner ${messageModalTitle === "Success" ? "bg-green-100" :
-                            messageModalTitle === "Error" ? "bg-red-100" :
-                                "bg-cream"
-                            }`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${messageModalTitle === "Success" ? "bg-green-200" :
-                                messageModalTitle === "Error" ? "bg-red-200" :
-                                    "bg-cream-dark"
-                                }`}>
-                                {messageModalTitle === "Success" ? (
-                                    <CheckCircle2 className="text-green-600 w-6 h-6" />
-                                ) : messageModalTitle === "Error" || messageModalTitle.includes("Failed") || messageModalTitle === "Missing Selection" ? (
-                                    <AlertCircle className="text-red-600 w-6 h-6" />
-                                ) : (
-                                    <ShieldCheck className="text-brand w-6 h-6" />
-                                )}
-                            </div>
-                        </div>
-                        <AlertDialogTitle className="text-xl font-semibold text-gray-900 text-center">{messageModalTitle}</AlertDialogTitle>
-                        <AlertDialogDescription className="text-center text-gray-600 mt-2 max-w-[280px]">
-                            {messageModalContent}
-                        </AlertDialogDescription>
-                    </div>
-                    <AlertDialogFooter className="p-6 pt-0 bg-white">
-                        <AlertDialogAction
-                            onClick={() => setMessageModalOpen(false)}
-                            className={`w-full cursor-pointer py-3 h-auto rounded-lg font-semibold text-white shadow-md transition-all ${messageModalTitle === "Success" ? "bg-green-600 hover:bg-green-700 shadow-green-200" :
-                                messageModalTitle === "Error" ? "bg-red-600 hover:bg-red-700 shadow-red-200" :
-                                    "bg-espresso hover:bg-espresso-light"
-                                }`}
-                        >
-                            OK, Got it
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                    </motion.div>
-                </AlertDialogContent>
-            </AlertDialog>
         </div>
     )
 }

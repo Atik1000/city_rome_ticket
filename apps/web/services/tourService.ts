@@ -245,8 +245,11 @@ export async function addToCart(payload: AddToCartPayload): Promise<AddToCartRes
         let errorMessage = "Failed to add item to cart";
         if (errorData.non_field_errors && Array.isArray(errorData.non_field_errors)) {
             errorMessage = errorData.non_field_errors[0];
+        } else if (errorData.detail) {
+            errorMessage = errorData.detail;
         } else {
-            errorMessage = errorData.message || errorMessage;
+            const firstField = Object.values(errorData).find((v) => Array.isArray(v) && v.length > 0) as string[] | undefined;
+            errorMessage = firstField?.[0] || errorData.message || errorMessage;
         }
         throw new Error(errorMessage);
     }
