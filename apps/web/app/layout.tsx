@@ -43,7 +43,7 @@ export default function RootLayout({
             </MotionProvider>
           </StoreProvider>
         </LanguageProvider>
-        <Toaster position="top-center" richColors closeButton />
+        <Toaster position="top-center" richColors closeButton duration={30000} />
         <Analytics />
       </body>
     </html>
