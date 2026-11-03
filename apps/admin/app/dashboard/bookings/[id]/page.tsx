@@ -252,6 +252,9 @@ export default function BookingDetailsPage() {
 
                           {tourPlan && (
                             <div className="grid grid-cols-2 gap-4">
+                              {tourPlan.skip_the_line && (
+                                <StatusBadge status="skip the line" tone="info" className="justify-center py-1" />
+                              )}
                               {tourPlan.free_cancellation && (
                                 <StatusBadge status="free cancellation" tone="success" className="justify-center py-1" />
                               )}

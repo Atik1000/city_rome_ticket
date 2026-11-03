@@ -254,6 +254,9 @@ export default function TourDetailsPage() {
                 status={tour.status}
                 tone={tour.is_active ? 'success' : 'neutral'}
               />
+              {tour.skip_the_line && (
+                <StatusBadge status="skip the line" tone="info" />
+              )}
               {tour.free_cancellation && (
                 <StatusBadge status="free cancellation" tone="success" />
               )}

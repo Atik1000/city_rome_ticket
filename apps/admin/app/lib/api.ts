@@ -95,6 +95,7 @@ export interface TourPlan {
     price_student_eu: string;
     student_eu_age_min: number;
     student_eu_age_max: number;
+    skip_the_line: boolean;
     free_cancellation: boolean;
     pickup_included: boolean;
     highlights: string[];

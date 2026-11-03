@@ -85,6 +85,7 @@ export function tourDataFromPayload(p: Record<string, unknown>) {
   set("studentEuAgeMin", int(p.student_eu_age_min));
   set("studentEuAgeMax", int(p.student_eu_age_max));
 
+  if (typeof p.skip_the_line === "boolean") set("skipTheLine", p.skip_the_line);
   if (typeof p.free_cancellation === "boolean")
     set("freeCancellation", p.free_cancellation);
   if (typeof p.pickup_included === "boolean")

@@ -66,6 +66,7 @@ export function serializeTour(
     price_student_eu: money(t.priceStudentEu),
     student_eu_age_min: t.studentEuAgeMin,
     student_eu_age_max: t.studentEuAgeMax,
+    skip_the_line: t.skipTheLine,
     free_cancellation: t.freeCancellation,
     pickup_included: t.pickupIncluded,
     highlights: parseArr(t.highlights),

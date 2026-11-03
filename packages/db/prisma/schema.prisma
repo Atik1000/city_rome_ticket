@@ -55,6 +55,7 @@ model Tour {
   studentEuAgeMin Int   @default(18)
   studentEuAgeMax Int   @default(25)
 
+  skipTheLine      Boolean @default(true)
   freeCancellation Boolean @default(true)
   pickupIncluded   Boolean @default(false)
 

@@ -63,6 +63,7 @@ const initialFormState = {
     price_student_eu: '',
     student_eu_age_min: '' as any,
     student_eu_age_max: '' as any,
+    skip_the_line: true,
     free_cancellation: true,
     pickup_included: false,
     duration_days: '' as any,
@@ -129,6 +130,7 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
                 price_student_eu: tour.price_student_eu || '',
                 student_eu_age_min: tour.student_eu_age_min ?? '',
                 student_eu_age_max: tour.student_eu_age_max ?? '',
+                skip_the_line: tour.skip_the_line ?? true,
                 free_cancellation: tour.free_cancellation ?? true,
                 pickup_included: tour.pickup_included ?? false,
                 duration_days: tour.duration_days ?? '',
@@ -830,6 +832,18 @@ export function TourFormModal({ open, onOpenChange, tour, onSaved }: TourFormMod
                                         <Switch
                                             checked={formData.is_active}
                                             onCheckedChange={(v) => setFormData({ ...formData, is_active: v })}
+                                            className='cursor-pointer'
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg">
+                                        <div className="space-y-0.5">
+                                            <Label>Skip the Line</Label>
+                                            <p className="text-xs text-muted-foreground">Priority entry, no queue</p>
+                                        </div>
+                                        <Switch
+                                            checked={formData.skip_the_line}
+                                            onCheckedChange={(v) => setFormData({ ...formData, skip_the_line: v })}
                                             className='cursor-pointer'
                                         />
                                     </div>

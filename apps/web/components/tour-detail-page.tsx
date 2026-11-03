@@ -21,7 +21,8 @@ import {
   X,
   CheckCircle2,
   AlertCircle,
-  ShieldCheck
+  ShieldCheck,
+  Zap
 } from "lucide-react"
 import Link from "next/link"
 import { ItineraryTimeline } from "./Itinerary-timeline"
@@ -776,6 +777,13 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
               <Star size={12} className="fill-current" />
               Top rated
             </div>
+
+            {tour.skip_the_line && (
+              <div className="inline-flex items-center gap-1.5 bg-cream border border-gold/50 text-ink px-3 py-1 rounded-full font-semibold text-xs uppercase tracking-[0.12em]">
+                <Zap size={12} className="text-gold" />
+                Skip the line
+              </div>
+            )}
 
             {/* Rating and Reviews */}
             <div className="flex items-center gap-2">

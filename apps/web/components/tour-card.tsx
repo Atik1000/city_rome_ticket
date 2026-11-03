@@ -34,10 +34,12 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-ink shadow-sm transition-transform duration-200 group-hover:-translate-y-0.5">
-              <Zap size={12} className="text-gold" />
-              Skip the line
-            </span>
+            {tour.skip_the_line && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/95 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-ink shadow-sm transition-transform duration-200 group-hover:-translate-y-0.5">
+                <Zap size={12} className="text-gold" />
+                Skip the line
+              </span>
+            )}
           </div>
 
           {tour.duration_days != null && (
