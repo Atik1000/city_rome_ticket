@@ -6,7 +6,7 @@ import Footer from "@/components/footer"
 import { getCart, createBooking, BookingPayload, TravelerDetail } from "@/services/tourService"
 
 import { isLoggedIn, getUserProfile } from "@/services/authService"
-import { Loader2, User, Mail, Globe, Phone, Check, CheckCircle2, AlertCircle, ShieldCheck, ChevronsUpDown } from "lucide-react"
+import { Loader2, User, Mail, Globe, Phone, Check, AlertCircle, ShieldCheck, ChevronsUpDown } from "lucide-react"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
 import { BookingSuccessModal } from "@/components/booking-success-modal"
@@ -513,7 +513,6 @@ export default function CheckoutPage() {
                 {/* Trust badges */}
                 <div className="flex flex-wrap items-center gap-2 mb-6 text-xs text-ink/70">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1.5 font-medium"><ShieldCheck size={14} className="text-gold" /> Secure checkout</span>
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1.5 font-medium"><CheckCircle2 size={14} className="text-gold" /> Free cancellation on most tours</span>
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-cream/60 px-3 py-1.5 font-medium"><Check size={14} className="text-gold" /> Instant mobile tickets</span>
                 </div>
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { TourPlan } from "@/services/tourService"
-import { Star, Clock, BadgeCheck, Zap } from "lucide-react"
+import { Star, Clock, Zap } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 
@@ -38,12 +38,6 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
               <Zap size={12} className="text-gold" />
               Skip the line
             </span>
-            {tour.free_cancellation && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-white/95 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-emerald-700 shadow-sm transition-transform duration-200 delay-75 group-hover:-translate-y-0.5">
-                <BadgeCheck size={12} />
-                Free cancellation
-              </span>
-            )}
           </div>
 
           {tour.duration_days != null && (

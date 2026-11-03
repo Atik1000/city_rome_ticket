@@ -39,7 +39,6 @@ import {
     ShieldCheck,
     CreditCard,
     Headphones,
-    Check,
     ChevronLeft,
     Minus,
     Plus,
@@ -723,12 +722,6 @@ export default function CartPage() {
                                                 </>
                                             )}
 
-                                            {/* Free Cancellation */}
-                                            <div className="flex items-center gap-2 text-sm text-laurel font-medium mb-4">
-                                                <Check size={16} className="stroke-2" />
-                                                <span>Free cancellation</span>
-                                            </div>
-
                                             {/* EDIT FORM (Show if editing) */}
                                             {editingItemId === item.id && item.tour && (
                                                 <div className="mb-4 space-y-4">
@@ -901,11 +894,6 @@ export default function CartPage() {
                                 >
                                     Go to checkout
                                 </button>
-
-                                <div className="flex items-center gap-2 text-sm text-ink/70">
-                                    <Check size={18} className="text-laurel" />
-                                    <span>Free cancellation <br /><span className="text-muted-foreground text-xs">Until 24 hours before activity</span></span>
-                                </div>
                             </div>
 
                             {/* Why book with us */}

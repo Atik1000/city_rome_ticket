@@ -12,15 +12,6 @@ const columnFade = (delay = 0) => ({
   transition: { duration: 0.5, ease: "easeOut" as const, delay },
 })
 
-const paymentLogos = [
-  { src: "/visa-logo.jpg", alt: "Visa" },
-  { src: "/mastercard-logo.jpg", alt: "Mastercard" },
-  { src: "/amex-logo.jpg", alt: "American Express" },
-  { src: "/paypal-logo.png", alt: "PayPal" },
-  { src: "/apple-pay-logo.png", alt: "Apple Pay" },
-  { src: "/google-pay-logo.jpg", alt: "Google Pay" },
-]
-
 export default function Footer() {
   const { t } = useLanguage()
   return (
@@ -75,7 +66,7 @@ export default function Footer() {
           </motion.div>
 
           {/* Links */}
-          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8">
+          <div className="lg:col-span-6 grid grid-cols-2 gap-8 sm:gap-12">
             {/* Support */}
             <motion.div {...columnFade(0.1)}>
               <h3 className="font-semibold text-sm tracking-widest uppercase text-gold/90">
@@ -129,22 +120,6 @@ export default function Footer() {
               </ul>
             </motion.div>
 
-            {/* Payments */}
-            <motion.div {...columnFade(0.26)} className="col-span-2 sm:col-span-1">
-              <h3 className="font-semibold text-sm tracking-widest uppercase text-gold/90">
-                We accept
-              </h3>
-              <div className="mt-4 grid grid-cols-3 gap-2 max-w-[180px]">
-                {paymentLogos.map((p) => (
-                  <span
-                    key={p.alt}
-                    className="flex h-9 items-center justify-center rounded-md bg-white px-1.5"
-                  >
-                    <img src={p.src} alt={p.alt} className="max-h-6 w-auto object-contain" />
-                  </span>
-                ))}
-              </div>
-            </motion.div>
           </div>
         </div>
 

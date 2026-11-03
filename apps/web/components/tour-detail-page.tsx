@@ -797,54 +797,91 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2">
-            {/* Image Gallery - Grid Layout */}
-            <div className="relative mb-8 rounded-2xl overflow-hidden grid grid-cols-3 gap-2 h-100 shadow-warm-md ring-1 ring-gold/20">
-              {/* Main large image on the left */}
-              <div className="col-span-2 rounded-lg overflow-auto cursor-pointer" onClick={() => openLightbox(0)}>
-                <img
-                  src={images[0]}
-                  alt={`${tour.title} - Main image`}
-                  className="w-full h-full object-fixed"
-                />
-              </div>
-
-              {/* Right column with smaller images */}
-              <div className="flex flex-col gap-2">
-                {/* First thumbnail */}
-                <div className="flex-1 rounded-lg overflow-auto cursor-pointer" onClick={() => openLightbox(0)}>
-                  {images[1] && (
-                    <img
-                      src={images[1]}
-                      alt={`${tour.title} - Image 2`}
-                      className="w-full h-full object-fixed"
-                    />
-                  )}
+            {/* Image Gallery — images are shown in full, never cropped */}
+            <div className="mb-8">
+              <div className="relative rounded-2xl overflow-hidden shadow-warm-md ring-1 ring-gold/20 bg-cream/60">
+                <div
+                  className="relative h-[240px] sm:h-[340px] lg:h-[440px] cursor-zoom-in"
+                  onClick={() => openLightbox(currentImageIndex)}
+                >
+                  {/* Blurred copy fills the frame so the real photo never has to be cropped */}
+                  <img
+                    src={images[currentImageIndex]}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-40"
+                  />
+                  <img
+                    src={images[currentImageIndex]}
+                    alt={`${tour.title} — image ${currentImageIndex + 1} of ${images.length}`}
+                    className="relative h-full w-full object-contain"
+                  />
                 </div>
 
-                {/* Second thumbnail with +4 badge */}
-                <div className="flex-1 rounded-lg overflow-auto relative cursor-pointer" onClick={() => openLightbox(2)}>
-                  {images[2] && (
-                    <img
-                      src={images[2]}
-                      alt={`${tour.title} - Image 3`}
-                      className="w-full h-full object-fixed"
-                    />
-                  )}
-                  {/* + badge indicator */}
-                  {images.length > 3 && (
+                {images.length > 1 && (
+                  <>
                     <button
+                      type="button"
+                      aria-label="Previous image"
+                      onClick={prevImage}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 text-ink shadow-warm flex items-center justify-center hover:bg-white transition cursor-pointer"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Next image"
+                      onClick={nextImage}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 text-ink shadow-warm flex items-center justify-center hover:bg-white transition cursor-pointer"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+
+                    <span className="absolute bottom-3 right-3 rounded-full bg-espresso/70 backdrop-blur px-3 py-1 text-xs font-medium text-white">
+                      {currentImageIndex + 1} / {images.length}
+                    </span>
+
+                    <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation()
-                        openLightbox(0)
+                        openLightbox(currentImageIndex)
                       }}
-                      className="absolute bottom-5 right-5 bg-transparent backdrop-blur-[2px] border-[1.5px] border-white text-white px-5 py-3 rounded-full flex items-center gap-2.5 z-10 hover:backdrop-blur-[3px] transition-all cursor-pointer"
+                      className="absolute bottom-3 left-3 inline-flex items-center gap-2 rounded-full bg-espresso/70 backdrop-blur px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-espresso/85 transition cursor-pointer"
                     >
-                      <ImageIcon size={22} strokeWidth={2.5} />
-                      <span className="font-semibold text-xl leading-none">+{images.length - 3}</span>
+                      <ImageIcon size={16} />
+                      View all {images.length} photos
                     </button>
-                  )}
-                </div>
+                  </>
+                )}
               </div>
+
+              {/* Thumbnails */}
+              {images.length > 1 && (
+                <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {images.map((image, index) => (
+                    <button
+                      key={`${image}-${index}`}
+                      type="button"
+                      onClick={() => setCurrentImageIndex(index)}
+                      aria-label={`Show image ${index + 1}`}
+                      aria-current={index === currentImageIndex}
+                      className={`relative h-16 w-24 sm:h-20 sm:w-28 shrink-0 overflow-hidden rounded-xl bg-cream/70 transition-all cursor-pointer ${
+                        index === currentImageIndex
+                          ? "ring-2 ring-gold"
+                          : "ring-1 ring-gold/20 hover:ring-gold/50"
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt=""
+                        className="h-full w-full object-contain p-1"
+                        loading="lazy"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Description */}
@@ -859,16 +896,6 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
 
               {/* Activity Features */}
               {/* <div className="space-y-4 mb-8">
-                {tour.free_cancellation && (
-                  <div className="flex items-start gap-4">
-                    <Check size={24} className="text-teal-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">Free cancellation</p>
-                      <p className="text-gray-600 text-sm">Cancel up to 24 hours in advance for a full refund</p>
-                    </div>
-                  </div>
-                )}
-
                 <div className="flex items-start gap-4">
                   <Share2 size={24} className="text-teal-600 flex-shrink-0 mt-0.5" />
                   <div>
@@ -1090,13 +1117,6 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
                 <div className="flex items-start gap-3">
                   <Check size={20} className="text-laurel flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm">Free cancellation</p>
-                    <p className="text-gray-600 text-xs">Cancel up to 24 hours in advance for a full refund</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={20} className="text-laurel flex-shrink-0 mt-0.5" />
-                  <div>
                     <p className="font-semibold text-gray-900 text-sm">Reserve now & pay later</p>
                     <p className="text-gray-600 text-xs">
                       Keep your travel plans flexible — book your spot and pay nothing today.
@@ -1206,7 +1226,7 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
       </div>
       {/* Lightbox Modal */}
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center">
+        <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center">
           {/* Image Counter */}
           <div className="absolute top-6 left-1/2 -translate-x-1/2 text-white text-xl font-semibold z-50 tracking-wide">
             {lightboxIndex + 1} / {images.length}
@@ -1235,7 +1255,7 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
             <img
               src={images[lightboxIndex]}
               alt={`Gallery image ${lightboxIndex + 1}`}
-              className="max-w-full max-h-screen object-contain select-none"
+              className="max-h-[85vh] max-w-[90vw] w-auto h-auto object-contain select-none"
             />
           </div>
 

@@ -895,11 +895,6 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                         </motion.div>
                                     )}
                                 </div>
-
-                                <div className="flex items-center gap-2 text-laurel md:justify-end justify-start">
-                                    <Check size={18} />
-                                    <span className="text-sm font-medium">Free cancellation</span>
-                                </div>
                             </div>
                         </div>
                     </motion.div>

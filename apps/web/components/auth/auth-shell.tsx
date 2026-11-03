@@ -46,8 +46,8 @@ export function AuthShell({ eyebrow, title, subtitle, children }: AuthShellProps
                     </h2>
                     <div aria-hidden="true" className="mt-6 h-px w-24 bg-gradient-to-r from-gold to-transparent" />
                     <p className="mt-5 text-white/75 max-w-sm leading-relaxed">
-                        Skip-the-line access to the Colosseum, Vatican, Pantheon and more —
-                        free cancellation on every tour.
+                        Skip-the-line access to the Colosseum, Vatican, Pantheon and more,
+                        booked in minutes.
                     </p>
                 </motion.div>
             </div>
