@@ -5,7 +5,6 @@ import Footer from "@/components/footer"
 import DiscountModal from "@/components/discount-modal"
 import Blogs from "@/components/BlogSection"
 import Video from "@/components/video_back"
-import BenefitsStrip from "@/components/benefits-strip"
 
 export default function Home() {
   return (
@@ -13,7 +12,6 @@ export default function Home() {
       <DiscountModal />
       <Navbar />
       <HeroCarousel />
-      <BenefitsStrip />
       <ToursSection />
       <Video/>
       <Blogs />
