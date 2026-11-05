@@ -1,6 +1,8 @@
 // app/robots.ts
 import type { MetadataRoute } from "next";
 
+const baseUrl = "https://iconicrometours.com";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
@@ -9,8 +11,16 @@ export default function robots(): MetadataRoute.Robots {
       disallow: [
         "/api/",
         "/admin/",
+        // Private or per-user pages: nothing here is useful in search results,
+        // and crawling them just burns crawl budget on the tour pages.
+        "/cart",
+        "/checkout",
+        "/login",
+        "/register",
+        "/settings",
       ],
     },
-    sitemap: "https://iconicrometours.com/sitemap.xml",
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }
