@@ -1,13 +1,9 @@
 "use client"
 
 import { TourPlan } from "@/services/tourService"
-import { Star, Clock, Zap } from "lucide-react"
+import { Clock, Zap } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-
-// Stable, display-only rating derived from the tour id.
-const ratingFor = (id: number) => (4.6 + ((id * 7) % 4) / 10).toFixed(1)
-const reviewsFor = (id: number) => 180 + ((id * 97) % 1400)
 
 export default function TourCard({ tour }: { tour: TourPlan }) {
   const imageUrl =
@@ -53,19 +49,6 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
 
         {/* Content */}
         <div className="p-4 sm:p-5 flex flex-col flex-grow">
-          {/* Rating */}
-          <div className="flex items-center gap-1.5 mb-2">
-            <span className="flex items-center gap-0.5 text-gold">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={13} className="fill-current" />
-              ))}
-            </span>
-            <span className="text-xs font-semibold text-ink">{ratingFor(tour.id)}</span>
-            <span className="text-xs text-muted-foreground">
-              ({reviewsFor(tour.id).toLocaleString()})
-            </span>
-          </div>
-
           {/* Title */}
           <h3 className="font-serif font-semibold text-base sm:text-lg leading-snug text-ink mb-2 line-clamp-2 group-hover:text-brand transition-colors">
             {tour.title}
