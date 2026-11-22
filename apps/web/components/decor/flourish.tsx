@@ -10,7 +10,7 @@ export default function Flourish({
   tone?: "dark" | "light"
 }) {
   const line = tone === "light" ? "via-gold-light/70" : "via-gold/60"
-  const leaf = tone === "light" ? "text-gold-light" : "text-gold"
+  const leaf = tone === "light" ? "text-white" : "text-gold"
   return (
     <div aria-hidden="true" className={`flex items-center justify-center gap-3 ${className}`}>
       <span className={`h-px w-14 sm:w-20 bg-gradient-to-r from-transparent ${line} to-transparent`} />

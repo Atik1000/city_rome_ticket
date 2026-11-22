@@ -92,7 +92,7 @@ export default function Contact() {
           <div className="overflow-hidden rounded-3xl border border-gold/25 bg-white shadow-warm-lg">
             <div className="grid grid-cols-1 lg:grid-cols-12">
               {/* Left: details panel */}
-              <aside className="lg:col-span-5 relative bg-[linear-gradient(165deg,#8f2721_0%,#7e211c_45%,#641a16_100%)] text-white p-7 sm:p-9">
+              <aside className="lg:col-span-5 relative bg-[linear-gradient(165deg,#0a4aa8_0%,#003b95_45%,#002c70_100%)] text-white p-7 sm:p-9">
                 <div
                   aria-hidden="true"
                   className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"
@@ -110,20 +110,20 @@ export default function Contact() {
                     href="mailto:info@iconicrometours.com"
                     className="group flex items-start gap-4 py-5"
                   >
-                    <Mail size={22} className="text-gold shrink-0 mt-0.5" />
+                    <Mail size={22} className="text-white shrink-0 mt-0.5" />
                     <div className="leading-tight">
                       <p className="font-semibold">Email us</p>
-                      <p className="mt-1 text-sm text-white/80 break-all group-hover:text-gold-light transition-colors">
+                      <p className="mt-1 text-sm text-white/80 break-all group-hover:text-white transition-colors">
                         info@iconicrometours.com
                       </p>
                     </div>
                   </a>
 
                   <a href="tel:+393710462213" className="group flex items-start gap-4 py-5">
-                    <Phone size={22} className="text-gold shrink-0 mt-0.5" />
+                    <Phone size={22} className="text-white shrink-0 mt-0.5" />
                     <div className="leading-tight">
                       <p className="font-semibold">Call our team</p>
-                      <p className="mt-1 text-sm text-white/80 group-hover:text-gold-light transition-colors">
+                      <p className="mt-1 text-sm text-white/80 group-hover:text-white transition-colors">
                         +39 371 046 2213
                       </p>
                       <p className="mt-1 text-xs text-white/55">Mon&ndash;Sat, 9:00&ndash;18:00</p>
@@ -131,7 +131,7 @@ export default function Contact() {
                   </a>
 
                   <div className="flex items-start gap-4 py-5">
-                    <MapPin size={22} className="text-gold shrink-0 mt-0.5" />
+                    <MapPin size={22} className="text-white shrink-0 mt-0.5" />
                     <p className="text-sm text-white/85">Based in Rome, Italy</p>
                   </div>
                 </div>

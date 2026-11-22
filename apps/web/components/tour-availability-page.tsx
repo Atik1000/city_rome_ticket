@@ -706,16 +706,16 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                         disabled={!availableDate || isPast}
                                         className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-xl border transition-all
                                         ${isSelected
-                                                ? "border-gold bg-espresso text-gold-light shadow-warm-md"
+                                                ? "border-gold bg-espresso text-white shadow-warm-md"
                                                 : availableDate && !isPast
                                                     ? "border-gold/30 bg-white text-ink shadow-warm hover:border-gold/60 hover:-translate-y-0.5 cursor-pointer"
                                                     : "border-ink/10 bg-cream/40 text-ink/30 cursor-not-allowed"
                                             }`}
                                     >
-                                        <span className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${isSelected ? "text-gold-light/80" : ""}`}>
+                                        <span className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${isSelected ? "text-white/80" : ""}`}>
                                             {isToday ? "Today" : date.toLocaleString('default', { weekday: 'short' })}
                                         </span>
-                                        <span className={`font-serif text-2xl font-semibold ${isSelected ? "text-gold-light" : availableDate && !isPast ? "text-ink" : "text-ink/30"}`}>
+                                        <span className={`font-serif text-2xl font-semibold ${isSelected ? "text-white" : availableDate && !isPast ? "text-ink" : "text-ink/30"}`}>
                                             {date.getDate()}
                                         </span>
                                         <span className="text-xs">
@@ -775,7 +775,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                                             onClick={() => setSelectedTimeSlot(slot)}
                                             className={`relative px-6 py-2.5 rounded-lg border text-sm font-semibold transition-colors duration-200 cursor-pointer
                             ${isSelected
-                                                    ? "text-gold-light border-gold/70 shadow-warm-md"
+                                                    ? "text-white border-gold/70 shadow-warm-md"
                                                     : "bg-white text-ink border-ink/25 hover:border-gold/70 hover:bg-cream/40"
                                                 }`}
                                         >

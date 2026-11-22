@@ -22,7 +22,7 @@ export function AuthShell({ eyebrow, title, subtitle, children }: AuthShellProps
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: "url('/images/carousel1.jpg')" }}
                 />
-                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#1C120D]/95 via-[#2A1B16]/70 to-[#2A1B16]/35" />
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#001a45]/95 via-[#002c70]/70 to-[#003b95]/35" />
                 <div aria-hidden="true" className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-gold/60 to-transparent" />
 
                 <div className="relative z-10 p-10">
@@ -38,7 +38,7 @@ export function AuthShell({ eyebrow, title, subtitle, children }: AuthShellProps
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     className="relative z-10 p-10 pb-14"
                 >
-                    <p className="text-gold uppercase tracking-[0.25em] text-xs font-semibold mb-4">
+                    <p className="text-white uppercase tracking-[0.25em] text-xs font-semibold mb-4">
                         Local guides · Instant mobile tickets
                     </p>
                     <h2 className="font-serif text-4xl xl:text-5xl font-semibold text-white leading-tight max-w-md">

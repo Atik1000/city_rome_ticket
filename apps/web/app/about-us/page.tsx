@@ -58,7 +58,7 @@ export default function AboutUsPage() {
             />
 
             <div className="relative px-6 sm:px-10 lg:px-14 py-14 sm:py-16 lg:py-20 max-w-2xl text-white">
-              <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-gold-light">
+              <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-white">
                 The people behind your journey
               </p>
               <span
@@ -188,7 +188,7 @@ export default function AboutUsPage() {
 
         {/* Closing CTA */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-20">
-          <div className="relative overflow-hidden rounded-3xl bg-[linear-gradient(165deg,#8f2721_0%,#7e211c_45%,#641a16_100%)] text-white px-7 sm:px-10 lg:px-14 py-10 lg:py-12">
+          <div className="relative overflow-hidden rounded-3xl bg-[linear-gradient(165deg,#0a4aa8_0%,#003b95_45%,#002c70_100%)] text-white px-7 sm:px-10 lg:px-14 py-10 lg:py-12">
             <div
               aria-hidden="true"
               className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"
@@ -218,17 +218,17 @@ export default function AboutUsPage() {
                 <div className="mt-6 space-y-3">
                   <a
                     href="mailto:info@iconicrometours.com"
-                    className="group flex items-center gap-3 text-sm text-white/90 hover:text-gold-light transition-colors"
+                    className="group flex items-center gap-3 text-sm text-white/90 hover:text-white transition-colors"
                   >
-                    <Mail size={18} className="text-gold shrink-0" />
+                    <Mail size={18} className="text-white shrink-0" />
                     <span className="break-all">info@iconicrometours.com</span>
                   </a>
 
                   <a
                     href="tel:+393710462213"
-                    className="group flex items-center gap-3 text-sm text-white/90 hover:text-gold-light transition-colors"
+                    className="group flex items-center gap-3 text-sm text-white/90 hover:text-white transition-colors"
                   >
-                    <Phone size={18} className="text-gold shrink-0" />
+                    <Phone size={18} className="text-white shrink-0" />
                     +39 371 046 2213
                   </a>
                 </div>

@@ -520,7 +520,7 @@ export default function CheckoutPage() {
                 {!loggedIn && (
                     <div className="flex items-center gap-3 mb-8" aria-hidden="true">
                         <div className="flex items-center gap-2.5">
-                            <span className={`flex h-9 w-9 items-center justify-center rounded-full font-serif text-sm font-semibold border transition-colors ${step === 1 ? "bg-brand text-white border-brand shadow-warm" : "bg-espresso text-gold-light border-gold/50"}`}>I</span>
+                            <span className={`flex h-9 w-9 items-center justify-center rounded-full font-serif text-sm font-semibold border transition-colors ${step === 1 ? "bg-brand text-white border-brand shadow-warm" : "bg-espresso text-white border-gold/50"}`}>I</span>
                             <span className={`text-sm font-medium ${step === 1 ? "text-ink" : "text-ink/50"}`}>Contact</span>
                         </div>
                         <span className="h-px flex-1 max-w-16 bg-gradient-to-r from-gold/60 to-gold/20" />

@@ -40,7 +40,7 @@ export default function Footer() {
                   href="mailto:info@iconicrometours.com"
                   className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition"
                 >
-                  <span className="h-9 w-9 rounded-lg bg-gold/15 flex items-center justify-center text-gold">
+                  <span className="h-9 w-9 rounded-lg bg-gold/15 flex items-center justify-center text-white">
                     <Mail size={18} />
                   </span>
                   <span className="text-sm text-white break-all">
@@ -52,7 +52,7 @@ export default function Footer() {
                   href="tel:+393710462213"
                   className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition"
                 >
-                  <span className="h-9 w-9 rounded-lg bg-gold/15 flex items-center justify-center text-gold">
+                  <span className="h-9 w-9 rounded-lg bg-gold/15 flex items-center justify-center text-white">
                     <Phone size={18} />
                   </span>
                   <span className="text-sm text-white">+39 371 046 2213</span>
@@ -60,7 +60,7 @@ export default function Footer() {
               </div>
 
               <p className="flex items-center gap-2 text-sm text-white/60">
-                <MapPin size={16} className="text-gold" /> Rome, Italy
+                <MapPin size={16} className="text-white" /> Rome, Italy
               </p>
             </div>
           </motion.div>
@@ -69,27 +69,27 @@ export default function Footer() {
           <div className="lg:col-span-6 grid grid-cols-2 gap-8 sm:gap-12">
             {/* Support */}
             <motion.div {...columnFade(0.1)}>
-              <h3 className="font-semibold text-sm tracking-widest uppercase text-gold/90">
+              <h3 className="font-semibold text-sm tracking-widest uppercase text-white">
                 {t.footer.support}
               </h3>
               <ul className="mt-4 space-y-3 text-sm">
                 <li>
-                  <Link href="/contact" className="text-white/70 hover:text-gold-light transition-colors">
+                  <Link href="/contact" className="text-white/70 hover:text-white transition-colors">
                     {t.footer.contact}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal-notice" className="text-white/70 hover:text-gold-light transition-colors">
+                  <Link href="/legal-notice" className="text-white/70 hover:text-white transition-colors">
                     {t.footer.legalNotice}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy-policy" className="text-white/70 hover:text-gold-light transition-colors">
+                  <Link href="/privacy-policy" className="text-white/70 hover:text-white transition-colors">
                     {t.footer.privacyPolicy}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms-and-conditions" className="text-white/70 hover:text-gold-light transition-colors">
+                  <Link href="/terms-and-conditions" className="text-white/70 hover:text-white transition-colors">
                     {t.footer.terms}
                   </Link>
                 </li>
@@ -98,22 +98,22 @@ export default function Footer() {
 
             {/* Company */}
             <motion.div {...columnFade(0.18)}>
-              <h3 className="font-semibold text-sm tracking-widest uppercase text-gold/90">
+              <h3 className="font-semibold text-sm tracking-widest uppercase text-white">
                 {t.footer.company}
               </h3>
               <ul className="mt-4 space-y-3 text-sm">
                 <li>
-                  <Link href="/about-us" className="text-white/70 hover:text-gold-light transition-colors">
+                  <Link href="/about-us" className="text-white/70 hover:text-white transition-colors">
                     {t.footer.aboutUs}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog" className="text-white/70 hover:text-gold-light transition-colors">
+                  <Link href="/blog" className="text-white/70 hover:text-white transition-colors">
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link href="/tour" className="text-white/70 hover:text-gold-light transition-colors">
+                  <Link href="/tour" className="text-white/70 hover:text-white transition-colors">
                     {t.nav.tours}
                   </Link>
                 </li>

@@ -138,7 +138,7 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
               <p className="font-display font-semibold text-lg leading-tight tracking-tight text-sidebar-foreground truncate">
                 Iconic Rome
               </p>
-              <p className="text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-white font-semibold">
                 Admin Panel
               </p>
             </div>

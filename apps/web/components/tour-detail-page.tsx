@@ -773,7 +773,7 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
 
           <div className="flex flex-wrap items-center gap-4 mb-4">
             {/* Top Rated Badge */}
-            <div className="inline-flex items-center gap-1.5 bg-espresso border border-gold/50 text-gold-light px-3 py-1 rounded-full font-semibold text-xs uppercase tracking-[0.12em]">
+            <div className="inline-flex items-center gap-1.5 bg-espresso border border-gold/50 text-white px-3 py-1 rounded-full font-semibold text-xs uppercase tracking-[0.12em]">
               <Star size={12} className="fill-current" />
               Top rated
             </div>

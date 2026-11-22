@@ -183,7 +183,7 @@ export default function SettingsPage() {
                         <div className="relative overflow-hidden bg-espresso p-8 text-white text-center">
                             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
                             <h2 className="font-serif text-2xl font-semibold mb-1">{profile?.first_name} {profile?.last_name}</h2>
-                            <p className="text-gold-light/80 text-xs uppercase tracking-[0.25em]">Account</p>
+                            <p className="text-white/80 text-xs uppercase tracking-[0.25em]">Account</p>
                         </div>
                         <nav className="bg-[#F3EEE6]">
                             <button

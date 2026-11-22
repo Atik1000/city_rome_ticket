@@ -22,7 +22,7 @@ export default function Logo({
         <span className={`font-serif text-xl font-semibold tracking-tight ${nameColor}`}>
           Iconic Rome
         </span>
-        <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.35em] text-gold">
+        <span className={`mt-1 text-[10px] font-semibold uppercase tracking-[0.35em] ${tone === "light" ? "text-white" : "text-gold"}`}>
           Tickets
         </span>
       </span>

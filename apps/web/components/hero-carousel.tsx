@@ -180,7 +180,7 @@ export default function HeroCarousel() {
           <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 flex flex-col justify-center">
             <p
               data-hero-fade
-              className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-gold-light"
+              className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-white"
             >
               Your Roman story starts here
             </p>
@@ -316,7 +316,7 @@ export default function HeroCarousel() {
                       {isLoading ? (
                         <div className="flex items-center justify-center py-8">
                           <div className="flex flex-col items-center gap-3">
-                            <div className="w-6 h-6 border-3 border-gray-200 border-t-[#9E2B25] rounded-full animate-spin"></div>
+                            <div className="w-6 h-6 border-3 border-gray-200 border-t-brand rounded-full animate-spin"></div>
                             <span className="text-sm text-gray-500">Searching...</span>
                           </div>
                         </div>

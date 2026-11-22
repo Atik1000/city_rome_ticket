@@ -40,7 +40,7 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
 
           {tour.duration_days != null && (
             <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-espresso/70 border border-white/20 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white">
-              <Clock size={12} className="text-gold-light" />
+              <Clock size={12} className="text-white" />
               {tour.duration_days === 1 ? "Day trip" : `${tour.duration_days} days`}
             </span>
           )}
@@ -61,9 +61,9 @@ export default function TourCard({ tour }: { tour: TourPlan }) {
           <div className="mt-auto pt-3 border-t border-dashed border-gold/30 flex items-center justify-between gap-2">
             {/* Gilded price tag */}
             <span className="inline-flex items-baseline gap-1.5 rounded-lg bg-espresso border border-gold/50 px-2.5 py-1.5 shadow-warm transition-transform duration-200 group-hover:-translate-y-0.5">
-              <span className="text-[10px] uppercase tracking-[0.12em] text-gold-light/80">From</span>
-              <span className="font-serif text-lg leading-none font-semibold text-gold-light">€{tour.price_adult}</span>
-              <span className="text-[10px] text-gold-light/70">/ person</span>
+              <span className="text-[10px] uppercase tracking-[0.12em] text-white/80">From</span>
+              <span className="font-serif text-lg leading-none font-semibold text-white">€{tour.price_adult}</span>
+              <span className="text-[10px] text-white/70">/ person</span>
             </span>
             <span className="text-xs font-medium text-gold group-hover:text-brand transition-colors whitespace-nowrap">
               View tour →

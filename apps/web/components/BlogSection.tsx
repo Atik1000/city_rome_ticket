@@ -134,7 +134,7 @@ const BlogSection = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-espresso/55 via-espresso/10 via-40% to-transparent" />
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-espresso/85 border border-gold/50 text-gold-light text-[11px] font-semibold uppercase tracking-[0.12em] rounded-full backdrop-blur">
+                  <span className="px-3 py-1 bg-espresso/85 border border-gold/50 text-white text-[11px] font-semibold uppercase tracking-[0.12em] rounded-full backdrop-blur">
                     {blog.category}
                   </span>
                 </div>

@@ -329,7 +329,7 @@ const ColosseumPrivateTourBlog = () => {
 
                   {/* CTA */}
                   <div className="bg-espresso border border-gold/30 rounded-2xl p-6 text-center shadow-warm-lg">
-                    <h3 className="font-serif text-xl font-semibold text-gold-light mb-3">
+                    <h3 className="font-serif text-xl font-semibold text-white mb-3">
                       Ready to Explore Ancient Rome?
                     </h3>
                     <p className="text-white/70 text-sm mb-4">

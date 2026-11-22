@@ -796,7 +796,7 @@ export default function CartPage() {
                                                                                     onClick={() => setEditSelectedTimeSlot(slot)}
                                                                                     className={`px-6 py-2.5 rounded-lg border text-sm font-semibold transition-all cursor-pointer
                                                             ${isSelected
-                                                                                            ? "bg-espresso text-gold-light border-gold/70 shadow-warm-md"
+                                                                                            ? "bg-espresso text-white border-gold/70 shadow-warm-md"
                                                                                             : "bg-white text-ink border-ink/25 hover:border-gold/70 hover:bg-cream/40"
                                                                                         }`}
                                                                                 >

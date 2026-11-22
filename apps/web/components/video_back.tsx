@@ -54,13 +54,13 @@ export default function VideoBackgroundPage() {
       {/* Content */}
       <div className="relative z-10 flex min-h-[70vh] flex-col items-center justify-center px-4 text-center gap-4">
         <Reveal className="flex flex-col items-center gap-4">
-          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.4em] text-gold-light">
+          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.4em] text-white">
             Iconic Rome Tickets
           </p>
           <h2 className="font-serif text-white text-4xl sm:text-6xl md:text-7xl font-semibold text-balance leading-[1.08]">
             Book the Past,
             <br />
-            Experience <span className="italic text-gold-light">the Eternal.</span>
+            Experience <span className="italic text-white">the Eternal.</span>
           </h2>
           <div aria-hidden="true" className="mt-4 flex items-center gap-3">
             <span className="h-px w-16 bg-gradient-to-r from-transparent to-gold/70" />

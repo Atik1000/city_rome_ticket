@@ -66,15 +66,15 @@ export default function LoginPage() {
           alt="The Colosseum, Rome"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2a0d0a]/95 via-[#5c1813]/75 to-[#9E2B25]/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#001a45]/95 via-[#002c70]/75 to-[#003b95]/40" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-white/10 border border-[#E9C77F]/40 flex items-center justify-center">
-              <Landmark size={22} className="text-[#E9C77F]" />
+              <Landmark size={22} className="text-white" />
             </div>
             <div className="leading-tight">
               <p className="text-white font-display font-semibold text-lg tracking-tight">Iconic Rome</p>
-              <p className="text-[10px] uppercase tracking-[0.25em] text-[#E9C77F] font-semibold">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-white font-semibold">
                 Admin Panel
               </p>
             </div>
@@ -85,7 +85,7 @@ export default function LoginPage() {
             <h2 className="font-display text-4xl xl:text-5xl font-semibold text-white leading-tight tracking-tight">
               The Eternal City,
               <br />
-              <span className="text-[#E9C77F]">expertly managed.</span>
+              <span className="text-white">expertly managed.</span>
             </h2>
             <p className="text-white/80 text-lg leading-relaxed">
               Run tours, bookings and customer requests for Iconic Rome Tickets
@@ -99,7 +99,7 @@ export default function LoginPage() {
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-3 text-white/90">
                   <div className="w-8 h-8 rounded-lg bg-white/10 border border-[#E9C77F]/25 flex items-center justify-center flex-shrink-0">
-                    <Icon size={16} className="text-[#E9C77F]" />
+                    <Icon size={16} className="text-white" />
                   </div>
                   <span className="text-sm font-medium">{label}</span>
                 </div>
