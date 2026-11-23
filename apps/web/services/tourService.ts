@@ -326,6 +326,8 @@ export async function createBooking(payload: BookingPayload, token?: string): Pr
         let errorMessage = "Failed to create booking";
         if (errorData.non_field_errors && Array.isArray(errorData.non_field_errors)) {
             errorMessage = errorData.non_field_errors[0];
+        } else if (Array.isArray(errorData.phone) || Array.isArray(errorData.email)) {
+            errorMessage = (errorData.phone || errorData.email)[0];
         } else {
             errorMessage = errorData.message || errorMessage;
         }

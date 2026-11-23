@@ -1,7 +1,7 @@
 import { prisma } from "@iconic/db";
 import { getAuthUser, hashPassword } from "@iconic/db/auth";
 import { serializeUser } from "@iconic/db/serialize";
-import { json } from "../_lib/helpers";
+import { json, normalizePhone } from "../_lib/helpers";
 
 const UNAUTHENTICATED = { detail: "Authentication credentials were not provided." };
 
@@ -25,7 +25,12 @@ export async function PATCH(req: Request) {
   const data: Record<string, unknown> = {};
   if (typeof body.first_name === "string" && body.first_name.trim()) data.firstName = body.first_name.trim();
   if (typeof body.last_name === "string" && body.last_name.trim()) data.lastName = body.last_name.trim();
-  if (body.phone !== undefined) data.phone = typeof body.phone === "string" ? body.phone.trim() : null;
+  // A WhatsApp number is required on every account: it can be changed, not cleared.
+  if (typeof body.phone === "string" && body.phone.trim()) {
+    const phone = normalizePhone(body.phone);
+    if (!phone) return json({ phone: ["Enter a valid WhatsApp number, including country code."] }, 400);
+    data.phone = phone;
+  }
   if (typeof body.email === "string" && body.email.trim()) {
     const email = body.email.trim().toLowerCase();
     if (email !== user.email) {

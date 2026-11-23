@@ -302,6 +302,9 @@ export default function CheckoutPage() {
 
     const [travelerDetails, setTravelerDetails] = useState<TravelerDetail[]>([])
     const [accountEmail, setAccountEmail] = useState("")
+    // Signed-in accounts created before WhatsApp became mandatory are asked for it once.
+    const [needsAccountPhone, setNeedsAccountPhone] = useState(false)
+    const [accountPhone, setAccountPhone] = useState("")
 
     useEffect(() => {
         checkAuthAndLoad()
@@ -323,6 +326,7 @@ export default function CheckoutPage() {
                 const profile = await getUserProfile();
                 prepopulatedName = `${profile.first_name} ${profile.last_name}`.trim();
                 if (profile.email) setAccountEmail(profile.email);
+                if (!profile.phone) setNeedsAccountPhone(true);
             } catch (error) {
                 console.error("Failed to fetch user profile", error);
             }
@@ -414,7 +418,8 @@ export default function CheckoutPage() {
         setTravelerDetails(newDetails)
     }
 
-    const handleFinalSubmit = async () => {
+    const handleFinalSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
         setLoading(true)
         try {
             let payload: BookingPayload;
@@ -437,6 +442,10 @@ export default function CheckoutPage() {
                     cart_item_ids: cartIdsStr.split(',').map(id => parseInt(id.trim(), 10)).filter(n => !isNaN(n)),
                     traveler_details: travelerDetails
                 }
+            }
+
+            if (loggedIn && needsAccountPhone) {
+                payload.phone = accountPhone
             }
 
             if (!loggedIn) {
@@ -642,12 +651,16 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-ink mb-1.5">Phone</label>
+                                    <label className="block text-sm font-semibold text-ink mb-1.5">WhatsApp Number</label>
                                     <div className="relative">
                                         <Phone className="absolute left-3 top-3.5 text-gray-400" size={18} />
                                         <input
-                                            //required
+                                            required
                                             type="tel"
+                                            inputMode="tel"
+                                            autoComplete="tel"
+                                            pattern="\+?[\d\s\(\).\-]{7,24}"
+                                            title="Enter your WhatsApp number with country code, e.g. +1 234 567 890"
                                             className="w-full pl-10 p-2.5 border border-ink/15 rounded-xl bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition-all"
                                             placeholder="+1 234 567 890"
                                             value={guestDetails.phone}
@@ -669,6 +682,29 @@ export default function CheckoutPage() {
                     <div className="relative bg-white rounded-2xl shadow-warm-lg border border-gold/30 p-6 sm:p-8 overflow-hidden">
                         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
                         <h2 className="font-serif text-2xl font-semibold text-ink mb-6">Traveler Details</h2>
+                        <form onSubmit={handleFinalSubmit}>
+                        {loggedIn && needsAccountPhone && (
+                            <div className="mb-6 pb-6 border-b border-gray-100">
+                                <label htmlFor="account-phone" className="block text-sm font-semibold text-ink mb-1.5">WhatsApp Number</label>
+                                <div className="relative">
+                                    <Phone className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                                    <input
+                                        id="account-phone"
+                                        required
+                                        type="tel"
+                                        inputMode="tel"
+                                        autoComplete="tel"
+                                        pattern="\+?[\d\s\(\).\-]{7,24}"
+                                        title="Enter your WhatsApp number with country code, e.g. +1 234 567 890"
+                                        className="w-full pl-10 p-2.5 border border-ink/15 rounded-xl bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition-all"
+                                        placeholder="+1 234 567 890"
+                                        value={accountPhone}
+                                        onChange={e => setAccountPhone(e.target.value)}
+                                    />
+                                </div>
+                                <p className="text-xs text-ink/50 mt-1.5">Include your country code. We&apos;ll save it to your account.</p>
+                            </div>
+                        )}
                         <div className="space-y-6">
                             {travelerDetails.map((traveler, index) => (
                                 <div key={index} className="pb-6 border-b border-gray-100 last:border-0 last:pb-0">
@@ -690,12 +726,13 @@ export default function CheckoutPage() {
                         </div>
 
                         <button
-                            onClick={handleFinalSubmit}
+                            type="submit"
                             className="btn-premium w-full py-3.5 mt-8"
                         >
                             <Check size={20} />
                             Final Submit
                         </button>
+                        </form>
                     </div>
                 )}
             </main>

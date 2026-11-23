@@ -1,12 +1,10 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Search, CalendarDays, ChevronDown, ArrowUpRight, Users, Zap, Ticket } from "lucide-react"
+import { Search, CalendarDays, ChevronDown, ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { API_BASE_URL } from "@/services/authService";
-import AmbientParticles from "@/components/animation/ambient-particles"
-import { gsap, useGSAP, prefersReducedMotion } from "@/components/animation/gsap"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
@@ -20,14 +18,8 @@ interface TourSuggestion {
 }
 
 const slides = [
-  { image: "/images/carousel2.jpg", alt: "Rome at dusk" },
-  { image: "/images/carousel1.jpg", alt: "Roman colonnade at golden hour" },
-]
-
-const trustPoints = [
-  { icon: Users, label: "Expert local guides" },
-  { icon: Zap, label: "Instant confirmation" },
-  { icon: Ticket, label: "Mobile tickets" },
+  { image: "/images/carousel1.jpg", alt: "Ancient Roman columns" },
+  { image: "/images/carousel2.jpg", alt: "Historic Rome architecture" },
 ]
 
 export default function HeroCarousel() {
@@ -90,45 +82,6 @@ export default function HeroCarousel() {
     return () => clearTimeout(delayDebounceFn)
   }, [searchQuery])
 
-  // Ken-Burns drift on the active hero image + headline words rising in on mount
-  useGSAP(
-    () => {
-      if (prefersReducedMotion() || !heroRef.current) return
-      const words = heroRef.current.querySelectorAll("[data-hero-word]")
-      if (words.length) {
-        gsap.fromTo(
-          words,
-          { yPercent: 110, autoAlpha: 0 },
-          { yPercent: 0, autoAlpha: 1, duration: 0.7, ease: "power2.out", stagger: 0.07 },
-        )
-      }
-      const fade = heroRef.current.querySelectorAll("[data-hero-fade]")
-      if (fade.length) {
-        gsap.fromTo(
-          fade,
-          { y: 14, autoAlpha: 0 },
-          { y: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out", stagger: 0.12, delay: 0.2 },
-        )
-      }
-    },
-    { scope: heroRef },
-  )
-
-  useGSAP(
-    () => {
-      if (prefersReducedMotion() || !heroRef.current) return
-      const image = heroRef.current.querySelector(`[data-hero-image="${currentSlide}"]`)
-      if (image) {
-        gsap.fromTo(
-          image,
-          { scale: 1.12, xPercent: 0.8 },
-          { scale: 1.02, xPercent: -0.8, duration: 9, ease: "none" },
-        )
-      }
-    },
-    { scope: heroRef, dependencies: [currentSlide] },
-  )
-
   const handleSuggestionClick = (id: number) => {
     setShowSuggestions(false)
     router.push(`/tour/${id}`)
@@ -148,86 +101,46 @@ export default function HeroCarousel() {
     return "/placeholder.svg"
   }
 
-  const headline = ["All", "roads", "lead"]
-  const headlineSecondLine = ["to", "extraordinary."]
-
   return (
-    <div ref={heroRef} className="relative w-full z-20">
-      {/* Hero card */}
-      <div className="px-2 sm:px-3">
-        <div className="relative w-full h-[560px] sm:h-[600px] lg:h-[640px] overflow-hidden rounded-3xl">
+    <section ref={heroRef} className="relative z-20 w-full">
+      <div className="relative min-h-[570px] overflow-hidden sm:min-h-[620px] lg:min-h-[650px]">
           {/* Background slides */}
           <div className="absolute inset-0 overflow-hidden">
             {slides.map((slide, index) => (
               <img
                 key={slide.image}
-                data-hero-image={index}
                 src={slide.image}
                 alt={slide.alt}
-                className={`absolute inset-0 w-full h-full object-cover will-change-transform transition-opacity duration-1000 ${
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                   index === currentSlide ? "opacity-100" : "opacity-0"
                 }`}
               />
             ))}
 
-            {/* Warm gradient overlays for legibility */}
-            <div className="absolute inset-0 bg-gradient-to-r from-espresso/90 via-espresso/55 to-espresso/15" />
-            <div className="absolute inset-0 bg-gradient-to-t from-espresso/70 via-transparent to-espresso/35" />
-            <AmbientParticles count={180} />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,19,48,.6),rgba(8,27,67,.38)_47%,rgba(5,19,48,.6))]" />
           </div>
 
           {/* Content */}
-          <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 flex flex-col justify-center">
-            <p
-              data-hero-fade
-              className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-white"
-            >
-              Your Roman story starts here
-            </p>
-
-            <h1 className="mt-5 font-serif text-[2.6rem] leading-[1.08] sm:text-6xl lg:text-[4.1rem] font-semibold text-white">
-              <span className="block">
-                {headline.map((word, i) => (
-                  <span key={`l1-${i}`}>
-                    <span className="inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em]">
-                      <span data-hero-word className="inline-block">
-                        {word}
-                      </span>
-                    </span>{" "}
-                  </span>
-                ))}
-              </span>
-              <span className="block">
-                {headlineSecondLine.map((word, i) => (
-                  <span key={`l2-${i}`}>
-                    <span className="inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em]">
-                      <span data-hero-word className="inline-block">
-                        {word}
-                      </span>
-                    </span>{" "}
-                  </span>
-                ))}
-              </span>
+          <div className="relative mx-auto flex min-h-[570px] max-w-5xl flex-col items-center justify-center px-5 pb-12 pt-5 text-center sm:min-h-[620px] lg:min-h-[650px]">
+            <h1 className="max-w-3xl font-serif text-[2.9rem] font-semibold leading-[.98] tracking-[-.035em] text-white drop-shadow-sm sm:text-6xl lg:text-[4.65rem]">
+              Rome is yours<br />to explore.
             </h1>
 
-            <p
-              data-hero-fade
-              className="mt-5 text-base sm:text-lg text-white/85 max-w-md"
-            >
-              Discover timeless landmarks and unforgettable moments in Rome.
+            <p className="mt-5 max-w-xl text-base font-normal leading-relaxed text-white/95 sm:text-xl">
+              Book landmark tickets and guided tours with local experts.
             </p>
 
             {/* Search bar */}
-            <div data-hero-fade className="mt-9 w-full max-w-3xl" ref={wrapperRef}>
-              <div className="relative rounded-2xl bg-white shadow-warm-lg p-2">
+            <div className="mt-9 w-full max-w-3xl text-left" ref={wrapperRef}>
+              <div className="relative rounded-xl bg-white p-2 shadow-[0_14px_34px_rgba(0,0,0,.25)] sm:p-2.5">
                 <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-0">
                   {/* Experience */}
-                  <div className="flex items-center gap-3 flex-1 min-w-0 px-4 py-2.5">
-                    <Search className="w-5 h-5 text-ink/50 shrink-0" />
+                  <div className="flex min-w-0 flex-1 items-center gap-3 px-3 py-2.5 sm:px-4">
+                    <Search className="h-5 w-5 shrink-0 text-[#252525]/70" strokeWidth={1.8} />
                     <div className="min-w-0 flex-1">
                       <label
                         htmlFor="hero-search"
-                        className="block font-serif text-[15px] font-semibold text-ink leading-tight"
+                        className="block text-[13px] font-bold text-[#252525] leading-tight"
                       >
                         Experience
                       </label>
@@ -250,7 +163,7 @@ export default function HeroCarousel() {
 
                   <span
                     aria-hidden="true"
-                    className="hidden lg:block h-11 w-px bg-ink/10 shrink-0"
+                    className="hidden h-11 w-px shrink-0 bg-[#252525]/20 lg:block"
                   />
 
                   {/* When */}
@@ -258,12 +171,12 @@ export default function HeroCarousel() {
                     <PopoverTrigger asChild>
                       <button
                         type="button"
-                        className="flex items-center gap-3 lg:w-[232px] px-4 py-2.5 rounded-xl text-left transition-colors hover:bg-cream/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/45"
+                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0751b3]/45 sm:px-4 lg:w-[210px]"
                       >
-                        <CalendarDays className="w-5 h-5 text-ink/50 shrink-0" />
+                        <CalendarDays className="h-5 w-5 shrink-0 text-[#252525]/70" strokeWidth={1.8} />
                         <span className="min-w-0 flex-1">
-                          <span className="block font-serif text-[15px] font-semibold text-ink leading-tight">
-                            When
+                          <span className="block text-[13px] font-bold text-[#252525] leading-tight">
+                            Date
                           </span>
                           <span className="block truncate text-sm text-ink/55">
                             {date ? format(date, "EEE, d MMM yyyy") : "Choose a date"}
@@ -302,10 +215,10 @@ export default function HeroCarousel() {
 
                   <button
                     onClick={handleSearch}
-                    className="btn-premium w-full lg:w-auto shrink-0 px-7 py-3.5 rounded-xl"
+                    className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-[#0751b3] px-6 py-3.5 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-[#034594] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0751b3] lg:w-auto"
                   >
-                    Find my experience
-                    <ArrowUpRight size={18} />
+                    Find tours
+                    <ArrowRight size={18} />
                   </button>
                 </div>
 
@@ -362,25 +275,7 @@ export default function HeroCarousel() {
               </div>
             </div>
           </div>
-        </div>
       </div>
-
-      {/* Trust row */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 sm:gap-x-8">
-          {trustPoints.map(({ icon: Icon, label }, index) => (
-            <div key={label} className="flex items-center gap-4 sm:gap-8">
-              {index > 0 && (
-                <span aria-hidden="true" className="h-5 w-px bg-ink/15" />
-              )}
-              <span className="flex items-center gap-2.5 text-sm sm:text-[15px] text-ink/80">
-                <Icon size={20} strokeWidth={1.6} className="text-ink/70" />
-                {label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    </section>
   )
 }

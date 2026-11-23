@@ -1,7 +1,7 @@
 import { prisma } from "@iconic/db";
 import { hashPassword } from "@iconic/db/auth";
 import { serializeUser } from "@iconic/db/serialize";
-import { json } from "../../../_lib/helpers";
+import { json, isValidEmail, normalizePhone } from "../../../_lib/helpers";
 
 export async function POST(req: Request) {
   let body: Record<string, unknown>;
@@ -16,6 +16,10 @@ export async function POST(req: Request) {
   if (!str("first_name")) errors.first_name = ["This field is required."];
   if (!str("last_name")) errors.last_name = ["This field is required."];
   if (!str("email")) errors.email = ["This field is required."];
+  else if (!isValidEmail(str("email"))) errors.email = ["Enter a valid email address."];
+  const phone = normalizePhone(str("phone"));
+  if (!str("phone")) errors.phone = ["WhatsApp number is required."];
+  else if (!phone) errors.phone = ["Enter a valid WhatsApp number, including country code."];
   const password = typeof body.password === "string" ? (body.password as string) : "";
   if (!password) errors.password = ["This field is required."];
   else if (password.length < 8) errors.password = ["Password must be at least 8 characters."];
@@ -32,7 +36,7 @@ export async function POST(req: Request) {
       firstName: str("first_name"),
       lastName: str("last_name"),
       email,
-      phone: str("phone") || null,
+      phone,
       passwordHash: await hashPassword(password),
       role: "customer",
     },

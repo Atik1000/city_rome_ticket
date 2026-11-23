@@ -95,18 +95,22 @@ function RegisterForm() {
                 </div>
 
                 <div className="space-y-1.5">
-                    <label htmlFor="phone" className="text-sm font-medium text-ink">Phone</label>
+                    <label htmlFor="phone" className="text-sm font-medium text-ink">WhatsApp Number</label>
                     <input
                         id="phone"
                         name="phone"
                         type="tel"
                         required
                         autoComplete="tel"
+                        inputMode="tel"
+                        pattern="\+?[\d\s\(\).\-]{7,24}"
+                        title="Enter your WhatsApp number with country code, e.g. +1 234 567 890"
                         value={formData.phone}
                         onChange={handleChange}
                         className={inputClass}
                         placeholder="+1 234 567 890"
                     />
+                    <p className="text-xs text-ink/50">Include your country code. We use it to reach you about your booking.</p>
                 </div>
 
                 <div className="space-y-1.5">

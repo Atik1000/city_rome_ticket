@@ -1,7 +1,16 @@
 import { prisma } from "@iconic/db";
 import { getAuthUser } from "@iconic/db/auth";
 import { serializeBooking, paginated } from "@iconic/db/serialize";
-import { json, computeItemPrice, toInt, type PartyCounts } from "../../_lib/helpers";
+import { after } from "next/server";
+import {
+  json,
+  computeItemPrice,
+  toInt,
+  isValidEmail,
+  normalizePhone,
+  type PartyCounts,
+} from "../../_lib/helpers";
+import { sendBookingNotification } from "@/lib/booking-email";
 
 interface PendingItem extends Required<PartyCounts> {
   tourId: number;
@@ -40,6 +49,22 @@ export async function POST(req: Request) {
   }
 
   const user = await getAuthUser(req);
+
+  // Every booking must carry an email and a WhatsApp number. Guests send both;
+  // signed-in customers fall back to their profile.
+  const bodyStr = (key: string) => (typeof body[key] === "string" ? body[key].trim() : "");
+  const contactErrors: Record<string, string[]> = {};
+  const contactEmail = (bodyStr("email") || user?.email || "").toLowerCase();
+  if (!contactEmail) contactErrors.email = ["Email is required."];
+  else if (!isValidEmail(contactEmail)) contactErrors.email = ["Enter a valid email address."];
+  const rawPhone = bodyStr("phone") || user?.phone || "";
+  const contactPhone = normalizePhone(rawPhone);
+  if (!rawPhone) contactErrors.phone = ["WhatsApp number is required."];
+  else if (!contactPhone) contactErrors.phone = ["Enter a valid WhatsApp number, including country code."];
+  if (Object.keys(contactErrors).length > 0) return json(contactErrors, 400);
+  const contactName =
+    bodyStr("full_name") || (user ? `${user.firstName} ${user.lastName}`.trim() : "") || null;
+
   const pending: PendingItem[] = [];
 
   if (body.book_now === "true" || body.book_now === true) {
@@ -170,10 +195,10 @@ export async function POST(req: Request) {
           totalPrice,
           travelerDetails: JSON.stringify(travelerDetails),
           status: "pending",
-          fullName: body.full_name ?? null,
-          email: body.email ?? null,
-          country: body.country ?? null,
-          phone: body.phone ?? null,
+          fullName: contactName,
+          email: contactEmail,
+          country: bodyStr("country") || null,
+          phone: contactPhone,
           items: { create: itemsData },
         },
       });
@@ -185,11 +210,46 @@ export async function POST(req: Request) {
         await tx.cartItem.deleteMany({ where: { id: { in: consumed } } });
       }
 
+      // Accounts created before the number became mandatory: keep what they just gave us.
+      if (user && !user.phone && contactPhone) {
+        await tx.user.update({ where: { id: user.id }, data: { phone: contactPhone } });
+      }
+
       return tx.booking.findUniqueOrThrow({
         where: { id: created.id },
         include: bookingInclude,
       });
     });
+
+    // Notify the owner once the response is out, so SMTP latency never slows checkout.
+    after(() =>
+      sendBookingNotification({
+        id: booking.id,
+        status: booking.status,
+        userType: booking.userType,
+        totalPrice: booking.totalPrice,
+        createdAt: booking.createdAt,
+        fullName: booking.fullName,
+        email: booking.email,
+        phone: booking.phone,
+        country: booking.country,
+        travelerNames: travelerDetails
+          .map((t: any) => (typeof t?.name === "string" ? t.name.trim() : ""))
+          .filter(Boolean),
+        items: booking.items.map((i) => ({
+          tourTitle: i.tour.title,
+          date: i.timeSlot.tourDate.date,
+          startTime: i.timeSlot.startTime,
+          endTime: i.timeSlot.endTime,
+          numAdults: i.numAdults,
+          numChildren: i.numChildren,
+          numInfants: i.numInfants,
+          numYouth: i.numYouth,
+          numStudentEu: i.numStudentEu,
+          itemPrice: i.itemPrice,
+        })),
+      })
+    );
 
     return json(serializeBooking(booking), 201);
   } catch (e: any) {

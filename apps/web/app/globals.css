@@ -199,15 +199,15 @@
     );
   }
 
-  /* Primary CTA: subtle single-hue blue gradient + glow on hover */
+  /* Primary CTA: compact high-contrast treatment matching the ticket dashboard. */
   .btn-premium {
     @apply inline-flex items-center justify-center gap-2 font-semibold text-white rounded-xl cursor-pointer transition-all duration-200;
-    background-image: linear-gradient(to bottom, #0a4aa8, var(--color-brand) 55%, var(--color-brand-dark));
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 1px 2px rgb(42 27 22 / 0.2);
+    background-image: linear-gradient(135deg, #f65a13, #e84408);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 3px 8px rgb(183 55 4 / 0.22);
   }
   .btn-premium:hover {
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), var(--shadow-glow-brand);
-    filter: brightness(1.04);
+    filter: brightness(1.03);
   }
   .btn-premium:active {
     filter: brightness(0.97);
