@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { registerUser } from "@/services/authService"
 import { AuthShell } from "@/components/auth/auth-shell"
+import { WhatsAppInput } from "@/components/whatsapp-input"
 
 const inputClass =
     "w-full px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition-all placeholder:text-ink/35"
@@ -96,21 +97,14 @@ function RegisterForm() {
 
                 <div className="space-y-1.5">
                     <label htmlFor="phone" className="text-sm font-medium text-ink">WhatsApp Number</label>
-                    <input
+                    <WhatsAppInput
                         id="phone"
-                        name="phone"
-                        type="tel"
-                        required
-                        autoComplete="tel"
-                        inputMode="tel"
-                        pattern="\+?[\d\s\(\).\-]{7,24}"
-                        title="Enter your WhatsApp number with country code, e.g. +1 234 567 890"
                         value={formData.phone}
-                        onChange={handleChange}
-                        className={inputClass}
-                        placeholder="+1 234 567 890"
+                        onChange={(phone) => setFormData((d) => ({ ...d, phone }))}
+                        fieldClassName="rounded-xl border border-ink/15 py-3 focus:border-gold focus:ring-2 focus:ring-gold/25"
+                        activeItemClassName="bg-cream text-brand-dark"
                     />
-                    <p className="text-xs text-ink/50">Include your country code. We use it to reach you about your booking.</p>
+                    <p className="text-xs text-ink/50">We use it to reach you about your booking.</p>
                 </div>
 
                 <div className="space-y-1.5">
