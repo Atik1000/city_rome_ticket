@@ -165,11 +165,11 @@ export default function CheckoutPage() {
 
         if (loggedIn) {
             // Keep the account's WhatsApp number current with what they confirmed here.
-            if (guestDetails.phone && guestDetails.phone !== profilePhone) {
+            if (guestDetails.phone.trim() && guestDetails.phone.trim() !== profilePhone) {
                 setSavingContact(true)
                 try {
-                    await updateUserProfile({ phone: guestDetails.phone })
-                    setProfilePhone(guestDetails.phone)
+                    await updateUserProfile({ phone: guestDetails.phone.trim() })
+                    setProfilePhone(guestDetails.phone.trim())
                 } catch (error: any) {
                     showMessage("Error", error.message || "Could not save your WhatsApp number. Please check it and try again.")
                     return
@@ -228,7 +228,7 @@ export default function CheckoutPage() {
             payload.full_name = guestDetails.full_name
             payload.email = guestDetails.email
             payload.country = guestDetails.country
-            payload.phone = guestDetails.phone
+            payload.phone = guestDetails.phone.trim()
 
             let token = undefined;
             if (loggedIn) {

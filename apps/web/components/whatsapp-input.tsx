@@ -21,7 +21,7 @@ export const findCountryByName = (name: string | null | undefined) => countries.
  * `preferIso` breaks ties between countries that share a dial code.
  */
 export function parseWhatsApp(value: string, preferIso?: string | null): { iso: string | null; local: string } {
-    const raw = (value || "").trim()
+    const raw = (value || "").replace(/^\s+/, "")
     if (!raw.startsWith("+")) return { iso: preferIso ?? null, local: raw }
 
     const digits = raw.replace(/\D/g, "")
@@ -95,9 +95,10 @@ export function WhatsAppInput({
     }, [local, selected])
 
     const emit = (country: Country | null, localPart: string) => {
-        const trimmed = localPart.trim()
-        if (!trimmed) return onChange("")
-        onChange(country ? `${dialLabel(country)} ${trimmed}` : trimmed)
+        // Only trim the front: a trailing space is the visitor mid-typing "333 123".
+        const typed = localPart.replace(/^\s+/, "")
+        if (!typed.trim()) return onChange("")
+        onChange(country ? `${dialLabel(country)} ${typed}` : typed)
     }
 
     return (
