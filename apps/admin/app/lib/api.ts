@@ -167,6 +167,10 @@ export interface Booking {
     updated_at: string;
     user: number | null;
     guest_user: number | null;
+    full_name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    country?: string | null;
 }
 
 export interface BookingResponse {

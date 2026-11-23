@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ChevronLeft, ChevronRight, X, AlertCircle, Calendar, Clock, Users, Euro, Mail, User } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, AlertCircle, Calendar, Clock, Users, Euro, Mail, User, Phone, Globe } from 'lucide-react'
 import { getBookingById, Booking, TourTime, TourPlan } from '@/app/lib/api'
 import { useAuth } from '@/app/contexts/auth-context'
 import { BookingFormModal } from '@/components/dashboard/booking-form-modal'
@@ -376,6 +376,49 @@ export default function BookingDetailsPage() {
                   )
                 })
               )}
+            </div>
+          </Card>
+
+          {/* Customer Contact */}
+          <Card className="p-6 border-border shadow-sm">
+            <h2 className="font-display text-lg font-semibold tracking-tight text-foreground mb-6">Customer Contact</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { icon: User, label: 'Name', value: booking.full_name, href: undefined },
+                { icon: Mail, label: 'Email', value: booking.email, href: booking.email ? `mailto:${booking.email}` : undefined },
+                {
+                  icon: Phone,
+                  label: 'WhatsApp',
+                  value: booking.phone,
+                  href: booking.phone ? `https://wa.me/${booking.phone.replace(/\D/g, '')}` : undefined,
+                },
+                { icon: Globe, label: 'Country', value: booking.country, href: undefined },
+              ].map(({ icon: Icon, label, value, href }) => (
+                <div key={label} className="p-4 bg-secondary/30 rounded-lg border border-border flex items-start gap-3">
+                  <div className="p-2 bg-background rounded-full text-muted-foreground">
+                    <Icon size={16} />
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-xs text-muted-foreground">{label}</p>
+                    {value ? (
+                      href ? (
+                        <a
+                          href={href}
+                          target={href.startsWith('http') ? '_blank' : undefined}
+                          rel="noopener noreferrer"
+                          className="font-semibold text-sm text-primary hover:underline truncate block"
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <p className="font-semibold text-foreground text-sm truncate">{value}</p>
+                      )
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">Not provided</p>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </Card>
 

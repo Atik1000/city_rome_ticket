@@ -155,7 +155,7 @@ function DatePicker({
   if (!isOpen) return null
 
   return (
-    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 md:p-6 z-50 w-[90vw] max-w-[350px] md:max-w-[700px] md:w-[700px]">
+    <div className="absolute top-full left-1/2 -translate-x-1/2 md:left-auto md:right-0 md:translate-x-0 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 md:p-6 z-50 w-[90vw] max-w-[350px] md:max-w-[min(700px,calc(100vw-2rem))] md:w-[700px]">
       <div className="flex justify-between items-start">
         {/* Left Arrow */}
         <button onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded mt-1">
@@ -1055,9 +1055,9 @@ export default function TourDetailPage({ tourId }: { tourId: number }) {
 
           {/* Right Column - Booking Panel */}
           <div className="lg:col-span-1">
-            <div className="bg-white border border-gold/30 rounded-2xl p-6 sticky top-24 shadow-warm-lg overflow-hidden">
+            <div className="bg-white border border-gold/30 rounded-2xl p-6 sticky top-24 shadow-warm-lg">
               {/* Gold hairline across the top, like a fine receipt */}
-              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
 
               {/* Price */}
               <div className="mb-6 pb-5 border-b border-dashed border-gold/30">

@@ -75,7 +75,7 @@ export function BookingSuccessModal({
                     {email && (
                         <p className="mt-4 flex items-center justify-center gap-2 text-sm text-ink/55">
                             <Mail size={15} className="text-gold shrink-0" />
-                            Confirmation sent to {email}
+                            Confirmation email on its way to {email}
                         </p>
                     )}
 
