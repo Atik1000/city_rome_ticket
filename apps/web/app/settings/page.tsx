@@ -251,9 +251,15 @@ export default function SettingsPage() {
                                             />
                                         </div>
                                         <div className="relative">
-                                            <label className="absolute -top-2.5 left-3 px-1 bg-white text-xs text-gray-500 z-10">Mobile Phone</label>
+                                            <label className="absolute -top-2.5 left-3 px-1 bg-white text-xs text-gray-500 z-10">WhatsApp Number</label>
                                             <input
-                                                type="text"
+                                                type="tel"
+                                                inputMode="tel"
+                                                autoComplete="tel"
+                                                required
+                                                pattern="\+?[\d\s\(\).\-]{7,24}"
+                                                title="Enter your WhatsApp number with country code, e.g. +1 234 567 890"
+                                                placeholder="+1 234 567 890"
                                                 name="phone"
                                                 value={formData.phone}
                                                 onChange={handleChange}

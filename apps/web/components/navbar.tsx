@@ -99,23 +99,23 @@ export default function Navbar() {
             <Logo />
 
             <div className="hidden items-center gap-8 md:flex">
-              <Link href="/tour" className="relative group text-sm font-medium text-slate-700 transition-colors hover:text-[#ed4b0c]">
+              <Link href="/tour" className="relative group text-sm font-medium text-slate-700 transition-colors hover:text-[#234f8b]">
                 {t.nav.tours}
-                <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-[#ed4b0c] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-[#234f8b] transition-all duration-300 group-hover:w-full" />
               </Link>
-              <Link href="/about-us" className="relative group text-sm font-medium text-slate-700 transition-colors hover:text-[#ed4b0c]">
+              <Link href="/about-us" className="relative group text-sm font-medium text-slate-700 transition-colors hover:text-[#234f8b]">
                 {t.nav.aboutUs}
-                <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-[#ed4b0c] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-[#234f8b] transition-all duration-300 group-hover:w-full" />
               </Link>
-              <Link href="/contact" className="relative group text-sm font-medium text-slate-700 transition-colors hover:text-[#ed4b0c]">
+              <Link href="/contact" className="relative group text-sm font-medium text-slate-700 transition-colors hover:text-[#234f8b]">
                 {t.nav.contact}
-                <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-[#ed4b0c] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-2 left-0 h-0.5 w-0 bg-[#234f8b] transition-all duration-300 group-hover:w-full" />
               </Link>
             </div>
 
             {/* Right menu items */}
             <div className="flex items-center gap-4 sm:gap-5">
-              <Link href="/cart" aria-label={t.nav.cart} className="relative group flex items-center gap-1.5 text-slate-700 hover:text-[#ed4b0c] cursor-pointer transition-colors">
+              <Link href="/cart" aria-label={t.nav.cart} className="relative group flex items-center gap-1.5 text-slate-700 hover:text-[#234f8b] cursor-pointer transition-colors">
                 <div className="relative">
                   <ShoppingCart size={20} />
                   <AnimatePresence>
@@ -139,7 +139,7 @@ export default function Navbar() {
               <div className="relative group z-50" ref={languageRef}>
                 <button
                   onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-                  className="relative group flex items-center gap-1.5 text-slate-700 hover:text-[#ed4b0c] cursor-pointer transition-colors"
+                  className="relative group flex items-center gap-1.5 text-slate-700 hover:text-[#234f8b] cursor-pointer transition-colors"
                 >
                   <Globe size={20} />
                   <span className="hidden text-xs font-semibold uppercase sm:inline">
@@ -224,7 +224,7 @@ export default function Navbar() {
               <div className="relative group z-50" ref={profileRef}>
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-slate-800 hover:border-[#ed4b0c]/40 hover:text-[#ed4b0c] cursor-pointer transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-slate-800 hover:border-[#234f8b]/40 hover:text-[#234f8b] cursor-pointer transition-colors"
                 >
                   <User size={20} />
                   <span className="hidden text-sm font-medium sm:inline">{userName}</span>

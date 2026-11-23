@@ -78,7 +78,7 @@ export default function DiscountModal() {
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
         <div className="bg-white rounded-2xl shadow-warm-lg border border-gold/30 w-full max-w-md overflow-hidden">
           {/* Brand header */}
-          <div className="bg-gradient-to-b from-[#0a4aa8] to-brand px-6 py-3 relative flex items-center justify-between gap-4">
+          <div className="bg-gradient-to-b from-[#3063a6] to-brand px-6 py-3 relative flex items-center justify-between gap-4">
             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-light/70 to-transparent" />
             <div className="flex items-center gap-3 justify-center">
               <div className="flex-shrink-0">

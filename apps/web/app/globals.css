@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ------------------------------------------------------------------
-   Iconic Rome Tickets — warm Roman palette
-   ivory/cream canvas, royal blue primary (#003B95), antique gold accent
+   Iconic Rome Tours — palette drawn from the logo blue (#AEC6E6)
+   ivory/cream canvas, steel-blue primary (#234F8B), antique gold accent
 ------------------------------------------------------------------- */
 :root {
   --background: oklch(0.977 0.008 85);          /* ivory #FAF7F2 */
@@ -17,8 +17,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.275 0.022 55);
 
-  /* Primary: royal blue #003B95 */
-  --primary: #003b95;
+  /* Primary: steel blue #234F8B (logo hue 214°) */
+  --primary: #234f8b;
   --primary-foreground: oklch(0.985 0.005 85);
 
   /* Secondary: warm sand */
@@ -37,9 +37,9 @@
 
   --border: oklch(0.905 0.016 80);
   --input: oklch(0.905 0.016 80);
-  --ring: #003b95;
+  --ring: #234f8b;
 
-  --chart-1: #003b95;
+  --chart-1: #234f8b;
   --chart-2: oklch(0.70 0.115 75);              /* gold */
   --chart-3: oklch(0.58 0.11 40);               /* clay */
   --chart-4: oklch(0.42 0.06 150);              /* laurel green */
@@ -49,12 +49,12 @@
 
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.275 0.022 55);
-  --sidebar-primary: #003b95;
+  --sidebar-primary: #234f8b;
   --sidebar-primary-foreground: oklch(0.985 0.005 85);
   --sidebar-accent: oklch(0.955 0.012 83);
   --sidebar-accent-foreground: oklch(0.275 0.022 55);
   --sidebar-border: oklch(0.905 0.016 80);
-  --sidebar-ring: #003b95;
+  --sidebar-ring: #234f8b;
 }
 
 .dark {
@@ -67,7 +67,7 @@
   --popover: oklch(0.27 0.018 55);
   --popover-foreground: oklch(0.96 0.008 85);
 
-  --primary: #5b8fe6;
+  --primary: #79a1d8;
   --primary-foreground: oklch(0.985 0.005 85);
 
   --secondary: oklch(0.32 0.02 55);
@@ -86,7 +86,7 @@
   --input: oklch(0.34 0.02 55);
   --ring: oklch(0.70 0.115 75);
 
-  --chart-1: #5b8fe6;
+  --chart-1: #79a1d8;
   --chart-2: oklch(0.70 0.115 75);
   --chart-3: oklch(0.58 0.11 40);
   --chart-4: oklch(0.55 0.07 150);
@@ -94,7 +94,7 @@
 
   --sidebar: oklch(0.22 0.015 55);
   --sidebar-foreground: oklch(0.96 0.008 85);
-  --sidebar-primary: #5b8fe6;
+  --sidebar-primary: #79a1d8;
   --sidebar-primary-foreground: oklch(0.985 0.005 85);
   --sidebar-accent: oklch(0.32 0.02 55);
   --sidebar-accent-foreground: oklch(0.96 0.008 85);
@@ -137,22 +137,23 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* Brand utility colors (bg-brand, text-gold, ring-cream, ...) */
-  --color-brand: #003b95;
-  --color-brand-dark: #002c70;
+  --color-brand: #234f8b;
+  --color-brand-dark: #193c6b;
+  --color-brand-light: #aec6e6;     /* logo blue: tints, highlights */
   --color-gold: #c8963e;
   --color-gold-light: #e3c88f;
   --color-cream: #f3ebdd;
   --color-cream-dark: #e9dcc6;
   --color-ink: #2a2118;
-  --color-espresso: #003b95;        /* brand-blue dark sections */
-  --color-espresso-light: #0a4aa8;  /* raised surfaces on blue */
+  --color-espresso: #234f8b;        /* brand-blue dark sections */
+  --color-espresso-light: #3063a6;  /* raised surfaces on blue */
   --color-laurel: #4e7a5a;          /* laurel green for positive checks */
 
   /* Warm-tinted layered shadows (shadow-warm, shadow-warm-md, shadow-warm-lg, shadow-glow-brand) */
   --shadow-warm: 0 1px 2px rgb(42 27 22 / 0.05), 0 3px 10px -2px rgb(42 27 22 / 0.08);
   --shadow-warm-md: 0 2px 4px rgb(42 27 22 / 0.05), 0 8px 24px -6px rgb(42 27 22 / 0.14);
-  --shadow-warm-lg: 0 4px 8px rgb(42 27 22 / 0.06), 0 18px 44px -12px rgb(0 44 112 / 0.24);
-  --shadow-glow-brand: 0 2px 6px rgb(42 27 22 / 0.08), 0 10px 26px -8px rgb(0 59 149 / 0.45);
+  --shadow-warm-lg: 0 4px 8px rgb(42 27 22 / 0.06), 0 18px 44px -12px rgb(25 60 107 / 0.24);
+  --shadow-glow-brand: 0 2px 6px rgb(42 27 22 / 0.08), 0 10px 26px -8px rgb(35 79 139 / 0.45);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

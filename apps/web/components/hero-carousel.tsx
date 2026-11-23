@@ -17,13 +17,9 @@ interface TourSuggestion {
   featured_image?: string
 }
 
-const slides = [
-  { image: "/images/carousel1.jpg", alt: "Ancient Roman columns" },
-  { image: "/images/carousel2.jpg", alt: "Historic Rome architecture" },
-]
+const heroImage = { src: "/images/carousel1.jpg", alt: "Ancient Roman columns" }
 
 export default function HeroCarousel() {
-  const [currentSlide, setCurrentSlide] = useState(0)
   const [searchQuery, setSearchQuery] = useState("")
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [dateOpen, setDateOpen] = useState(false)
@@ -33,13 +29,6 @@ export default function HeroCarousel() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 6000)
-    return () => clearInterval(timer)
-  }, [])
 
   // Handle outside click to close suggestions
   useEffect(() => {
@@ -104,18 +93,13 @@ export default function HeroCarousel() {
   return (
     <section ref={heroRef} className="relative z-20 w-full">
       <div className="relative min-h-[570px] overflow-hidden sm:min-h-[620px] lg:min-h-[650px]">
-          {/* Background slides */}
+          {/* Background image */}
           <div className="absolute inset-0 overflow-hidden">
-            {slides.map((slide, index) => (
-              <img
-                key={slide.image}
-                src={slide.image}
-                alt={slide.alt}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            ))}
+            <img
+              src={heroImage.src}
+              alt={heroImage.alt}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
 
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,19,48,.6),rgba(8,27,67,.38)_47%,rgba(5,19,48,.6))]" />
           </div>
@@ -171,7 +155,7 @@ export default function HeroCarousel() {
                     <PopoverTrigger asChild>
                       <button
                         type="button"
-                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0751b3]/45 sm:px-4 lg:w-[210px]"
+                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3063a6]/45 sm:px-4 lg:w-[210px]"
                       >
                         <CalendarDays className="h-5 w-5 shrink-0 text-[#252525]/70" strokeWidth={1.8} />
                         <span className="min-w-0 flex-1">
@@ -215,7 +199,7 @@ export default function HeroCarousel() {
 
                   <button
                     onClick={handleSearch}
-                    className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-[#0751b3] px-6 py-3.5 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-[#034594] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0751b3] lg:w-auto"
+                    className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-[#3063a6] px-6 py-3.5 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-[#193c6b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#3063a6] lg:w-auto"
                   >
                     Find tours
                     <ArrowRight size={18} />

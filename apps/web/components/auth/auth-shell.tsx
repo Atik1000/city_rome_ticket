@@ -22,7 +22,7 @@ export function AuthShell({ eyebrow, title, subtitle, children }: AuthShellProps
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: "url('/images/carousel1.jpg')" }}
                 />
-                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#001a45]/95 via-[#002c70]/70 to-[#003b95]/35" />
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0b1c32]/95 via-[#193c6b]/70 to-[#234f8b]/35" />
                 <div aria-hidden="true" className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-gold/60 to-transparent" />
 
                 <div className="relative z-10 p-10">

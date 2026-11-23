@@ -66,7 +66,7 @@ export default function LoginPage() {
           alt="The Colosseum, Rome"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#001a45]/95 via-[#002c70]/75 to-[#003b95]/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b1c32]/95 via-[#193c6b]/75 to-[#234f8b]/40" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-white/10 border border-[#E9C77F]/40 flex items-center justify-center">

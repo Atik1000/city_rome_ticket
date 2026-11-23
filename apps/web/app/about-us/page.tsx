@@ -188,7 +188,7 @@ export default function AboutUsPage() {
 
         {/* Closing CTA */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-20">
-          <div className="relative overflow-hidden rounded-3xl bg-[linear-gradient(165deg,#0a4aa8_0%,#003b95_45%,#002c70_100%)] text-white px-7 sm:px-10 lg:px-14 py-10 lg:py-12">
+          <div className="relative overflow-hidden rounded-3xl bg-[linear-gradient(165deg,#3063a6_0%,#234f8b_45%,#193c6b_100%)] text-white px-7 sm:px-10 lg:px-14 py-10 lg:py-12">
             <div
               aria-hidden="true"
               className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"

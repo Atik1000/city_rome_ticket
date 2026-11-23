@@ -92,7 +92,7 @@ export default function Contact() {
           <div className="overflow-hidden rounded-3xl border border-gold/25 bg-white shadow-warm-lg">
             <div className="grid grid-cols-1 lg:grid-cols-12">
               {/* Left: details panel */}
-              <aside className="lg:col-span-5 relative bg-[linear-gradient(165deg,#0a4aa8_0%,#003b95_45%,#002c70_100%)] text-white p-7 sm:p-9">
+              <aside className="lg:col-span-5 relative bg-[linear-gradient(165deg,#3063a6_0%,#234f8b_45%,#193c6b_100%)] text-white p-7 sm:p-9">
                 <div
                   aria-hidden="true"
                   className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"

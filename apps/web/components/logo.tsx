@@ -2,7 +2,9 @@ import Link from "next/link"
 import Image from "next/image"
 
 /**
- * Official wordmark used across the storefront.
+ * Iconic Rome Tours logo.
+ * tone="dark"  → navy/blue artwork for light backgrounds (navbar, auth pages).
+ * tone="light" → original pale-blue/white artwork for dark backgrounds (footer).
  */
 export default function Logo({
   tone = "dark",
@@ -12,14 +14,14 @@ export default function Logo({
   className?: string
 }) {
   return (
-    <Link href="/" aria-label="City Rome Tickets home" className={`group inline-flex items-center ${className}`}>
+    <Link href="/" aria-label="Iconic Rome Tours home" className={`group inline-flex items-center ${className}`}>
       <Image
-        src="/images/logo_city_roam_tickets-transparent.png"
-        alt="City Rome Tickets"
-        width={666}
-        height={374}
+        src={tone === "light" ? "/images/logo-iconic-rome-tours-light.png" : "/images/logo-iconic-rome-tours.png"}
+        alt="Iconic Rome Tours"
+        width={458}
+        height={237}
         priority
-        className={`h-auto w-[126px] object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:w-[142px] ${tone === "light" ? "brightness-0 invert" : ""}`}
+        className="h-auto w-[104px] object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:w-[118px]"
       />
     </Link>
   )

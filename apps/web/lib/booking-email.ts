@@ -124,11 +124,11 @@ export async function sendBookingNotification(b: BookingEmailData): Promise<void
 
     const td = 'style="padding:6px 12px 6px 0;vertical-align:top"';
     const th = 'style="padding:6px 12px 6px 0;vertical-align:top;color:#666;white-space:nowrap;text-align:left;font-weight:normal"';
-    const h2 = 'style="font-size:15px;margin:24px 0 8px;color:#003b95"';
+    const h2 = 'style="font-size:15px;margin:24px 0 8px;color:#234f8b"';
     const row = (k: string, vHtml: string) => `<tr><th ${th}>${esc(k)}</th><td ${td}>${vHtml}</td></tr>`;
 
     const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1a1a1a;max-width:640px">
-<h1 style="font-size:20px;margin:0 0 4px;color:#003b95">New booking #${b.id}</h1>
+<h1 style="font-size:20px;margin:0 0 4px;color:#234f8b">New booking #${b.id}</h1>
 <p style="margin:0;color:#666">Iconic Rome Tours website · ${esc(created)} (Rome time)</p>
 <h2 ${h2}>Client</h2>
 <table cellpadding="0" cellspacing="0">${clientRows.map(([k, , v]) => row(k, v)).join("")}</table>
