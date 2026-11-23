@@ -6,6 +6,7 @@ import Footer from "@/components/footer"
 import { User, Bell, CreditCard, ChevronDown, Loader2, AlertTriangle, Trash2, History, Calendar, DollarSign, Tag } from "lucide-react"
 import { getUserProfile, updateUserProfile, deleteUserAccount, removeTokens } from "@/services/authService"
 import { getBookingHistory } from "@/services/tourService"
+import { WhatsAppInput, parseWhatsApp } from "@/components/whatsapp-input"
 import { useRouter } from "next/navigation"
 import {
     AlertDialog,
@@ -121,6 +122,12 @@ export default function SettingsPage() {
     }
 
     const handleSave = async () => {
+        // WhatsApp is required, with a country code picked from the list.
+        const whatsapp = parseWhatsApp(formData.phone)
+        if (!whatsapp.iso || whatsapp.local.replace(/\D/g, "").length < 4) {
+            showAlert("WhatsApp required", "Select your country code and enter your WhatsApp number.", 'error')
+            return
+        }
         setSaveLoading(true)
         try {
             let formattedDob = null
@@ -251,19 +258,13 @@ export default function SettingsPage() {
                                             />
                                         </div>
                                         <div className="relative">
-                                            <label className="absolute -top-2.5 left-3 px-1 bg-white text-xs text-gray-500 z-10">WhatsApp Number</label>
-                                            <input
-                                                type="tel"
-                                                inputMode="tel"
-                                                autoComplete="tel"
-                                                required
-                                                pattern="\+?[\d\s\(\).\-]{7,24}"
-                                                title="Enter your WhatsApp number with country code, e.g. +1 234 567 890"
-                                                placeholder="+1 234 567 890"
-                                                name="phone"
+                                            <label className="absolute -top-2.5 left-3 px-1 bg-white text-xs text-gray-500 z-10">WhatsApp</label>
+                                            <WhatsAppInput
+                                                id="settings-whatsapp"
                                                 value={formData.phone}
-                                                onChange={handleChange}
-                                                className="w-full px-4 py-4 border border-ink/15 rounded-xl focus:border-gold focus:ring-2 focus:ring-gold/25 outline-none transition font-medium"
+                                                onChange={(phone) => setFormData(prev => ({ ...prev, phone }))}
+                                                fieldClassName="rounded-xl border border-ink/15 py-4 px-4 font-medium focus:border-gold focus:ring-2 focus:ring-gold/25"
+                                                activeItemClassName="bg-cream text-brand-dark"
                                             />
                                         </div>
                                     </div>

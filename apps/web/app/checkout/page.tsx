@@ -417,7 +417,7 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="whatsapp" className="block text-sm font-semibold text-ink mb-1.5">WhatsApp Number</label>
+                                    <label htmlFor="whatsapp" className="block text-sm font-semibold text-ink mb-1.5">WhatsApp</label>
                                     <WhatsAppInput
                                         value={guestDetails.phone}
                                         onChange={(phone) => setGuestDetails((d) => ({ ...d, phone }))}

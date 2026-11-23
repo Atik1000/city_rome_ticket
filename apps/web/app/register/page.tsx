@@ -96,7 +96,7 @@ function RegisterForm() {
                 </div>
 
                 <div className="space-y-1.5">
-                    <label htmlFor="phone" className="text-sm font-medium text-ink">WhatsApp Number</label>
+                    <label htmlFor="phone" className="text-sm font-medium text-ink">WhatsApp</label>
                     <WhatsAppInput
                         id="phone"
                         value={formData.phone}
