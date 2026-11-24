@@ -106,8 +106,11 @@ export default function CheckoutPage() {
             }
         }
 
-        // Check for Book Now data first
-        const bookNowDataStr = localStorage.getItem('bookNowData')
+        // Book Now opens /checkout?mode=book_now; anything else (the cart) books the cart.
+        // A leftover bookNowData from an abandoned Book Now must never replace the cart.
+        const wantsBookNow = new URLSearchParams(window.location.search).get('mode') === 'book_now'
+        if (!wantsBookNow) localStorage.removeItem('bookNowData')
+        const bookNowDataStr = wantsBookNow ? localStorage.getItem('bookNowData') : null
         let bookNowMode = false
         if (bookNowDataStr) {
             try {
@@ -485,7 +488,6 @@ export default function CheckoutPage() {
                 }}
                 bookingId={successBooking.id}
                 totalPrice={successBooking.total_price}
-                email={successBooking.email}
             />
 
         </div>

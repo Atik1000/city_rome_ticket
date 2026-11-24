@@ -5,7 +5,7 @@ import React from "react"
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
-import { Eye, EyeOff, Landmark, ShieldCheck, Ticket, CalendarCheck } from 'lucide-react'
+import { Eye, EyeOff, ShieldCheck, Ticket, CalendarCheck } from 'lucide-react'
 import { useAuth } from '@/app/contexts/auth-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -68,16 +68,18 @@ export default function LoginPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b1c32]/95 via-[#193c6b]/75 to-[#234f8b]/40" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-white/10 border border-[#E9C77F]/40 flex items-center justify-center">
-              <Landmark size={22} className="text-white" />
-            </div>
-            <div className="leading-tight">
-              <p className="text-white font-display font-semibold text-lg tracking-tight">Iconic Rome</p>
-              <p className="text-[10px] uppercase tracking-[0.25em] text-white font-semibold">
-                Admin Panel
-              </p>
-            </div>
+          <div className="leading-tight">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo-iconic-rome-tours-light.png"
+              alt="Iconic Rome Tours"
+              width={458}
+              height={237}
+              className="h-auto w-[170px] object-contain"
+            />
+            <p className="mt-2 text-[10px] uppercase tracking-[0.25em] text-white font-semibold">
+              Admin Panel
+            </p>
           </div>
 
           <div className="space-y-8 max-w-lg">
@@ -122,16 +124,18 @@ export default function LoginPage() {
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
           {/* Brand mark (visible where the hero panel is hidden) */}
-          <div className="flex items-center gap-3 mb-10 lg:hidden">
-            <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center shadow-md ring-1 ring-gold/40">
-              <Landmark size={22} className="text-primary-foreground" />
-            </div>
-            <div className="leading-tight">
-              <p className="font-display font-semibold text-lg tracking-tight text-foreground">Iconic Rome</p>
-              <p className="text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">
-                Admin Panel
-              </p>
-            </div>
+          <div className="mb-10 lg:hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo-iconic-rome-tours.png"
+              alt="Iconic Rome Tours"
+              width={458}
+              height={237}
+              className="h-auto w-[140px] object-contain"
+            />
+            <p className="mt-2 text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">
+              Admin Panel
+            </p>
           </div>
 
           <div className="relative rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-warm-lg overflow-hidden">

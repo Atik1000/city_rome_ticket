@@ -565,7 +565,7 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
 
         // Save to local storage
         localStorage.setItem('bookNowData', JSON.stringify(payload))
-        router.push('/checkout')
+        router.push('/checkout?mode=book_now')
     }
 
     // Generate next 14 days for the horizontal strip

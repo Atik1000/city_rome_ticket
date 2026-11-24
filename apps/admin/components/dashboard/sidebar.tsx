@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import { motion, LayoutGroup, useReducedMotion } from 'framer-motion'
 import {
   LayoutDashboard,
-  Landmark,
   Plane,
   BookOpen,
   MessageSquare,
@@ -130,18 +129,30 @@ export function Sidebar({ isMobile = false, onClose, isCollapsed = false }: Side
             isCollapsed && !isMobile ? 'justify-center' : ''
           )}
         >
-          <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center flex-shrink-0 shadow-md ring-1 ring-gold/50">
-            <Landmark size={20} className="text-sidebar-primary-foreground" />
-          </div>
-          {shouldShowLabels && (
+          {shouldShowLabels ? (
             <div className="min-w-0">
-              <p className="font-display font-semibold text-lg leading-tight tracking-tight text-sidebar-foreground truncate">
-                Iconic Rome
-              </p>
-              <p className="text-[10px] uppercase tracking-[0.22em] text-white font-semibold">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo-iconic-rome-tours-light.png"
+                alt="Iconic Rome Tours"
+                width={458}
+                height={237}
+                className="h-auto w-[120px] object-contain"
+              />
+              <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-white font-semibold">
                 Admin Panel
               </p>
             </div>
+          ) : (
+            // Collapsed rail: the full wordmark is too wide, so show just the hexagon mark.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/images/logo-iconic-rome-tours-mark-light.png"
+              alt="Iconic Rome Tours"
+              width={245}
+              height={245}
+              className="w-12 h-12 flex-shrink-0 object-contain"
+            />
           )}
         </div>
 
