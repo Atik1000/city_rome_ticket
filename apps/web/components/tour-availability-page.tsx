@@ -215,7 +215,7 @@ function TravelerCounter({
     if (!isOpen) return null
 
     return (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 z-10 w-[80vw] sm:w-[350px]">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gold/30 rounded-xl shadow-warm-lg p-4 z-30 w-full sm:w-[350px]">
             {/* Changing top-full to bottom-full for this page maybe? Original was top-full. Let's stick to original but ensure z-index */}
 
             {/* Adult */}
@@ -680,8 +680,8 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
 
                     {/* Check availability logic */}
                     {/* Horizontal Date Selector */}
-                    <div className="mb-6 relative flex gap-2">
-                        <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide flex-1">
+                    <div className="mb-6 relative flex gap-2 min-w-0">
+                        <div className="flex gap-2 overflow-x-auto pt-1 pb-4 scrollbar-hide flex-1 min-w-0">
                             {nextDays.map((date, idx) => {
                                 const year = date.getFullYear();
                                 const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -801,9 +801,9 @@ export default function TourAvailabilityPage({ tourId }: { tourId: number }) {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="relative border border-gold/30 rounded-2xl p-6 sm:p-8 bg-white shadow-warm-lg mb-6 overflow-hidden"
+                        className="relative border border-gold/30 rounded-2xl p-6 sm:p-8 bg-white shadow-warm-lg mb-6"
                     >
-                        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+                        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
                         <h3 className="font-serif font-semibold text-ink text-xl sm:text-2xl mb-4">{tour.title}</h3>
 
                         <div className="flex flex-wrap gap-3 mb-5">

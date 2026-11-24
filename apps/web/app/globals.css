@@ -278,3 +278,12 @@
     }
   }
 }
+
+/* Hide scrollbars on horizontal scrollers while keeping them scrollable */
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
